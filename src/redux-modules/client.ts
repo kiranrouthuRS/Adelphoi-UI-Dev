@@ -130,14 +130,14 @@ export const actions = {
       const response = await fetchPcr(client_code, selected_program);
     
       const pcr: number | null = response ? response.pcr : null;
-      const roc: number | null = response ? response.Roc_confidence : null;
+      const roc_confidence: number | null = response ? response.roc_confidence : null;
       if (pcr !== null) {
         const cl: Types.Client = {
           ...getState().client!.client,
           Confidence: pcr,
           confidence: pcr,
-          Roc_confidence: roc,
-          roc_confidence: roc
+          Roc_confidence: roc_confidence,
+          roc_confidence: roc_confidence
         };
         dispatch(update({ client: cl }));
         const clientList = getState().client?.clientList;
@@ -147,8 +147,8 @@ export const actions = {
             ...client,
             Confidence: pcr,
             confidence: pcr,
-            Roc_confidence: roc,
-          roc_confidence: roc,
+            Roc_confidence: roc_confidence,
+          roc_confidence: roc_confidence,
             Program_Completion: 0,
             selected_program
           };
@@ -351,6 +351,26 @@ export const actions = {
       let updatedClient: Types.Client;
       client = {
         ...client,
+        yls_FamCircumstances_Score: client.yls_FamCircumstances_Score || null,
+        yls_Edu_Employ_Score: client.yls_Edu_Employ_Score || null,
+        yls_Peer_Score: client.yls_Peer_Score || null,
+        yls_Subab_Score: client.yls_Subab_Score || null,
+        yls_Leisure_Score: client.yls_Leisure_Score || null,
+        yls_Personality_Score: client.yls_Personality_Score || null,
+        yls_Attitude_Score: client.yls_Attitude_Score || null,
+        yls_PriorCurrentOffenses_Score: client.yls_PriorCurrentOffenses_Score || null,
+        family_support: client.family_support || null,
+        fire_setting: client.fire_setting || null,
+        level_of_aggression: client.level_of_aggression || null,
+        client_self_harm: client.client_self_harm || null,
+        Screening_tool_Trauma: client.Screening_tool_Trauma || null,
+        cans_LifeFunctioning: client.cans_LifeFunctioning || null,
+        cans_YouthStrengths: client.cans_YouthStrengths || null,
+        cans_CareGiverStrengths: client.cans_CareGiverStrengths || null,
+        cans_Culture: client.cans_Culture || null,
+        cans_YouthBehavior: client.cans_YouthBehavior || null,
+        cans_YouthRisk: client.cans_YouthRisk || null,
+        cans_Trauma_Exp: client.cans_Trauma_Exp || null,
         referred_program: client.referred_program || null
       };
       try {

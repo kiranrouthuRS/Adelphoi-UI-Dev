@@ -194,7 +194,7 @@ export class EditClientContainer extends React.Component<
       this.props.saveClient(client);
       await this.props.updateClient(client);
       this.setState({ isLoading: false });
-      this.props.enqueueSnackbar("New Client Created Successfully.");
+      this.props.enqueueSnackbar("Client Updated Successfully.");
       history.push(`/${domainPath}/existing-client/edit-details/${index}/program-selection`);
       //this.props.clearClient();
     } catch (error) {

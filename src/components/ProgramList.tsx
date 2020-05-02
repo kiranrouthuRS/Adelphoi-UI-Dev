@@ -190,7 +190,7 @@ const ProgramList: React.FC<ProgramListProps> = props => {
                   helpers.resetForm();
                 }
               } catch (error) {
-                enqueueSnackbar("Could create/update program");
+                enqueueSnackbar("Could not create/update program");
               }
             }}
           >

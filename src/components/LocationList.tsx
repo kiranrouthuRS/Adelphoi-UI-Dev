@@ -191,7 +191,7 @@ const LocationList: React.FC<LocationListProps> = props => {
                   helpers.resetForm();
                 }
               } catch (error) {
-                enqueueSnackbar("Could create/update location");
+                enqueueSnackbar("Could not create/update location");
               }
             }}
           >

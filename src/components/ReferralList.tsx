@@ -195,7 +195,7 @@ const ReferralList: React.FC<ReferralListProps> = props => {
                   helpers.resetForm();
                 }
               } catch (error) {
-                enqueueSnackbar("Could create/update Referral Source");
+                enqueueSnackbar("Could not create/update Referral Source");
               }
             }}
           >

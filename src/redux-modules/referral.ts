@@ -60,7 +60,7 @@ export const actions = {
         throw Error("something went wrong while creating the referral");
       }
       const newReferral: Types.Referral = {
-        referral_code: response.referral_id,
+        referral_code: response.referral_code,
         referral_name: referral.referral_name
       };
       const referralState = getState().referral;
