@@ -57,7 +57,7 @@ createAuthRefreshInterceptor(axios as any, refreshAuthLogic);
 // and the request retried with the new token
 export const login = async (email: string,password: string) => {
   try {
-    const response = await axios.post(`${loginApiUrl}/adelphoi/admin/login`, {
+    const response = await axios.post(`${loginApiUrl}/adelphoi/login`, {
       username: email,
       password: password      
     });
