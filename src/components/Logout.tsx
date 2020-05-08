@@ -1,11 +1,13 @@
 /** @jsx jsx */
 import React,{ useState, useEffect } from "react";
+import axios from "axios";
 import { connect } from "react-redux";
 import { jsx, css } from "@emotion/core";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import { AppState } from "../redux-modules/root";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App" 
+export const loginApiUrl = "http://3.7.135.210:8005"; 
 
 
 export interface LogoutProps {
@@ -14,20 +16,29 @@ export interface LogoutProps {
   
 }
 const Logout: React.FC<LogoutProps> = props => {
-  const user = props.appState.user;
   const history = useHistory();
-  const {  logout } = props;
-  useEffect(() => {
-    console.log("logout")
-    logout();
-    history.push(`/${domainPath}/login`);
-  });
-  console.log(logout,"log")
-  const onLogoutClick = () => {
-    console.log("logout")
-    logout();
-    history.push(`/${domainPath}/login`);
-  };
+  const {  logout,appState, } = props;
+  const { user } = appState;
+  
+  const currentUser = user && user.user ? user.user.accessToken:""
+    useEffect( () => {
+    const myHeaders = new Headers();
+myHeaders.append("Authorization", `Bearer ${currentUser}`);
+
+const formdata = new FormData();
+
+const req = {
+  method: "post",
+  headers: myHeaders,
+  body: formdata
+}
+fetch(`${loginApiUrl}/organizations/${domainPath}/logout`, req)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+  logout();
+   history.push(`/${domainPath}/login`);
+   });
   return (
     <div>
       

@@ -4,9 +4,8 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 import { store } from "../index";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
-export const baseApiUrl = "http://3.7.135.210:8000/first_match";
+export const baseApiUrl = "http://3.6.249.182:8000/first_match";
 export const loginApiUrl = "http://3.7.135.210:8005"; 
-
 
 interface PredictionResponse {
   referred_program: string;
@@ -55,9 +54,9 @@ createAuthRefreshInterceptor(axios as any, refreshAuthLogic);
 
 // Make a call. If it returns a 401 error, the refreshAuthLogic will be run,
 // and the request retried with the new token
-export const login = async (email: string,password: string) => {
+export const login = async (email: string,password: string, domain: string) => {
   try {
-    const response = await axios.post(`${loginApiUrl}/adelphoi/login`, {
+    const response = await axios.post(`${loginApiUrl}/organizations/${domain}/login`, {
       username: email,
       password: password      
     });

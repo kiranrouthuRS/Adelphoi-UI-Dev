@@ -44,7 +44,9 @@ export class LoginContainer extends React.Component<
     }
     const credentials: Types.Credential = {
       email: email,
-      password: password
+      password: password,
+      domain: domainPath
+      
     };
     try {
       const r = await this.props.dispatch(user.actions.login(credentials));

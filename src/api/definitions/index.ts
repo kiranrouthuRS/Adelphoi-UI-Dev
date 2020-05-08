@@ -8,6 +8,7 @@ export interface User {
 export interface Credential {
   email: string;
   password: string;
+  domain: string;
 }
 export interface Client {
   client_code: string | null;
