@@ -34,8 +34,9 @@ export const actions = {
     return async (dispatch, getState) => {
       const email = credential.email;
       const password = credential.password;
+      const domain = credential.domain;
       let user: Types.User;
-      const response = await login(email,password);
+      const response = await login(email,password,domain);
       console.log(response,"response")
       if (response && response.data) {
         const { token,role_type,domain,customer_id } = response.data.response;
@@ -55,6 +56,7 @@ export const actions = {
   logout(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch) => {
       dispatch(update({ user: emptyUser }));
+      
     };
   }
 };
