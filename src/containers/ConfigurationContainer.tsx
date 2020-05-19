@@ -12,8 +12,10 @@ import { ContainerProps } from "./Container";
 import * as Types from "../api/definitions";
 import * as program from "../redux-modules/program";
 import * as referral from "../redux-modules/referral";
+import * as users from "../redux-modules/users";
 import * as programLocation from "../redux-modules/location";
 import ProgramList from "../components/ProgramList";
+import UsersList from "../components/UsersList";
 import ReferralList from "../components/ReferralList";
 import LocationList from "../components/LocationList";
 import ConfigurationForm from "../components/ConfigurationForm";
@@ -27,7 +29,13 @@ export interface ConfigurationContainerState {
 
 export interface ConfigurationContainerProp
   extends ContainerProps,
-    WithSnackbarProps {
+  WithSnackbarProps {
+  getUsers: () => Promise<void>;
+  createUsers: (users: Types.Users) => Promise<void>;
+  updateUsers: (users: Types.Users) => Promise<void>;
+  deleteUsers: (users: Types.Users) => Promise<void>;
+  getRoles:() => Promise<void>;
+  getAvailableUsers: (users: Types.Users) => Promise<void>;
   getReferral: () => Promise<void>;
   createReferral: (referral: Types.Referral) => Promise<void>;
   updateReferral: (referral: Types.Referral) => Promise<void>;
@@ -45,7 +53,7 @@ export interface ConfigurationContainerProp
 export class ConfigurationContainer extends React.Component<
   ConfigurationContainerProp,
   ConfigurationContainerState
-> {
+  > {
   constructor(props: ConfigurationContainerProp) {
     super(props);
     this.state = this.getInitialState();
@@ -72,14 +80,23 @@ export class ConfigurationContainer extends React.Component<
 
   componentDidMount() {
     this.props.closeSnackbar();
+    this.props.getUsers();
+    this.props.getRoles();
     this.props.getReferral();
     this.props.getPrograms();
-    this.props.getLocations();
+    this.props.getLocations(); 
+    
   }
 
   render() {
     const {
-      referral: referralState,
+      users: usersState,
+      createUsers,
+      updateUsers,
+      deleteUsers,
+      getAvailableUsers,
+      getRoles,
+      referral: referralState, 
       createReferral,
       updateReferral,
       deleteReferral,
@@ -92,22 +109,40 @@ export class ConfigurationContainer extends React.Component<
       updateLocation,
       deleteLocation
     } = this.props;
+    
+    const  rolesList = (usersState && usersState.rolesList) || [];
+    console.log(rolesList,"rolesList")
+    const  availableUsersList = (usersState && usersState.availableUsersList) || [];
+    const usersList = (usersState && usersState.usersList) || [];
     const referralList = (referralState && referralState.referralList) || [];
     const programList = (programState && programState.programList) || [];
     const locationList = (locationState && locationState.locationList) || [];
-    const { match, location } = this.props;
+    const { match, location,user } = this.props;
+    
+    const role_type:any = user && user.user && user.user.role_type
+    console.log(role_type,"conf")
     return (
       <Switch>
         <Route path={`/${domainPath}/configuration`}>
           <React.Fragment>
-            <Paper style={{ flexGrow: 1, marginTop: 30 }}>
+            <Paper style={{ flexGrow: 1, marginTop: 30 }}>  
               <Tabs value={location.pathname} centered>
+                {role_type === "Consultant" || role_type === "Contributor" ? "":
+                <Tab
+                  label="Users"
+                  component={Link}
+                  to={`${match.url}/users`}
+                  value={`${match.url}/users`}
+                />
+                }
+                {role_type === "Consultant"  || role_type === "Contributor" ? "":
                 <Tab
                   label="Referral Sources"
                   component={Link}
                   to={`${match.url}/referral`}
-                  value={`${match.url}/referral`}
-                />
+                  value={`${match.url}/referral`} 
+                />}
+                
                 <Tab
                   label="Programs"
                   component={Link}
@@ -129,6 +164,20 @@ export class ConfigurationContainer extends React.Component<
               </Tabs>
             </Paper>
             <Switch>
+              <Route path={`${match.url}/users`}>
+                <UsersList
+                  usersList={usersList}
+                  availableUsersList={availableUsersList}
+                  rolesList={rolesList}
+                  {...this.state}
+                  createUsers={createUsers}
+                  updateUsers={updateUsers}
+                  deleteUsers={deleteUsers} 
+                  getAvailableUsers={getAvailableUsers}
+                  getRoles={getRoles}
+                  
+                />
+              </Route>
               <Route path={`${match.url}/referral`}>
                 <ReferralList
                   referralList={referralList}
@@ -179,12 +228,20 @@ export class ConfigurationContainer extends React.Component<
 const mapStateToProps = (state: AppState) => {
   return {
     referral: state.referral,
+    users: state.users,
+    user: state.user,
     program: state.program,
     programLocation: state.programLocation
   };
 };
 
 const mapDispatchToProps = {
+  getUsers: users.actions.getUsers,
+  createUsers: users.actions.createUsers,
+  updateUsers: users.actions.updateUsers,
+  deleteUsers: users.actions.deleteUsers,
+  getAvailableUsers: users.actions.getAvailableUsers,
+  getRoles:users.actions.getRoles,
   getReferral: referral.actions.getReferral,
   createReferral: referral.actions.createReferral,
   updateReferral: referral.actions.updateReferral,

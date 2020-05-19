@@ -11,6 +11,7 @@ import * as user from "./redux-modules/user";
 import { AppState } from "./redux-modules/root";
 import {  Global } from "@emotion/core";
 import { domainPath } from "./App"
+
 import {
   ConfigIcon,
   NewClientIcon,
@@ -115,9 +116,19 @@ const logout = css`
     right: 0;
   }
 `;
+const profile = css`
+  position: absolute;
+  top: -25px;
+  right: 85px;
+  radius: 2px;
+  @media all and (max-width: 520px) {
+    top: 0;
+    right: 0;
+  }
+`;
 
-const AppShell: React.FC = ({children} ) => {
- 
+const AppShell: React.FC = ({children},props ) => {
+ console.log(props,"shell")
   return (
     <Paper css={App} elevation={3}>
       
@@ -132,6 +143,12 @@ const AppShell: React.FC = ({children} ) => {
           alt={`${domainPath} Logo`}
           src={`/img/${domainPath}_logo.png`}
         />
+        <a
+              href={`/${domainPath}/changepassword`}
+              css={profile}
+            >
+              Profile
+            </a>
                 <a
               href={`/${domainPath}/logout`}
               css={logout}
@@ -139,7 +156,8 @@ const AppShell: React.FC = ({children} ) => {
               Logout
             </a>
       </div>
-      {domainPath == "adelphoi" ? (
+      {/* {is_pwd_updated === true ?  : ""} */}
+      { domainPath == "adelphoi" ? (
                  <div css={nav}>
                  <Route
                    path={`/${domainPath}/new-client`}
@@ -213,7 +231,7 @@ const AppShell: React.FC = ({children} ) => {
                    )}
                  />
                </div>
-      ) : ""}
+      ) : ""}  
       
       {children}
     </Paper>

@@ -14,6 +14,17 @@ export interface ClientState {
 export interface ConfigurationState {
   configuration: Types.Configuration;
 }
+export interface UsersState {
+  usersList: Types.Users[];
+  availableUsersList: Types.Users[];
+  rolesList: Types.Users[];
+}
+
+export const emptyUsers: Types.Users = {
+  id: "",
+  first_name: ""
+};   
+
 export interface ReferralState {
   referralList: Types.Referral[];
   availableReferralList: Types.Referral[];

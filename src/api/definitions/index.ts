@@ -4,11 +4,30 @@ export interface User {
   password: string;
   accessToken: string;
   role_type: string;
+  user_id: string;
+  is_pwd_updated: string;
+}
+export interface Users {
+  id: string;
+  name: string;
+  full_name: string;
+  first_name: string;
+  last_name: string;
+  email_id: string;
+  mobile: string;
+  gender: string;
+  role_type: string;
 }
 export interface Credential {
   email: string;
   password: string;
   domain: string;
+}
+export interface ChangePwd {
+  old_password: string;
+  password: string;
+  retype_password: string;
+  
 }
 export interface Client {
   client_code: string | null;

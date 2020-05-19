@@ -4,8 +4,8 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 import { store } from "../index";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
-export const baseApiUrl = "http://3.6.249.182:8000/first_match";
-export const loginApiUrl = "http://3.7.135.210:8005"; 
+export const baseApiUrl = "http://3.7.135.210:8000/first_match";
+export const loginApiUrl = "http://3.7.135.210:8005";
 
 interface PredictionResponse {
   referred_program: string;
@@ -20,10 +20,8 @@ interface LocationsResponse {
 const refreshAuthLogic = (failedRequest: {
   response: { config: { headers: { [x: string]: string } } };
 }) => {
-  console.log("refresh-user")
   const userState = store.getState().user;
   const currentUser = userState.user;
-  console.log(currentUser,'userState')
   // const refreshToken = localStorage.getItem("refreshToken");
   if (!userState) {
     return Promise.reject();
@@ -54,13 +52,12 @@ createAuthRefreshInterceptor(axios as any, refreshAuthLogic);
 
 // Make a call. If it returns a 401 error, the refreshAuthLogic will be run,
 // and the request retried with the new token
-export const login = async (email: string,password: string, domain: string) => {
+export const login = async (email: string, password: string, domain: string) => {
   try {
     const response = await axios.post(`${loginApiUrl}/organizations/${domain}/login`, {
       username: email,
-      password: password      
+      password: password
     });
-    console.log(response,"login");
     localStorage.setItem("refreshToken", response.data.refresh_token);
     return response;
   } catch (error) {
@@ -69,7 +66,52 @@ export const login = async (email: string,password: string, domain: string) => {
   }
 };
 
+export const Logout = async () => {
+  const currentUser = store.getState().user.user.accessToken;
+   try {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${currentUser}`);
+    
+    const formdata = new FormData();
+    
+    const req = {
+      headers: myHeaders,
+      body: formdata
+    }
+    const response = await axios.post(`${baseApiUrl}/organizations/${domainPath}/logout`, req)
+    .then(response => {
+      store.dispatch(
+        user.actions.update({
+          user: {
+            email:"",
+            password:"",
+            accessToken:"",
+            role_type:"",
+            user_id:"",
+            is_pwd_updated: ""
 
+
+          }
+        })
+      );
+      console.log(response,"logout")
+      return response;
+      console.log(response,"logout")
+    });
+    console.log(response,"logout")
+    return response;
+    // const response = await  fetch(`${loginApiUrl}/organizations/${domainPath}/logout`, req)
+    //   .then(response => response.json())
+    //   .then(result => console.log(result,"result"))
+    //   .catch(error => console.log('error', error)); 
+        
+
+    
+  } catch (error) {
+    console.error("api function fetchLocationsList error");
+    throwError(error);
+  }
+};
 export const updateConfiguration = async (
   configuration: Types.Configuration
 ) => {
@@ -83,7 +125,7 @@ export const updateConfiguration = async (
 };
 
 export const insertClient = async (client: Types.Client) => {
-  
+
   try {
     const response = await axios.post(`${baseApiUrl}/list_view/`, client);
     if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
@@ -114,8 +156,8 @@ export const insertClient = async (client: Types.Client) => {
 
 export const updateClient = async (client: Types.Client) => {
   try {
-    
-    const response = await axios.put(`${baseApiUrl}/latest_update/${client.client_code}/`, client); 
+
+    const response = await axios.put(`${baseApiUrl}/latest_update/${client.client_code}/`, client);
     if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
       throw new Error(response.data["ERROR"]);
     }
@@ -157,6 +199,114 @@ export const insertPrediction = async (client: Types.Client) => {
     throwError(error);
   }
 };
+
+export const fetchUsers = async () => {
+  try {
+    const response = await axios.get(`${loginApiUrl}/organizations/${domainPath}/users/`);
+    const data = (response.data as unknown) as Types.Users[];
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchUsers error");
+    throwError(error);
+  }
+};
+export const fetchRoles = async () => { 
+  const currentUser = store.getState().user.user.accessToken;
+  
+  try {
+    const response = await axios.get(`${loginApiUrl}/organizations/${domainPath}/groups/`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    });
+    console.log(response.data,"data")
+    return response.data;
+  } catch (error) {
+    
+    console.error("api function fetchRoles error");
+    throwError(error);
+  }
+};
+
+export const fetchAvailableUsers = async (userID: any) => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    const response = await axios.get(`${loginApiUrl}/organizations/${domainPath}/users/${userID}`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    });
+    return response.data.response;
+  } catch (error) {
+    console.error("api function fetchAvailableUsers error");
+    throwError(error);
+  }
+};
+
+export const createUsers = async (users: Types.Users) => {
+  const currentUser = store.getState().user.user.accessToken;
+  const data = {
+    first_name: users.first_name !== null ? users.first_name.charAt(0).toUpperCase() + users.first_name.substr(1).toLowerCase() : "",
+    last_name: users.last_name !== null ? users.last_name.charAt(0).toUpperCase() + users.last_name.substr(1).toLowerCase() : "",
+    email_id: users.email_id,
+    gender: users.gender,
+    mobile: users.mobile,
+    group_id: users.role_type
+  }
+  try {
+    const response = await axios.post(`${loginApiUrl}/organizations/${domainPath}/users/`, data, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("api function createUsers error");
+    throwError(error);
+  }
+};
+
+export const updateUsers = async (users: Types.Users) => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    const response = await axios.put(
+      `${loginApiUrl}/organizations/${domainPath}/users/${users.id}/`,
+      {
+        first_name: users.first_name !== null ? users.first_name.charAt(0).toUpperCase() + users.first_name.substr(1).toLowerCase() : "",
+        last_name: users.last_name !== null ? users.last_name.charAt(0).toUpperCase() + users.last_name.substr(1).toLowerCase() : "",
+        email_id: users.email_id,
+        mobile: users.mobile,
+        gender: users.gender,
+        group_id: users.role_type
+      }
+        , { 
+          headers: {
+            'Authorization': `Bearer ${currentUser}`
+          }
+        });
+    return response.data;
+  } catch (error) {
+    console.error("api function updateUsers error");
+    throwError(error);
+  }
+};
+
+export const deleteUsers = async (userID: any) => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    const response = await axios.delete(`${loginApiUrl}/organizations/${domainPath}/users/${userID}`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("api function deleteUser error");
+    throwError(error);
+  }
+};
+
 export const fetchReferral = async () => {
   try {
     const response = await axios.get(`${baseApiUrl}/referral_list`);
@@ -195,7 +345,7 @@ export const createReferral = async (referral: Types.Referral) => {
 
 export const updateReferral = async (referral: Types.Referral) => {
   try {
-    
+
     const response = await axios.put(
       `${baseApiUrl}/referral_modify/${referral.referral_code}/`,
       {
@@ -455,8 +605,11 @@ function throwError(error: any) {
   if (error.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
+    if(error.response.status){
+      window.location.reload();
+    }
     console.log(error.response.data);
-    console.log(error.response.status);
+    console.log("code",error.response.status);
     console.log(error.response.headers);
     const errorResponse = {
       data: error.response.data || undefined,

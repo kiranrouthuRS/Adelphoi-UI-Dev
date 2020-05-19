@@ -13,6 +13,7 @@ import {
   Redirect
 } from "react-router-dom";
 import AppShell from "./AppShell";
+
 import NewClientContainer from "./containers/NewClientContainer";
 import ExistingClientContainer from "./containers/ExistingClientContainer";
 import ConfigurationContainer from "./containers/ConfigurationContainer";
@@ -20,13 +21,16 @@ import LoginContainer from "./containers/LoginContainer";
 import Logout from "./components/Logout"; 
 import PrivateRoute from './PrivateRoute';
 import Welcomepage from './components/welcomepage'
+import ChangePasswordContainer from './containers/ChangePasswordContainer'
 export const { store } = configureStore(createHistory());
 const url = typeof window !== 'undefined' ? window.location.pathname : '';
   let str1 = url.split('/');
   let dom = str1[1];
   export const domainPath = dom;
-const App: React.FC = () => {
   
+const App: React.FC = (props) => {
+  
+  console.log(props,"appStateapp")
   return (
     <React.Fragment>
       
@@ -36,27 +40,7 @@ const App: React.FC = () => {
         <SnackbarProvider
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          {/* <Global
-        styles={css`
-          *,
-          *::before,
-          *::after {
-            box-sizing: inherit ;
-          }
-          html {
-            box-sizing: border-box ;
-          }
-          html,
-          body {
-            padding: 0 ;
-            margin: 0;
-            background: url(img/repeated_bg.png) !important;
-            min-height: 100%;
-            font-family: "Quicksand", Helvetica, sans-serif;
-          }
-        `}
-      />   */}
-          <Router>
+        <Router>
           
           <Switch>
          
@@ -83,11 +67,15 @@ const App: React.FC = () => {
                 />
                 <PrivateRoute
                   path={`/${dom}/configuration`}
-                  component={ConfigurationContainer}
+                  component={ConfigurationContainer} 
                 />
                 <PrivateRoute
                   path={`/${dom}/logout`}
                   component={Logout}
+                />
+                <PrivateRoute
+                  path={`/${dom}/changepassword`}
+                  component={ChangePasswordContainer}
                 />
                 
               </Switch>

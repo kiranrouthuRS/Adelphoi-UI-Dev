@@ -6,20 +6,22 @@ import createReducer from "./createReducer";
 import UserState from "./definitions/UserState";
 import { AppState } from "../redux-modules/root";
 import * as Types from "../api/definitions";
-import { login } from "../api/api";
+import { login,Logout } from "../api/api";
 
 export const emptyUser: Types.User = {
   email: "",
   password:"",
   accessToken: "",
-  role_type: ""
+  role_type: "",
+  user_id:"",
+  is_pwd_updated:""
 };
 
 const initialState: UserState = {
   user: emptyUser
 };
 
-const { reducer, update } = createReducer<UserState>(
+const { reducer, update } = createReducer<UserState>(  
   "User/UPDATE",
   initialState
 );
@@ -37,27 +39,26 @@ export const actions = {
       const domain = credential.domain;
       let user: Types.User;
       const response = await login(email,password,domain);
-      console.log(response,"response")
       if (response && response.data) {
-        const { token,role_type,domain,customer_id } = response.data.response;
-        console.log(response.data.response,"response")
+        const { token,role_type,user_id,is_pwd_updated } = response.data.response;
         user = {
           email,
           password,
           accessToken: token,
-          role_type: role_type
+          role_type: role_type,
+          user_id: user_id,
+          is_pwd_updated: is_pwd_updated
         };
         dispatch(update({ user }));
       }
     };
     
   },
-
+  
   logout(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
-    return async (dispatch) => {
+    return async (dispatch,getState) => {
       dispatch(update({ user: emptyUser }));
-      
-    };
+     };
   }
 };
 

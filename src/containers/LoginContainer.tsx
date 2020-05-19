@@ -5,10 +5,12 @@ import { ContainerProps } from "./Container";
 import LoginPage from "../components/Login";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
+import { store } from "../index";
 export interface LoginContainerState {
   isLoading: boolean;
   error: string;
   hasLoginError: boolean;
+ 
 }
 
 export interface LoginContainerProp extends ContainerProps {}
@@ -20,19 +22,19 @@ export class LoginContainer extends React.Component<
   constructor(props: LoginContainerProp) {
     super(props);
     const isLoggedIn = props.user && props.user.user;
-    console.log(props,"props")
-    if (isLoggedIn && isLoggedIn.accessToken !== "") {
-      console.log(domainPath,'domainPath')
-      this.props.history.push(domainPath !== "adelphoi" ? (`/${domainPath}/welcomepage`) :
-      (`/${domainPath}/new-client`));
-    }
+    // if (isLoggedIn && isLoggedIn.accessToken !== "") {
+    //   console.log(domainPath,'domainPath')
+    //   this.props.history.push(domainPath !== "adelphoi" ? (`/${domainPath}/welcomepage`) :
+    //   (`/${domainPath}/new-client`));
+    // }
     this.state = this.getInitialState();
   }
   getInitialState() {
     return {
       isLoading: false,
       hasLoginError: false,
-      error: ""
+      error: "",
+     
     };
   }
 
@@ -50,14 +52,19 @@ export class LoginContainer extends React.Component<
     };
     try {
       const r = await this.props.dispatch(user.actions.login(credentials));
-      //let { from } = location.state || { from: { pathname: "/select" } };
-       //history.push(from);
-       console.log(r,"login")
-     history.push(domainPath !== "adelphoi" ? (`/${domainPath}/welcomepage`) :
-     (`/${domainPath}/new-client`));;
+      const accessToken = store.getState().user.user.accessToken;
+      const pwd_updated = this.props.user && this.props.user.user && this.props.user.user.is_pwd_updated
+      if(pwd_updated){
+        history.push(domainPath !== "adelphoi" ? (`/${domainPath}/welcomepage`) :
+        (`/${domainPath}/new-client`));;
+        
+      }else{
+        history.push(`/${domainPath}/changepassword`);
+      }
+     
     } catch (e) {
       console.log(e,"error");
-      const error = e.data.message;
+      const error = e.data.message; 
       this.setState({
         error,
         hasLoginError: true,
@@ -67,7 +74,9 @@ export class LoginContainer extends React.Component<
     }
   };
 
-  render() {
+  render()
+   
+  {
     return <LoginPage onLogin={this.onLogin} {...this.state} />;
   }
 }
