@@ -185,11 +185,13 @@ export class ClientDetailsContainer extends React.Component<
     const referralList = (referralState && referralState.referralList) || [];
     const clientList = (clientState && clientState.clientList) || {};
     const { index } = this.props.match.params;
+    const is_role_type: any = this.props.user && this.props.user.user.role_type 
     return (
       <div css={wrap}>
         <div css={mainContent}>
           {!clientList[index] ? null : (
             <ClientDetails
+            is_role_type={is_role_type}
               client={clientList[index]}
               onProgramSelect={this.getLocationsAndPcr}
               // onLocationSelect={this.saveProgramAndLocation}
@@ -211,7 +213,8 @@ const mapStateToProps = (state: AppState) => {
   return {
     client: state.client,
     program: state.program,
-    referral: state.referral
+    referral: state.referral,
+    user: state.user
   };
 };
 

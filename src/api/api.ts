@@ -5,7 +5,7 @@ import { store } from "../index";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
 export const baseApiUrl = "http://3.7.135.210:8000/first_match";
-export const loginApiUrl = "http://3.7.135.210:8005"; 
+export const loginApiUrl = "http://3.7.135.210:8005";
 
 interface PredictionResponse {
   referred_program: string;
@@ -100,7 +100,12 @@ export const Logout = async () => {
     });
     console.log(response,"logout")
     return response;
-    
+    // const response = await  fetch(`${loginApiUrl}/organizations/${domainPath}/logout`, req)
+    //   .then(response => response.json())
+    //   .then(result => console.log(result,"result"))
+    //   .catch(error => console.log('error', error)); 
+        
+
     
   } catch (error) {
     console.error("api function fetchLocationsList error");

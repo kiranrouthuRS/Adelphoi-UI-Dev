@@ -157,13 +157,17 @@ export class NewClientContainer extends React.Component<
   saveClientStep2 = async (client: Types.Client) => {
     
     const { history } = this.props;
+    const is_role_type: any = this.props.user && this.props.user.user.role_type 
     try {
       this.setState({ isLoading: true });
       this.props.saveClient(client);
       await this.props.insertClient(client);
       this.setState({ isLoading: false });
       this.props.enqueueSnackbar("New Client Created Successfully.");
-      history.push(`/${domainPath}/new-client/program-selection`);
+      {is_role_type === "Contributor" ?
+        history.push(`/${domainPath}/new-client/`) :
+        history.push(`/${domainPath}/new-client/program-selection`)
+      }
       //this.props.clearClient();
     } catch (error) {
       console.log(error);
@@ -239,7 +243,8 @@ const mapStateToProps = (state: AppState) => {
   return {
     client: state.client,
     program: state.program,
-    referral: state.referral
+    referral: state.referral,
+    user: state.user
   };
 };
 

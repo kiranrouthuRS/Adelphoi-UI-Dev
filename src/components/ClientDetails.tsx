@@ -58,6 +58,7 @@ interface ClientDetailsProps {
   program_completion_response: string | null;
   // getReferral: () => Promise<void>;
   Referral: Types.Referral[],
+  is_role_type: string
 }
 
 interface FormValues {
@@ -152,10 +153,12 @@ const ClientDetails: React.FC<ClientDetailsProps> = props => {
     })
     : [];
   const getInitialValues = (): FormValues => {
-    const { client } = props;
+    const { client,is_role_type } = props; 
+    console.log(props,"client")
     let program: any = null;
     let location: any = null;
     let referral: any = null;
+    let role_type: any = is_role_type;
     if (client.selected_referral) {
       referral = {
         label: client.selected_referral,
@@ -206,24 +209,26 @@ const ClientDetails: React.FC<ClientDetailsProps> = props => {
       <Backdrop css={backdrop} open={props.isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          textAlign: "right",
-          paddingTop: 20,
-          paddingBottom: 20
-        }}
-      >
-        <a
-          rel="noopener noreferrer"
-          target="_blank"
-          css={txtDetail}
-          href={`${baseApiUrl}/index/${client.client_code}`}
+      {props.is_role_type ==="Contributor" ?"":( 
+          <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            textAlign: "right",
+            paddingTop: 20,
+            paddingBottom: 20
+          }}
         >
-          <PictureAsPdfIcon /> Download Report
-        </a>
-      </div>
+          <a
+            rel="noopener noreferrer"
+            target="_blank"
+            css={txtDetail}
+            href={`${baseApiUrl}/index/${client.client_code}`}
+          >
+            <PictureAsPdfIcon /> Download Report
+          </a>
+        </div>
+      )}
       <ExpansionPanel defaultExpanded>
         <ExpansionPanelSummary
           css={panelHeader}
@@ -715,7 +720,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = props => {
                       )
                     }><u style={{color: "red"}}>here</u></a> to Edit Client details Or update below details.</h3> 
 
-      <Formik
+{props.is_role_type === "Contributor" ?"":( <Formik
         initialValues={getInitialValues()}
         enableReinitialize
         validate={values => {
@@ -943,7 +948,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = props => {
             </div>
           </form>
         )}
-      </Formik>
+      </Formik>)} 
       {props.program_completion_response && (
         <div css={subHeading}>{props.program_completion_response}</div>
       )}

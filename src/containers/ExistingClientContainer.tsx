@@ -106,7 +106,8 @@ const mapStateToProps = (state: AppState) => {
   return {
     client: state.client,
     program: state.program,
-    referral: state.referral
+    referral: state.referral,
+    user: state.user
   };
 };
 

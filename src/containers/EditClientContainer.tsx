@@ -189,13 +189,17 @@ export class EditClientContainer extends React.Component<
   saveClientStep2 = async (client: Types.Client) => {
     const { index } = this.props.match.params;
     const { history } = this.props;
+    const is_role_type: any = this.props.user && this.props.user.user.role_type 
     try {
       this.setState({ isLoading: true });
       this.props.saveClient(client);
       await this.props.updateClient(client);
       this.setState({ isLoading: false });
       this.props.enqueueSnackbar("Client Updated Successfully.");
-      history.push(`/${domainPath}/existing-client/edit-details/${index}/program-selection`);
+      {is_role_type === "Contributor" ?
+        history.push(`/${domainPath}/new-client/`) :
+        history.push(`/${domainPath}/existing-client/edit-details/${index}/program-selection`)
+      }
       //this.props.clearClient();
     } catch (error) {
       console.log(error);
@@ -259,7 +263,8 @@ const mapStateToProps = (state: AppState) => {
   return {
     client: state.client,
     program: state.program,
-    referral: state.referral
+    referral: state.referral,
+    user: state.user
   };
 };
 
