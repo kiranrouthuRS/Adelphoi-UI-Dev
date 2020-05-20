@@ -38,10 +38,12 @@ export const actions = {
     };
   },
 
-  getRoles(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+  getRoles(
+    is_accessToken:any
+  ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
      
-      const response = await fetchRoles();
+      const response = await fetchRoles(is_accessToken);
       console.log(response,"fetchroles")
       if (!response) {
         throw Error("something went wrong getting list of roles");
@@ -80,10 +82,11 @@ export const actions = {
   },
 
   createUsers(
-    users: Types.Users
-  ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+    users: Types.Users,
+    is_accessToken:any
+  ): ThunkAction<Promise<void>, AppState, null, AnyAction> { 
     return async (dispatch, getState) => {
-      const response = await createUsers(users);
+      const response = await createUsers(users,is_accessToken);
       if (!response) {
         throw Error("something went wrong while creating the users");
       }
@@ -111,10 +114,11 @@ export const actions = {
   },
 
   updateUsers(
-    users: Types.Users
+    users: Types.Users,
+    is_accessToken:any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await updateUsers(users);
+      const response = await updateUsers(users,is_accessToken);
       if (!response) {
         throw Error("something went wrong while updating the users");
       }
@@ -136,9 +140,10 @@ export const actions = {
   },
   deleteUsers(
     userID: any,
+    is_accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-     const response = await deleteUsers(userID);
+     const response = await deleteUsers(userID,is_accessToken);
       if (!response) {
         throw Error("something went wrong while updating the users");
       }

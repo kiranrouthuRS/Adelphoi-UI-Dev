@@ -4,6 +4,7 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 import { store } from "../index";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
+import { AppState } from "../redux-modules/root";
 export const baseApiUrl = "http://3.7.135.210:8000/first_match";
 export const loginApiUrl = "http://3.7.135.210:8005";
 
@@ -211,13 +212,13 @@ export const fetchUsers = async () => {
     throwError(error);
   }
 };
-export const fetchRoles = async () => { 
+export const fetchRoles = async (is_accessToken:any) => {  
   const currentUser = store.getState().user.user.accessToken;
   
   try {
     const response = await axios.get(`${loginApiUrl}/organizations/${domainPath}/groups/`, {
       headers: {
-        'Authorization': `Bearer ${currentUser}`
+        'Authorization': `Bearer ${is_accessToken}`
       }
     });
     console.log(response.data,"data")
@@ -244,7 +245,7 @@ export const fetchAvailableUsers = async (userID: any) => {
   }
 };
 
-export const createUsers = async (users: Types.Users) => {
+export const createUsers = async (users: Types.Users,is_accessToken:any) => {
   const currentUser = store.getState().user.user.accessToken;
   const data = {
     first_name: users.first_name !== null ? users.first_name.charAt(0).toUpperCase() + users.first_name.substr(1).toLowerCase() : "",
@@ -257,7 +258,7 @@ export const createUsers = async (users: Types.Users) => {
   try {
     const response = await axios.post(`${loginApiUrl}/organizations/${domainPath}/users/`, data, {
       headers: {
-        'Authorization': `Bearer ${currentUser}`
+        'Authorization': `Bearer ${is_accessToken}`
       }
     });
     return response.data;
@@ -267,7 +268,7 @@ export const createUsers = async (users: Types.Users) => {
   }
 };
 
-export const updateUsers = async (users: Types.Users) => {
+export const updateUsers = async (users: Types.Users,is_accessToken:any) => {
   const currentUser = store.getState().user.user.accessToken;
   try {
     const response = await axios.put(
@@ -282,7 +283,7 @@ export const updateUsers = async (users: Types.Users) => {
       }
         , { 
           headers: {
-            'Authorization': `Bearer ${currentUser}`
+            'Authorization': `Bearer ${is_accessToken}`
           }
         });
     return response.data;
@@ -292,12 +293,12 @@ export const updateUsers = async (users: Types.Users) => {
   }
 };
 
-export const deleteUsers = async (userID: any) => {
+export const deleteUsers = async (userID: any,is_accessToken:any) => {
   const currentUser = store.getState().user.user.accessToken;
   try {
     const response = await axios.delete(`${loginApiUrl}/organizations/${domainPath}/users/${userID}`, {
       headers: {
-        'Authorization': `Bearer ${currentUser}`
+        'Authorization': `Bearer ${is_accessToken}`
       }
     });
     return response.data;
@@ -605,9 +606,6 @@ function throwError(error: any) {
   if (error.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
-    if(error.response.status !== 400){
-      window.location.reload();
-    }
     console.log(error.response.data);
     console.log("code",error.response.status);
     console.log(error.response.headers);

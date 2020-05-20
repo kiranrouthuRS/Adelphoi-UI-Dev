@@ -31,10 +31,10 @@ export interface ConfigurationContainerProp
   extends ContainerProps,
   WithSnackbarProps {
   getUsers: () => Promise<void>;
-  createUsers: (users: Types.Users) => Promise<void>;
-  updateUsers: (users: Types.Users) => Promise<void>;
-  deleteUsers: (users: Types.Users) => Promise<void>;
-  getRoles:() => Promise<void>;
+  createUsers: (users: Types.Users,is_accessToken:any) => Promise<void>;
+  updateUsers: (users: Types.Users,is_accessToken:any) => Promise<void>;
+  deleteUsers: (users: Types.Users,is_accessToken:any) => Promise<void>;
+  getRoles:(is_accessToken:any) => Promise<void>;
   getAvailableUsers: (users: Types.Users) => Promise<void>;
   getReferral: () => Promise<void>;
   createReferral: (referral: Types.Referral) => Promise<void>;
@@ -79,9 +79,10 @@ export class ConfigurationContainer extends React.Component<
   };
 
   componentDidMount() {
+    const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     this.props.closeSnackbar();
     this.props.getUsers();
-    this.props.getRoles();
+    this.props.getRoles(is_accessToken);
     this.props.getReferral();
     this.props.getPrograms();
     this.props.getLocations(); 

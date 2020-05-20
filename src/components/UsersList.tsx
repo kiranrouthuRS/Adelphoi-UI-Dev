@@ -51,11 +51,12 @@ export interface UsersListProps {
   availableUsersList: Types.Users[];
   rolesList: Types.Users[];
   isLoading: boolean;
-  createUsers: (users: Types.Users) => Promise<void>;
-  updateUsers: (users: Types.Users) => Promise<void>;
-  deleteUsers: (users: Types.Users) => Promise<void>;
+  user: any;
+  createUsers: (users: Types.Users,is_accessToken:any) => Promise<void>;
+  updateUsers: (users: Types.Users,is_accessToken:any) => Promise<void>;
+  deleteUsers: (users: Types.Users,is_accessToken:any) => Promise<void>;
   getAvailableUsers: (users: Types.Users) => Promise<void>;
-  getRoles: () => Promise<void>;
+  getRoles: (is_accessToken:any) => Promise<void>;  
 }
 
 
@@ -63,7 +64,7 @@ export class UsersList extends React.Component<
   UsersListProps,
   UsersListState
   >
-{
+{ 
   constructor(props: UsersListProps) {
     super(props);
 
@@ -97,13 +98,15 @@ export class UsersList extends React.Component<
       gender: this.state.gender,
       role_type: this.state.role_type
     };
+    console.log(this.props,"edit")
+    const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     if (this.state.isEdit) {
-      await this.props.updateUsers(users);
+      await this.props.updateUsers(users,is_accessToken); 
       this.setState({
         message: "User updated successfully"
       })
     } else {
-      await this.props.createUsers(users);
+      await this.props.createUsers(users,is_accessToken);
       this.setState({
         message: "User created successfully"
       })
@@ -195,7 +198,8 @@ export class UsersList extends React.Component<
     if (e.currentTarget.dataset.id === 0 || e.currentTarget.dataset.id) {
       userID = e.currentTarget.dataset.id;
     }
-    await this.props.deleteUsers(userID)
+    const is_accessToken: any = this.props.user && this.props.user.user.accessToken
+    await this.props.deleteUsers(userID,is_accessToken)
     this.setState({
       message: "User deleted successfully"
     })
