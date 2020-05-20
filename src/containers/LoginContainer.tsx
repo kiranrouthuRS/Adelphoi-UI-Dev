@@ -52,6 +52,7 @@ export class LoginContainer extends React.Component<
     };
     try {
       const r = await this.props.dispatch(user.actions.login(credentials));
+      console.log(r,"login")
       const accessToken = store.getState().user.user.accessToken;
       const pwd_updated = this.props.user && this.props.user.user && this.props.user.user.is_pwd_updated
       if(pwd_updated){
@@ -64,7 +65,7 @@ export class LoginContainer extends React.Component<
      
     } catch (e) {
       console.log(e,"error");
-      const error = e.data.message; 
+      const error = "Invalid Credentials"; 
       this.setState({
         error,
         hasLoginError: true,

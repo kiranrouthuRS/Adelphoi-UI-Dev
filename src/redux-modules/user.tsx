@@ -39,6 +39,7 @@ export const actions = {
       const domain = credential.domain;
       let user: Types.User;
       const response = await login(email,password,domain);
+      console.log(response,"data")
       if (response && response.data) {
         const { token,role_type,user_id,is_pwd_updated } = response.data.response;
         user = {

@@ -205,6 +205,8 @@ export class UsersList extends React.Component<
     const { usersList, availableUsersList, rolesList } = this.props;
     const acctoken = this.props
     const isEdit = this.state.isEdit
+    const arr = Array.isArray(rolesList)
+    console.log(arr,"array")
     return (
       <form name="UsersForm" onSubmit={this.handleSubmit}>
         <h1 css={subHeading}>{isEdit ? "Edit User" : "Add New User"}</h1>
@@ -300,13 +302,15 @@ export class UsersList extends React.Component<
               css={selectField}
               name="role_type"
               id="role_type"
+              value={this.state.role_type || ""}
               onChange={this.handleChangeRole}
             >
               <option value="" >Select</option>
-              {rolesList && rolesList.map((role, key) =>
-                <option value={role.id} selected={this.state.role_type_text === role.name}>{role.name}
+               
+              { Array.isArray(rolesList) ? rolesList  &&  rolesList.map((role, key) =>
+                <option value={role.id} >{role.name}
 
-                </option>)}
+                </option>) : ""} 
             </select>
 
           </div>

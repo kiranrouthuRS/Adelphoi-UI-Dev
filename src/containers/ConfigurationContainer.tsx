@@ -136,31 +136,34 @@ export class ConfigurationContainer extends React.Component<
                 />
                 }
                 {role_type === "Consultant"  || role_type === "Contributor" ? "":
+                domainPath !== "adelphoi" ?"":
                 <Tab
                   label="Referral Sources"
                   component={Link}
                   to={`${match.url}/referral`}
                   value={`${match.url}/referral`} 
                 />}
-                
+                {domainPath !== "adelphoi" ?"":
                 <Tab
                   label="Programs"
                   component={Link}
                   to={`${match.url}/programs`}
                   value={`${match.url}/programs`}
-                />
+                />}
+                {domainPath !== "adelphoi" ?"":
                 <Tab
                   label="Locations"
                   component={Link}
                   to={`${match.url}/locations`}
                   value={`${match.url}/locations`}
-                />
+                />}
+                {domainPath !== "adelphoi" ?"":
                 <Tab
-                  label="Configuration"
+                  label="Configuration"   
                   component={Link}
                   to={`${match.url}/linking`}
                   value={`${match.url}/linking`}
-                />
+                />} 
               </Tabs>
             </Paper>
             <Switch>

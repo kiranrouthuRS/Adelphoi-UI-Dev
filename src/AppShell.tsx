@@ -203,7 +203,7 @@ const AppShell: React.FC = ({children},props ) => {
                          css={menuIcon}
                          fillColor={match ? "white" : "#9d9d9d"}
                        />
-                       Existing Client
+                       Existing Client 
                      </Link>
                    )}
                  />
@@ -213,7 +213,7 @@ const AppShell: React.FC = ({children},props ) => {
                    children={({ match, history }) => (
                      <Link
                        onClick={() => {
-                         history.push(`/${domainPath}/configuration/programs`);
+                         history.push(`/${domainPath}/configuration/programs`); 
                        }}
                        css={menuButton}
                        style={
@@ -231,7 +231,78 @@ const AppShell: React.FC = ({children},props ) => {
                    )}
                  />
                </div>
-      ) : ""}  
+      ) : (
+        <div css={nav}>
+      <Route
+        path={`/${domainPath}/configuration`}
+        // exact={activeOnlyWhenExact}
+        children={({ match, history }) => (
+          <Link
+            onClick={() => {
+              history.push(`/${domainPath}/configuration/users`);
+            }}
+            css={menuButton}
+            style={
+              match
+                ? { backgroundColor: "#8284e5", color: "white" }
+                : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
+            }
+          >
+            {/* <ConfigIcon
+              css={menuIcon}
+              fillColor={match ? "white" : "#9d9d9d"}
+            />
+            Configuration */}
+          </Link>
+        )}
+      />
+      <Route
+        path={`/${domainPath}/configuration`}
+        // exact={activeOnlyWhenExact}
+        children={({ match, history }) => (
+          <Link
+            onClick={() => {
+              history.push(`/${domainPath}/configuration/users`);
+            }}
+            css={menuButton}
+            style={
+              match
+                ? { backgroundColor: "#8284e5", color: "white" }
+                : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
+            }
+          >
+            <ConfigIcon
+              css={menuIcon}
+              fillColor={match ? "white" : "#9d9d9d"}
+            />
+            Configuration
+          </Link>
+        )}
+      />
+      <Route
+        path={`/${domainPath}/configuration`}
+        // exact={activeOnlyWhenExact}
+        children={({ match, history }) => (
+          <Link
+            onClick={() => {
+              history.push(`/${domainPath}/configuration/users`);
+            }}
+            css={menuButton}
+            style={
+              match
+                ? { backgroundColor: "#8284e5", color: "white" }
+                : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
+            }
+          >
+            {/* <ConfigIcon
+              css={menuIcon}
+              fillColor={match ? "white" : "#9d9d9d"}
+            />
+            Configuration */}
+          </Link>
+        )}
+      />
+      </div>)}  
       
       {children}
     </Paper>
