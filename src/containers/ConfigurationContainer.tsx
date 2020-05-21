@@ -169,6 +169,7 @@ export class ConfigurationContainer extends React.Component<
             </Paper>
             <Switch>
               <Route path={`${match.url}/users`}>
+              {role_type === "Consultant"  || role_type === "Contributor" ? "":
                 <UsersList
                   usersList={usersList}
                   availableUsersList={availableUsersList}
@@ -180,43 +181,48 @@ export class ConfigurationContainer extends React.Component<
                   getAvailableUsers={getAvailableUsers}
                   getRoles={getRoles}
                   
-                />
+                />}
               </Route>
               <Route path={`${match.url}/referral`}>
+              {role_type === "Consultant"  || role_type === "Contributor" ? "":
+                domainPath !== "adelphoi" ?"":
                 <ReferralList
                   referralList={referralList}
                   {...this.state}
                   createReferral={createReferral}
                   updateReferral={updateReferral}
                   deleteReferral={deleteReferral}
-                />
+                />}
               </Route>
               <Route path={`${match.url}/programs`}>
+              {domainPath !== "adelphoi" ?"":
                 <ProgramList
                   programList={programList}
                   {...this.state}
                   createProgram={createProgram}
                   updateProgram={updateProgram}
                   deleteProgram={deleteProgram}
-                />
+                />}
               </Route>
               <Route path={`${match.url}/locations`}>
+              {domainPath !== "adelphoi" ?"":
                 <LocationList
                   locationList={locationList}
                   {...this.state}
                   createLocation={createLocation}
                   updateLocation={updateLocation}
                   deleteLocation={deleteLocation}
-                />
+                />}
               </Route>
               <Route path={`${match.url}/linking`}>
+              {domainPath !== "adelphoi" ?"":
                 <ConfigurationForm
                   referral={referralList}
                   locations={locationList}
                   programs={programList}
                   {...this.state}
                   onFormSubmit={this.saveConfiguration}
-                />
+                />}
               </Route>
               <Route path={`${match.url}`}>
                 <div>Programs default page</div>
