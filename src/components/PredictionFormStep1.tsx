@@ -176,7 +176,7 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.episode_number || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
+                    
                     <option value="1">No - Episode 1</option>
                     <option value="2">Yes - Episode 2</option>
                     <option value="3">Yes - Episode 3</option>
@@ -287,7 +287,7 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.primary_language || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
+                    
                     <option value="1">English</option>
                     <option value="2">Not English</option>
                   </select>
@@ -340,7 +340,7 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.CYF_code || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
+                    
                     <option value="0">None</option>
                     <option value="1">CYF</option>
                     <option value="2">Juvenile Justice</option>
@@ -378,7 +378,7 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.number_of_prior_placements || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
+                    
                     <option value="0">None</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -398,7 +398,6 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.number_of_foster_care_placements || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
                     <option value="0">None</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -420,7 +419,6 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.number_of_prior_AWOLS || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
                     <option value="0">None</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -437,7 +435,6 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.number_of_prior_treatment_terminations || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
                     <option value="0">None</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -461,7 +458,7 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.termination_directly_to_AV || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
+                    
                     <option value="0">None</option>
                     <option value="1">Unknown</option>
                     <option value="2">One</option>
@@ -481,7 +478,7 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.length_of_time_since_living_at_home || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
+                    
                     <option value="0">0-6 months</option>
                     <option value="1">6-12 months</option>
                     <option value="2">12+ months</option>
@@ -709,7 +706,7 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.borderline_IQ || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
+                    
                     <option value="0">70+</option>
                     <option value="1">&lt;70</option>
                   </select>
@@ -758,12 +755,12 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.severe_mental_health_symptoms || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
-                    <option value="0">No ER/hospitalizations</option>
+                    
+                    <option value="0">N/A</option>
                     <option value="1">Last 3 months</option>
-                    <option value="2">6 months ago</option>
-                    <option value="3">9 months ago</option>
-                    <option value="4">1 year or more ago</option>
+                    <option value="2">4-8 months ago</option>
+                    <option value="3">9-12 months ago</option>
+                    <option value="4">1 or more years ago</option>
                   </select>
                   <ErrorMessage
                     component="span"
@@ -779,7 +776,7 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     value={values.compliant_with_meds || ""}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
+                    
                     <option value="0">No</option>
                     <option value="1">Yes</option>
                     <option value="9">N/A</option>
