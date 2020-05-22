@@ -95,11 +95,8 @@ export const Logout = async () => {
           }
         })
       );
-      console.log(response,"logout")
       return response;
-      console.log(response,"logout")
     });
-    console.log(response,"logout")
     return response;
     // const response = await  fetch(`${loginApiUrl}/organizations/${domainPath}/logout`, req)
     //   .then(response => response.json())
@@ -129,6 +126,7 @@ export const insertClient = async (client: Types.Client) => {
 
   try {
     const response = await axios.post(`${baseApiUrl}/list_view/`, client);
+    console.log(response,"insert")
     if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
       throw new Error(response.data["ERROR"]);
     }
@@ -221,7 +219,6 @@ export const fetchRoles = async (is_accessToken:any) => {
         'Authorization': `Bearer ${is_accessToken}`
       }
     });
-    console.log(response.data,"data")
     return response.data;
   } catch (error) {
     
@@ -248,8 +245,8 @@ export const fetchAvailableUsers = async (userID: any) => {
 export const createUsers = async (users: Types.Users,is_accessToken:any) => {
   const currentUser = store.getState().user.user.accessToken;
   const data = {
-    first_name: users.first_name !== null ? users.first_name.charAt(0).toUpperCase() + users.first_name.substr(1).toLowerCase() : "",
-    last_name: users.last_name !== null ? users.last_name.charAt(0).toUpperCase() + users.last_name.substr(1).toLowerCase() : "",
+    first_name: users.first_name !== null ? users.first_name.charAt(0).toUpperCase() + users.first_name.substr(1) : "",
+    last_name: users.last_name !== null ? users.last_name.charAt(0).toUpperCase() + users.last_name.substr(1) : "",
     email_id: users.email_id,
     gender: users.gender,
     mobile: users.mobile,
@@ -263,6 +260,7 @@ export const createUsers = async (users: Types.Users,is_accessToken:any) => {
     });
     return response.data;
   } catch (error) {
+    console.log(error,"erroruser")
     console.error("api function createUsers error");
     throwError(error);
   }
@@ -274,8 +272,8 @@ export const updateUsers = async (users: Types.Users,is_accessToken:any) => {
     const response = await axios.put(
       `${loginApiUrl}/organizations/${domainPath}/users/${users.id}/`,
       {
-        first_name: users.first_name !== null ? users.first_name.charAt(0).toUpperCase() + users.first_name.substr(1).toLowerCase() : "",
-        last_name: users.last_name !== null ? users.last_name.charAt(0).toUpperCase() + users.last_name.substr(1).toLowerCase() : "",
+        first_name: users.first_name !== null ? users.first_name.charAt(0).toUpperCase() + users.first_name.substr(1) : "",
+        last_name: users.last_name !== null ? users.last_name.charAt(0).toUpperCase() + users.last_name.substr(1) : "",
         email_id: users.email_id,
         mobile: users.mobile,
         gender: users.gender,
