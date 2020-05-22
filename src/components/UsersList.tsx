@@ -103,12 +103,10 @@ export class UsersList extends React.Component<
     if (isEdit) {
       await this.props.updateUsers(users,is_accessToken); 
       this.setState({
-        message: "User updated successfully"
+        message: "User updated successfully",
+        isEdit : false
       });
-      this.setState({
-      isEdit : false
-
-      })
+     
     } else {
       await this.props.createUsers(users,is_accessToken);
       this.setState({
@@ -170,6 +168,9 @@ export class UsersList extends React.Component<
   }
   handleEdit = async (e: any) => {
     e.preventDefault();
+    this.setState({
+      message: ""
+    })
     let userID: any = this.state.id;
     if (e.currentTarget.dataset.id === 0 || e.currentTarget.dataset.id) {
       userID = e.currentTarget.dataset.id;
@@ -198,6 +199,7 @@ export class UsersList extends React.Component<
     if (e.currentTarget.dataset.id === 0 || e.currentTarget.dataset.id) {
       userID = e.currentTarget.dataset.id;
     }
+
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     await this.props.deleteUsers(userID,is_accessToken)
     this.setState({
