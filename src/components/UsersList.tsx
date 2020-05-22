@@ -87,8 +87,10 @@ export class UsersList extends React.Component<
 
   handleSubmit = async (e: any) => {
     e.preventDefault();
+    const isEdit:any = this.state.isEdit
+    const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     const users: Types.Users = {
-      id: this.props.availableUsersList[0].id,
+      id: isEdit ? this.props.availableUsersList[0].id : "",
       full_name: "",
       name: "",
       first_name: this.state.first_name,
@@ -98,12 +100,14 @@ export class UsersList extends React.Component<
       gender: this.state.gender,
       role_type: this.state.role_type
     };
-    console.log(this.props,"edit")
-    const is_accessToken: any = this.props.user && this.props.user.user.accessToken
-    if (this.state.isEdit) {
+    if (isEdit) {
       await this.props.updateUsers(users,is_accessToken); 
       this.setState({
         message: "User updated successfully"
+      });
+      this.setState({
+      isEdit : false
+
       })
     } else {
       await this.props.createUsers(users,is_accessToken);
@@ -170,11 +174,7 @@ export class UsersList extends React.Component<
     if (e.currentTarget.dataset.id === 0 || e.currentTarget.dataset.id) {
       userID = e.currentTarget.dataset.id;
     }
-    console.log(this.props,"editProps")
-    //const user = (this.props.user && this.props.user) || []
-    // const pwd_updated: any = user.accessToken; 
-    //console.log(user,"user") 
-       const response = await this.props.getAvailableUsers(userID) 
+     const response = await this.props.getAvailableUsers(userID) 
     const singleuser = (this.props.availableUsersList && this.props.availableUsersList) || [];
     const singlerole = (this.props.rolesList && this.props.rolesList) || [];
     const roleID: any = singlerole.filter(id => id.name == singleuser[0].role_type)
@@ -210,7 +210,6 @@ export class UsersList extends React.Component<
     const acctoken = this.props
     const isEdit = this.state.isEdit
     const arr = Array.isArray(rolesList)
-    console.log(arr,"array")
     return (
       <form name="UsersForm" onSubmit={this.handleSubmit}>
         <h1 css={subHeading}>{isEdit ? "Edit User" : "Add New User"}</h1>
