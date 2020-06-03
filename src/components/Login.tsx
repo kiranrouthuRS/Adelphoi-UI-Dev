@@ -238,11 +238,12 @@ const Login: React.FC<LoginFormProps> = props => {
                   
                   return errors;
                 }}
-                onSubmit={async (values, helpers) => {
+                onSubmit={async (values,{resetForm}) => {
                   console.log(values,"propsvalues")  
                   if(values.forgotpassword){
                    const response = await axios.get(`${loginApiUrl}/organizations/${domainPath}/forgot-password?email_id=${values.email_id}`);
                    setMessage("Reset password sent successfully to provided Email ID")
+                   resetForm();
                       return response;
                      
                   }
@@ -325,7 +326,7 @@ const Login: React.FC<LoginFormProps> = props => {
         
         {message && message ? 
         <React.Fragment>
-          <div style={{color:"red"}}>{message}</div>
+          <div style={{color:"#5cb85c"}}>{message}</div>
         <div css={fieldRow} style={{ justifyContent: "center" }}>
          <Button
           type="submit"
@@ -335,6 +336,7 @@ const Login: React.FC<LoginFormProps> = props => {
           className={classes.submit}
           onClick={() => {
             setFieldValue('forgotpassword', false, false)
+            setMessage("")
             closeModal()
         }}
           
