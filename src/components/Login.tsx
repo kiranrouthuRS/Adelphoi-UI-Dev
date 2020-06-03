@@ -1,13 +1,14 @@
 /** @jsx jsx */
 import React from "react";
+import axios from "axios";
+import Modal from "react-modal";
 import { jsx, css, Global } from "@emotion/core";
 import { Formik, FormikErrors } from "formik";
 import Container from "@material-ui/core/Container";
-import Avatar from "@material-ui/core/Avatar";
-import Box from "@material-ui/core/Box";
+import * as Types from "../api/definitions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
+import Grid from "@material-ui/core/Grid"; 
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,7 +18,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import { domainPath } from "../App"
-
 import {
   wrap,
   subHeading,
@@ -30,7 +30,7 @@ import {
   selectField,
   datePicker
 } from "./styles";
-
+export const loginApiUrl = "http://3.7.135.210:8005";
 const App = css`
   margin: 80px auto;
   width: 100%;
@@ -89,7 +89,7 @@ const useStyles = makeStyles(theme => ({
     width: "45%",
     height: "auto",
     // marginLeft: "100px",
-    margin: theme.spacing(2, 0, 0),
+    margin: theme.spacing(2, 2, 2),
     
   },
   logo: {
@@ -129,9 +129,22 @@ const useStyles = makeStyles(theme => ({
   
 }));
 
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -110%)'
+  }
+};
+
 interface LoginFormValues {
   password: string;
   email: string;
+  email_id: string;
+  forgotpassword: boolean;
 }
 
 interface LoginFormProps {
@@ -145,7 +158,18 @@ interface LoginFormProps {
 
 const Login: React.FC<LoginFormProps> = props => {
   const classes = useStyles();
-  const initialValues: LoginFormValues = { email: "", password: "" };
+  const [modalIsOpen,setIsOpen] = React.useState(false);
+  const [message, setMessage] = React.useState( '' );
+  function openModal() {
+    setIsOpen(true);
+  }
+ 
+  function closeModal(){
+    setIsOpen(false);
+    
+  }
+
+  const initialValues: LoginFormValues = { email: "", password: "", email_id: "", forgotpassword: false };    
   const { error } = props;
   const domain = domainPath.charAt(0).toUpperCase() + domainPath.substr(1).toLowerCase();
   return (
@@ -163,19 +187,8 @@ const Login: React.FC<LoginFormProps> = props => {
             <a className={classes.brand} href="https://firstmatchcom.wpcomstaging.com/"> 
               <img src="/img/logo_stroke.png" alt="" className={classes.logo} />
               </a>
-              {/* <Typography
-                variant="h6"
-                color="inherit"
-                noWrap
-                className={classes.brandTitle}
-              >
-               
-              </Typography> */}
-            {/* </RouterLink> */}
-          </div>
-          
-          
-        </Toolbar>
+              </div>       
+          </Toolbar>
       </AppBar>
       <Container component="main" maxWidth="sm" css={App}>
       <div className={classes.paper}>
@@ -200,21 +213,48 @@ const Login: React.FC<LoginFormProps> = props => {
                 initialValues={initialValues}
                 validate={values => {
                   const errors: FormikErrors<LoginFormValues> = {};
-                  if (!values.email) {
-                    errors.email = "Required";
+                  console.log(values,"props")  
+                  if(values.forgotpassword){
+                    if (!values.email_id) {
+                      errors.email_id = "Required";
+                    } else if (
+                      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email_id)
+                    ) {
+                      errors.email_id = "Invalid email address";
+                    }
+                  } else {
+                    if (!values.email) {
+                      errors.email = "Required";
+                    } else if (
+                      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+                    ) {
+                      errors.email = "Invalid email address";
+                    }
+                    
+                    if (!values.password) {
+                      errors.password = "Required";
+                    }
                   }
-                  if (!values.password) {
-                    errors.password = "Required";
-                  }
+                  
                   return errors;
                 }}
-                onSubmit={values => {
-                  props.onLogin(values.email,values.password);
+                onSubmit={async (values, helpers) => {
+                  console.log(values,"propsvalues")  
+                  if(values.forgotpassword){
+                   const response = await axios.get(`${loginApiUrl}/organizations/${domainPath}/forgot-password?email_id=${values.email_id}`);
+                   setMessage("Reset password sent successfully to provided Email ID")
+                      return response;
+                     
+                  }
+                  else{
+                    await props.onLogin(values.email,values.password);
+                  }
                   
                 }}
               >
                 {({
                   values,
+                  setFieldValue,
                   handleSubmit,
                   handleChange,
                   handleBlur,
@@ -224,6 +264,7 @@ const Login: React.FC<LoginFormProps> = props => {
                   
           <form className={classes.form} noValidate
           onSubmit={handleSubmit}>
+            
              <TextField
             variant="outlined"
             margin="normal"
@@ -252,11 +293,16 @@ const Login: React.FC<LoginFormProps> = props => {
             autoComplete="current-password"
           />
           {touched.password && errors.password ? <div style={{color:"red"}}>{errors.password}</div> : null}
-          {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
+          
+          <Grid container>
+            <Grid item >
+              <Link href="#" variant="body2" onClick={openModal}>
+                Forgot password
+              </Link>
+            </Grid>
+           </Grid>
           <div css={fieldRow} style={{ justifyContent: "center" }}>
+            
           <Button
             type="submit"
             fullWidth
@@ -267,6 +313,95 @@ const Login: React.FC<LoginFormProps> = props => {
             Login
           </Button>
           </div>
+          
+          <Modal
+          isOpen={modalIsOpen}
+          ariaHideApp={false}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+        <form>
+        
+        {message && message ? 
+        <React.Fragment>
+          <div style={{color:"red"}}>{message}</div>
+        <div css={fieldRow} style={{ justifyContent: "center" }}>
+         <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          onClick={() => {
+            setFieldValue('forgotpassword', false, false)
+            closeModal()
+        }}
+          
+        >
+          Ok
+        </Button>
+        </div>
+        </React.Fragment>
+         : 
+         <React.Fragment>
+           <Typography component="div" variant="h4"
+          className={classes.brandTitle}>
+              Forgot Password
+        </Typography >
+            <p className="text-center">Please enter registered Email ID below to get reset password.</p>
+        
+        <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email_id"
+            label="Email ID"
+            name="email_id"
+            value={values.email_id || ""}
+            onChange={handleChange}
+            autoComplete="email"
+            autoFocus
+          /> 
+          {touched.email_id && errors.email_id ? <div style={{color:"red"}}>{errors.email_id}</div> : null}
+          <div css={fieldRow} style={{ justifyContent: "center" }}>
+            
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={() => {
+                setFieldValue('forgotpassword', true, true)
+                handleSubmit()
+            }}
+            >
+              Submit
+            </Button>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={() => {
+                setFieldValue('forgotpassword', false, false)
+                closeModal()
+            }}
+              
+            >
+              Close
+            </Button>
+            </div>
+         </React.Fragment>
+        }
+        
+        
+            
+          </form>
+        </Modal>
         </form>
                
                   
