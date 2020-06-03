@@ -57,7 +57,7 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
 
   const getInitialValues = () => {
     const { client } = props;
-    let program = null;
+    let program: any = null;
     
     if (client.client_selected_program) {
       program = {
