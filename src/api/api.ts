@@ -5,11 +5,11 @@ import { store } from "../index";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
 import { AppState } from "../redux-modules/root";
-export const baseApiUrl = "http://3.7.135.210:8000/first_match";
+export const baseApiUrl = `http://3.7.135.210:8005/organizations`;
 export const loginApiUrl = "http://3.7.135.210:8005";
 
 interface PredictionResponse {
-  referred_program: string;
+  referred_program: string; 
   model_program: string;
 }
 
@@ -79,7 +79,7 @@ export const Logout = async () => {
       headers: myHeaders,
       body: formdata
     }
-    const response = await axios.post(`${baseApiUrl}/organizations/${domainPath}/logout`, req)
+    const response = await axios.post(`${baseApiUrl}/${domainPath}/logout`, req)
     .then(response => {
       store.dispatch(
         user.actions.update({
@@ -98,12 +98,6 @@ export const Logout = async () => {
       return response;
     });
     return response;
-    // const response = await  fetch(`${loginApiUrl}/organizations/${domainPath}/logout`, req)
-    //   .then(response => response.json())
-    //   .then(result => console.log(result,"result"))
-    //   .catch(error => console.log('error', error)); 
-        
-
     
   } catch (error) {
     console.error("api function fetchLocationsList error");
@@ -114,7 +108,7 @@ export const updateConfiguration = async (
   configuration: Types.Configuration
 ) => {
   try {
-    const response = await axios.post(`${baseApiUrl}/dataSave`, configuration);
+    const response = await axios.post(`${baseApiUrl}/${domainPath}/dataSave`, configuration);
     return response.data.data;
   } catch (error) {
     console.error("api function updateConfiguration error");
@@ -125,8 +119,7 @@ export const updateConfiguration = async (
 export const insertClient = async (client: Types.Client) => {
 
   try {
-    const response = await axios.post(`${baseApiUrl}/list_view/`, client);
-    console.log(response,"insert")
+    const response = await axios.post(`${baseApiUrl}/${domainPath}/list_view/`, client);
     if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
       throw new Error(response.data["ERROR"]);
     }
@@ -156,7 +149,7 @@ export const insertClient = async (client: Types.Client) => {
 export const updateClient = async (client: Types.Client) => {
   try {
 
-    const response = await axios.put(`${baseApiUrl}/latest_update/${client.client_code}/`, client);
+    const response = await axios.put(`${baseApiUrl}/${domainPath}/latest_update/${client.client_code}/`, client);
     if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
       throw new Error(response.data["ERROR"]);
     }
@@ -189,7 +182,7 @@ export const insertPrediction = async (client: Types.Client) => {
   }
   try {
     const response = await axios.put(
-      `${baseApiUrl}/refer/${client.client_code}/`,
+      `${baseApiUrl}/${domainPath}/refer/${client.client_code}/`,
       { referred_program: client.program_type }
     );
     return response;
@@ -306,9 +299,162 @@ export const deleteUsers = async (userID: any,is_accessToken:any) => {
   }
 };
 
+export const fetchBillingStatus = async () => {
+  const { dispatch } = store
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+       return await axios.get(`${baseApiUrl}/${domainPath}/billing-status/`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+    
+    throwError(error)
+
+  }
+};
+
+export const fetchAllRecords = async (sDate,EDate) => {
+  const { dispatch } = store
+  const currentUser = store.getState().user.user.accessToken;
+  
+  try {
+       return await axios.get(`${baseApiUrl}/${domainPath}/orders/?start_date=${sDate}&end_date=${EDate}`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+    
+    throwError(error)
+
+  }
+};
+
+export const getRecord = async (id) => {
+  const { dispatch } = store
+  const currentUser = store.getState().user.user.accessToken;
+  
+  try {
+       return await axios.get(`${baseApiUrl}/${domainPath}/orders/${id}/`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+    
+    throwError(error)
+
+  }
+};
+
+export const downloadRecords = async () => {
+  const currentUser = store.getState().user.user.accessToken;
+  
+  try {
+       return await axios.get(`${baseApiUrl}/${domainPath}/download/`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        const path = response.data.response
+        window.open(`${loginApiUrl}/${path}`);
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+    
+    throwError(error)
+
+  }
+};
+
+export const getOrderDownload = async (sDate, eDate) => {
+  const currentUser = store.getState().user.user.accessToken;
+  
+   try {
+     return await axios.get(`${baseApiUrl}/${domainPath}/download/?start_date=${sDate}&end_date=${eDate}`, {
+       headers: {
+         'Authorization': `Bearer ${currentUser}`
+       }
+     })
+       .then(response => {
+        const path = response.data.response
+        window.open(`${loginApiUrl}/${path}`);
+         const records = response.data
+         return response.data;
+       })
+     }
+ 
+   catch (error) {
+     console.log('error')
+ 
+     throwError(error)
+ 
+   }
+ };
+
+ export const downloadReportCSV = async (id) => {
+  const currentUser = store.getState().user.user.accessToken;
+  
+   try {
+     return await axios.get(`${baseApiUrl}/${domainPath}/download/${id}/`, {
+       headers: {
+         'Authorization': `Bearer ${currentUser}`
+       }
+     })
+       .then(response => {
+         const bill = response.data
+         const path = response.data.response
+        window.open(`${loginApiUrl}/${path}`);
+         return response.data;
+       })
+ 
+   }
+ 
+   catch (error) {
+     console.log('error')
+ 
+     throwError(error)
+ 
+   }
+ };
+
 export const fetchReferral = async () => {
   try {
-    const response = await axios.get(`${baseApiUrl}/referral_list`);
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/referral_list`);
+    console.log(response,"res")
     const data = (response.data as unknown) as Types.Referral[];
 
     return data;
@@ -320,7 +466,7 @@ export const fetchReferral = async () => {
 
 export const fetchAvailableReferral = async () => {
   try {
-    const response = await axios.get(`${baseApiUrl}/referral_list`);
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/referral_list`);
     const data = (response.data as unknown) as Types.Referral[];
 
     return data;
@@ -332,7 +478,7 @@ export const fetchAvailableReferral = async () => {
 
 export const createReferral = async (referral: Types.Referral) => {
   try {
-    const response = await axios.post(`${baseApiUrl}/referral_save`, {
+    const response = await axios.post(`${baseApiUrl}/${domainPath}/referral_save`, {
       referral_name: referral.referral_name
     });
     return response.data;
@@ -346,7 +492,7 @@ export const updateReferral = async (referral: Types.Referral) => {
   try {
 
     const response = await axios.put(
-      `${baseApiUrl}/referral_modify/${referral.referral_code}/`,
+      `${baseApiUrl}/${domainPath}/referral_modify/${referral.referral_code}/`,
       {
         referral_name: referral.referral_name
       }
@@ -361,7 +507,7 @@ export const updateReferral = async (referral: Types.Referral) => {
 export const deleteReferral = async (referral: Types.Referral) => {
   try {
     const response = await axios.delete(
-      `${baseApiUrl}/referral_modify/${referral.referral_code}/`,
+      `${baseApiUrl}/${domainPath}/referral_modify/${referral.referral_code}/`,
       {
         //referral_name: referral.referral_name
       }
@@ -375,7 +521,7 @@ export const deleteReferral = async (referral: Types.Referral) => {
 
 export const fetchPrograms = async () => {
   try {
-    const response = await axios.get(`${baseApiUrl}/program_list`);
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/program_list`);
     const data = (response.data as unknown) as Types.Program[];
 
     return data;
@@ -387,7 +533,7 @@ export const fetchPrograms = async () => {
 
 export const fetchAvailablePrograms = async () => {
   try {
-    const response = await axios.get(`${baseApiUrl}/available_programs`);
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/available_programs`);
     const data = (response.data as unknown) as Types.Program[];
 
     return data;
@@ -399,7 +545,7 @@ export const fetchAvailablePrograms = async () => {
 
 export const createProgram = async (program: Types.Program) => {
   try {
-    const response = await axios.post(`${baseApiUrl}/program_save`, {
+    const response = await axios.post(`${baseApiUrl}/${domainPath}/program_save`, {
       program_name: program.program_name
     });
     return response.data;
@@ -412,7 +558,7 @@ export const createProgram = async (program: Types.Program) => {
 export const updateProgram = async (program: Types.Program) => {
   try {
     const response = await axios.put(
-      `${baseApiUrl}/programs/${program.program}/`,
+      `${baseApiUrl}/${domainPath}/programs/${program.program}/`,
       {
         program_name: program.program_name
       }
@@ -427,7 +573,7 @@ export const updateProgram = async (program: Types.Program) => {
 export const deleteProgram = async (program: Types.Program) => {
   try {
     const response = await axios.delete(
-      `${baseApiUrl}/programs/${program.program}/`,
+      `${baseApiUrl}/${domainPath}/programs/${program.program}/`,
       {
         //program_name: program.program_name
       }
@@ -441,7 +587,7 @@ export const deleteProgram = async (program: Types.Program) => {
 
 export const fetchLocationsList = async () => {
   try {
-    const response = await axios.get(`${baseApiUrl}/location_list`);
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/location_list`);
     const data = (response.data as unknown) as Types.Location[];
 
     return data;
@@ -453,7 +599,7 @@ export const fetchLocationsList = async () => {
 
 export const createLocation = async (location: Types.Location) => {
   try {
-    const response = await axios.post(`${baseApiUrl}/location_save`, {
+    const response = await axios.post(`${baseApiUrl}/${domainPath}/location_save`, {
       location_name: location.location_names
     });
     return response.data;
@@ -466,7 +612,7 @@ export const createLocation = async (location: Types.Location) => {
 export const updateLocation = async (location: Types.Location) => {
   try {
     const response = await axios.put(
-      `${baseApiUrl}/locations/${location.location}/`,
+      `${baseApiUrl}/${domainPath}/locations/${location.location}/`,
       {
         location_names: location.location_names
       }
@@ -481,7 +627,7 @@ export const updateLocation = async (location: Types.Location) => {
 export const deleteLocation = async (location: Types.Location) => {
   try {
     const response = await axios.delete(
-      `${baseApiUrl}/locations/${location.location}/`,
+      `${baseApiUrl}/${domainPath}/locations/${location.location}/`,
       {
         //location_names: location.location_names
       }
@@ -499,7 +645,7 @@ export const fetchLocations = async (
 ) => {
   try {
     const response = await axios.get(
-      `${baseApiUrl}/location/${client_code}?referred_program=${referred_program}`
+      `${baseApiUrl}/${domainPath}/location/${client_code}?referred_program=${referred_program}`
     );
     const data = (response.data as unknown) as LocationsResponse;
     return data;
@@ -516,7 +662,7 @@ export const fetchPcr = async (
 ) => {
   try {
     const response = await axios.put(
-      `${baseApiUrl}/program_pcr/${client_code}/`,
+      `${baseApiUrl}/${domainPath}/program_pcr/${client_code}/`,
       { client_selected_program: referred_program }
     );
     const data = (response.data as unknown) as any;
@@ -534,7 +680,7 @@ export const saveLocationAndProgram = async (
 ) => {
   try {
     const response = await axios.put(
-      `${baseApiUrl}/update_list/${client_code}/`,
+      `${baseApiUrl}/${domainPath}/update_list/${client_code}/`,
       {
         client_selected_program: selected_program,
         client_selected_locations: selected_location
@@ -555,7 +701,7 @@ export const updateProgramCompletion = async (
 ) => {
   try {
     const response = await axios.put(
-      `${baseApiUrl}/program_complete/${client_code}/`,
+      `${baseApiUrl}/${domainPath}/program_complete/${client_code}/`,
       {
         Program_Completion,
         Returned_to_Care,
@@ -575,7 +721,7 @@ export const searchClient = async (
 ) => {
   try {
     const response = await axios.get(
-      `${baseApiUrl}/search/?name=${client_name}&client_code=${client_code}`
+      `${baseApiUrl}/${domainPath}/search/?name=${client_name}&client_code=${client_code}`
     );
     return response.data;
   } catch (error) {
@@ -591,7 +737,7 @@ export const searchClient = async (
 
 export const fetchProgramsForClient = async (client_code: string) => {
   try {
-    const response = await axios.get(`${baseApiUrl}/program/${client_code}/`);
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/program/${client_code}/`);
     const data = (response.data as unknown) as any;
     return data;
   } catch (error) {
