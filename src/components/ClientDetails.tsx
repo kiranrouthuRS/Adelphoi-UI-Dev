@@ -154,7 +154,6 @@ const ClientDetails: React.FC<ClientDetailsProps> = props => {
     : [];
   const getInitialValues = (): FormValues => {
     const { client,is_role_type } = props; 
-    console.log(props,"client")
     let program: any = null;
     let location: any = null;
     let referral: any = null;

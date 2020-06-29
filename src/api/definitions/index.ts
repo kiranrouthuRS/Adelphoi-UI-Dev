@@ -18,6 +18,19 @@ export interface Users {
   gender: string;
   role_type: string;
 }
+
+export interface Billing {
+  id: string; 
+  customer: string;
+  startDate: string;
+  endDate: string;
+  sDate: string;
+  eDate: string;
+  
+}
+
+
+
 export interface Credential {
   email: string;
   password: string;
@@ -268,6 +281,15 @@ export const emptyConfiguration: Configuration = {
   facility_type: null,
   program_model_suggested: "",
   program_type: ""
+};
+
+export const emptyBilling: Billing = { 
+  id:'',
+  customer: '',
+  startDate: '',
+  endDate:'',
+  sDate: '',
+  eDate: ''
 };
 
 export const primary_language: string[] = ["", "English", "Other"];

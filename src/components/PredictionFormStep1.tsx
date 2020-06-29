@@ -110,14 +110,13 @@ const DobPicker: React.FC<FormikProps<Types.Client> & FieldProps> = props => {
         format="MM/dd/yyyy"
         {...other}
       />
-    </MuiPickersUtilsProvider>
+    </MuiPickersUtilsProvider> 
   );
 };
 
 const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
   const { Referral, isEdit  } = props;
-  
-    const renderErrorNotification = () => {
+  const renderErrorNotification = () => {
     const { errors } = props;
     
     if (!errors) {

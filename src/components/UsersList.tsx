@@ -362,7 +362,7 @@ export class UsersList extends React.Component<
             {usersList.length > 0 ? (
               usersList.map((p, id) => (
                 <TableRow key={id} css={tableRow}>
-                  <TableCell>{p.full_name}</TableCell>
+                  <TableCell>{p.id}</TableCell> 
                   <TableCell>{p.email_id}</TableCell>
                   <TableCell>{p.role_type}</TableCell>
                   <TableCell>

@@ -22,15 +22,15 @@ import Logout from "./components/Logout";
 import PrivateRoute from './PrivateRoute';
 import Welcomepage from './components/welcomepage'
 import ChangePasswordContainer from './containers/ChangePasswordContainer'
+import BillingDetailsContainer from './containers/BillingDetailsContainer'
 export const { store } = configureStore(createHistory());
 const url = typeof window !== 'undefined' ? window.location.pathname : '';
   let str1 = url.split('/');
   let dom = str1[1];
-  export const domainPath = dom;
+  export const domainPath = dom; 
   
 const App: React.FC = (props) => {
   
-  console.log(props,"appStateapp")
   return (
     <React.Fragment>
       
@@ -77,7 +77,10 @@ const App: React.FC = (props) => {
                   path={`/${dom}/changepassword`}
                   component={ChangePasswordContainer}
                 />
-                
+                <PrivateRoute
+                  path={`/${dom}/billing`}
+                  component={BillingDetailsContainer} 
+                />
               </Switch>
               
               

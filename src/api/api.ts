@@ -5,11 +5,11 @@ import { store } from "../index";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
 import { AppState } from "../redux-modules/root";
-export const baseApiUrl = "http://3.7.135.210:8000/first_match";
+export const baseApiUrl = "http://3.7.135.210:8005/organizations";
 export const loginApiUrl = "http://3.7.135.210:8005";
 
 interface PredictionResponse {
-  referred_program: string;
+  referred_program: string; 
   model_program: string;
 }
 
@@ -98,12 +98,6 @@ export const Logout = async () => {
       return response;
     });
     return response;
-    // const response = await  fetch(`${loginApiUrl}/organizations/${domainPath}/logout`, req)
-    //   .then(response => response.json())
-    //   .then(result => console.log(result,"result"))
-    //   .catch(error => console.log('error', error)); 
-        
-
     
   } catch (error) {
     console.error("api function fetchLocationsList error");
@@ -126,7 +120,6 @@ export const insertClient = async (client: Types.Client) => {
 
   try {
     const response = await axios.post(`${baseApiUrl}/list_view/`, client);
-    console.log(response,"insert")
     if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
       throw new Error(response.data["ERROR"]);
     }
@@ -305,6 +298,158 @@ export const deleteUsers = async (userID: any,is_accessToken:any) => {
     throwError(error);
   }
 };
+
+export const fetchBillingStatus = async () => {
+  const { dispatch } = store
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+       return await axios.get(`${baseApiUrl}/${domainPath}/billing-status/`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+    
+    throwError(error)
+
+  }
+};
+
+export const fetchAllRecords = async (sDate,EDate) => {
+  const { dispatch } = store
+  const currentUser = store.getState().user.user.accessToken;
+  
+  try {
+       return await axios.get(`${baseApiUrl}/${domainPath}/orders/?start_date=${sDate}&end_date=${EDate}`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+    
+    throwError(error)
+
+  }
+};
+
+export const getRecord = async (id) => {
+  const { dispatch } = store
+  const currentUser = store.getState().user.user.accessToken;
+  
+  try {
+       return await axios.get(`${baseApiUrl}/${domainPath}/orders/${id}/`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+    
+    throwError(error)
+
+  }
+};
+
+export const downloadRecords = async () => {
+  const currentUser = store.getState().user.user.accessToken;
+  
+  try {
+       return await axios.get(`${baseApiUrl}/${domainPath}/download/`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        const path = response.data.response
+        window.open(`${loginApiUrl}/${path}`);
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+    
+    throwError(error)
+
+  }
+};
+
+export const getOrderDownload = async (sDate, eDate) => {
+  const currentUser = store.getState().user.user.accessToken;
+  
+   try {
+     return await axios.get(`${baseApiUrl}/${domainPath}/download/?start_date=${sDate}&end_date=${eDate}`, {
+       headers: {
+         'Authorization': `Bearer ${currentUser}`
+       }
+     })
+       .then(response => {
+        const path = response.data.response
+        window.open(`${loginApiUrl}/${path}`);
+         const records = response.data
+         return response.data;
+       })
+     }
+ 
+   catch (error) {
+     console.log('error')
+ 
+     throwError(error)
+ 
+   }
+ };
+
+ export const downloadReportCSV = async (id) => {
+  const currentUser = store.getState().user.user.accessToken;
+  
+   try {
+     return await axios.get(`${baseApiUrl}/${domainPath}/download/${id}/`, {
+       headers: {
+         'Authorization': `Bearer ${currentUser}`
+       }
+     })
+       .then(response => {
+         const bill = response.data
+         const path = response.data.response
+        window.open(`${loginApiUrl}/${path}`);
+         return response.data;
+       })
+ 
+   }
+ 
+   catch (error) {
+     console.log('error')
+ 
+     throwError(error)
+ 
+   }
+ };
 
 export const fetchReferral = async () => {
   try {

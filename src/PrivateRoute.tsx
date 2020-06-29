@@ -14,10 +14,7 @@ export interface PrivateRouteProps extends RouteProps {
 
 const PRoute: React.FC<PrivateRouteProps> = (props) => {
   const { appState, ...routeProps } = props;
-  console.log(routeProps.location,"loc")
   const { user } = appState;
-  console.log(user,"user")
-  
   if (!user ||user.user.accessToken === "") {
     return (
       <React.Fragment>
