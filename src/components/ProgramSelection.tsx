@@ -116,7 +116,7 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
                     rel="noopener noreferrer"
                     target="_blank"
                     onClick={() => history.push(`/${domainPath}/new-client`)}
-                    href={`${baseApiUrl}/index/${clientCode}`}
+                    href={`${baseApiUrl}/${domainPath}/index/${clientCode}`}
                   >
                     <PictureAsPdfIcon /> Download Report 
                   </a>

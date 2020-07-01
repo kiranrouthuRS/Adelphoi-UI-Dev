@@ -222,7 +222,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = props => {
             rel="noopener noreferrer"
             target="_blank"
             css={txtDetail}
-            href={`${baseApiUrl}/index/${client.client_code}`}
+            href={`${baseApiUrl}/${domainPath}/index/${client.client_code}`}
           >
             <PictureAsPdfIcon /> Download Report
           </a>
