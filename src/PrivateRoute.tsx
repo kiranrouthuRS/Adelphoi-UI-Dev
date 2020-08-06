@@ -47,7 +47,7 @@ const mapStateToProps = (state: AppState) => {
   }
 };
 
-//const mapDispatchToProps = { logout: user.actions.logout };
+const mapDispatchToProps = { logout: user.actions.logout };
 
 export default connect(
   mapStateToProps,
