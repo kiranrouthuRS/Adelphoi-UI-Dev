@@ -140,10 +140,10 @@ const billing = css`
 `;
 
 const AppShell: React.FC = ({children},props ) => {
-//const is_configured = children&&children[1].props.user.user.is_fully_configured  
-// const logopath = children&&children[1].props.user.user.logo_path; 
-const is_configured = store.getState().user.user.is_fully_configured  
-const logopath = store.getState().user.user.logo_path;  
+const is_configured = children&&children[1].props.user.user.is_fully_configured  
+const logopath = children&&children[1].props.user.user.logo_path; 
+// const is_configured = store.getState().user.user.is_fully_configured  
+// const logopath = store.getState().user.user.logo_path;  
   
  return ( 
     <Paper css={App} elevation={3}>
@@ -179,8 +179,7 @@ const logopath = store.getState().user.user.logo_path;
             </a>
       </div>
       
-      { is_configured == true ? (
-                 <div css={nav}>
+           <div css={nav}>
                  <Route
                    path={domainPath === "adelphoi"?`/${domainPath}/new-client`:`/${domainPath}/new-client1`}
                    // exact={activeOnlyWhenExact}
@@ -196,11 +195,12 @@ const logopath = store.getState().user.user.logo_path;
                            : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
                        }
                      >
-                       <NewClientIcon
+                      {is_configured === true ? <NewClientIcon
                          css={menuIcon}
                          fillColor={match ? "white" : "#9d9d9d"}
                        />
-                       New Client
+                       :""}
+                      {is_configured === true ? "New Client" :""}
                      </Link>
                    )}
                  />
@@ -219,11 +219,11 @@ const logopath = store.getState().user.user.logo_path;
                            : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
                        }
                      >
-                       <ExistingClientIcon
+                      {is_configured === true ? <ExistingClientIcon
                          css={menuIcon}
                          fillColor={match ? "white" : "#9d9d9d"}
-                       />
-                       Existing Client 
+                       />:""}
+                     {is_configured === true ?  "Existing Client" :""} 
                      </Link>
                    )}
                  />
@@ -251,9 +251,9 @@ const logopath = store.getState().user.user.logo_path;
                    )}
                  />
                </div>
-      ) : (
+     
         <div css={nav}>
-      <Route
+      {/* <Route
         path={`/${domainPath}/configuration`}
         // exact={activeOnlyWhenExact}
         children={({ match, history }) => (
@@ -268,61 +268,12 @@ const logopath = store.getState().user.user.logo_path;
                 : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
             }
           >
-            {/* <ConfigIcon
-              css={menuIcon}
-              fillColor={match ? "white" : "#9d9d9d"}
-            />
-            Configuration */}
+           
           </Link>
         )}
-      />
-      <Route
-        path={`/${domainPath}/configuration`}
-        // exact={activeOnlyWhenExact}
-        children={({ match, history }) => (
-          <Link
-            onClick={() => {
-              history.push(`/${domainPath}/configuration/users`);
-            }}
-            css={menuButton}
-            style={
-              match
-                ? { backgroundColor: "#8284e5", color: "white" }
-                : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
-            }
-          >
-            <ConfigIcon
-              css={menuIcon}
-              fillColor={match ? "white" : "#9d9d9d"}
-            />
-            Configuration
-          </Link>
-        )}
-      />
-      <Route
-        path={`/${domainPath}/configuration`}
-        // exact={activeOnlyWhenExact}
-        children={({ match, history }) => (
-          <Link
-            onClick={() => {
-              history.push(`/${domainPath}/configuration/users`);
-            }}
-            css={menuButton}
-            style={
-              match
-                ? { backgroundColor: "#8284e5", color: "white" }
-                : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
-            }
-          >
-            {/* <ConfigIcon
-              css={menuIcon}
-              fillColor={match ? "white" : "#9d9d9d"}
-            />
-            Configuration */}
-          </Link>
-        )}
-      />
-      </div>)}  
+      /> */}
+      
+      </div>
       
       {children}
       
