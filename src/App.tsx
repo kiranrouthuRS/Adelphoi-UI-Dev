@@ -15,6 +15,7 @@ import {
 import AppShell from "./AppShell";
 
 import NewClientContainer from "./containers/NewClientContainer";
+import DynamicNewClientContainer from "./containers/DynamicNewClientContainer";
 import ExistingClientContainer from "./containers/ExistingClientContainer";
 import ConfigurationContainer from "./containers/ConfigurationContainer";
 import LoginContainer from "./containers/LoginContainer";
@@ -30,7 +31,7 @@ const url = typeof window !== 'undefined' ? window.location.pathname : '';
   export const domainPath = dom; 
   
 const App: React.FC = (props) => {
-  
+  const is_configured = store.getState().user.user.is_fully_configured
   return (
     <React.Fragment>
       
@@ -45,7 +46,7 @@ const App: React.FC = (props) => {
           <Switch>
          
                 <Route exact path={`/${dom}`}>
-                {dom == "adelphoi" ? (
+                {is_configured === true ? (
                     <Redirect to={`/${dom}/new-client`} /> 
                   ):(
                     <Redirect to={`/${dom}/welcomepage`} /> 
@@ -61,6 +62,7 @@ const App: React.FC = (props) => {
                 <Switch>
                 <PrivateRoute path={`/${dom}/welcomepage`} component={Welcomepage} />
                 <PrivateRoute path={`/${dom}/new-client`} component={NewClientContainer} />
+                <PrivateRoute exact path={`/${dom}/new-client1`} component={DynamicNewClientContainer} />
                 <PrivateRoute
                   path={`/${dom}/existing-client`}
                   component={ExistingClientContainer}

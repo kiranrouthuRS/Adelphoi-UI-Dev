@@ -44,7 +44,6 @@ export const actions = {
     return async (dispatch, getState) => {
      
       const response = await fetchRoles(is_accessToken);
-      console.log(response,"fetchroles")
       if (!response) {
         throw Error("something went wrong getting list of roles");
       }

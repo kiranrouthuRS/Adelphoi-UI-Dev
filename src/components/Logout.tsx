@@ -27,27 +27,7 @@ const Logout: React.FC<LogoutProps> = props => {
     fetchDataAsync()
     history.push(`/${domainPath}/login`);
    }, []);
-//     useEffect( () => {
-//       logout();
-//     const myHeaders = new Headers();
-// myHeaders.append("Authorization", `Bearer ${currentUser}`);
-
-// const formdata = new FormData();
-
-// const req = {
-//   method: "post",
-//   headers: myHeaders,
-//   body: formdata
-// }
-// fetch(`${loginApiUrl}/organizations/${domainPath}/logout`, req)
-//   .then(response => response.text())
-//   .then(result => console.log(result))
-//   .catch(error => console.log('error', error));
-  
-//    history.push(`/${domainPath}/login`);
-//    });
-   
-  return (
+return (
     <div>
       
     </div>

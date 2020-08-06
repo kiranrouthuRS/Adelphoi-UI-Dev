@@ -10,11 +10,12 @@ import { login,Logout } from "../api/api";
 
 export const emptyUser: Types.User = {
   email: "",
-  password:"",
   accessToken: "",
   role_type: "",
   user_id:"",
-  is_pwd_updated:""
+  is_pwd_updated:"",
+  logo_path:"",
+  is_fully_configured:""
 };
 
 const initialState: UserState = {
@@ -39,16 +40,16 @@ export const actions = {
       const domain = credential.domain;
       let user: Types.User;
       const response = await login(email,password,domain);
-      console.log(response,"data")
       if (response && response.data) {
-        const { token,role_type,user_id,is_pwd_updated } = response.data.response;
+        const { token,role_type,user_id,is_pwd_updated,logo_path,is_fully_configured } = response.data.response;
         user = {
           email,
-          password,
-          accessToken: token,
+         accessToken: token,
           role_type: role_type,
           user_id: user_id,
-          is_pwd_updated: is_pwd_updated
+          is_pwd_updated: is_pwd_updated,
+          logo_path: logo_path,
+          is_fully_configured: is_fully_configured
         };
         dispatch(update({ user }));
       }

@@ -303,11 +303,11 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
                     onChange={handleChange}
                   >
                     <option value="">Select</option>
-                    {Referral.map(p => (
+                    {/* {Referral.map(p => (
                       <option key={p.referral_code} value={p.referral_code}>
                         {p.referral_name}
                       </option>
-                    ))}
+                    ))} */}
                   </select>
                   <ErrorMessage component="span" name="RefSourceCode" />
                 </div>

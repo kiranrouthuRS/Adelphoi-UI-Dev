@@ -52,12 +52,12 @@ export class LoginContainer extends React.Component<
     };
     try {
       const r = await this.props.dispatch(user.actions.login(credentials));
-      console.log(r,"login")
-      const accessToken = store.getState().user.user.accessToken;
+      const accessToken = store.getState().user.user.accessToken; 
+      const is_configured:any = this.props.user && this.props.user.user.is_fully_configured;
       const pwd_updated = this.props.user && this.props.user.user && this.props.user.user.is_pwd_updated
       if(pwd_updated){
-        history.push(domainPath !== "adelphoi" ? (`/${domainPath}/welcomepage`) :
-        (`/${domainPath}/new-client`));;
+        history.push(is_configured !== true ? (`/${domainPath}/welcomepage`) :
+        domainPath == "adelphoi" ? (`/${domainPath}/new-client`):(`/${domainPath}/new-client1`));;
         
       }else{
         history.push(`/${domainPath}/changepassword`);
@@ -74,7 +74,7 @@ export class LoginContainer extends React.Component<
       return;
     }
   };
-
+ 
   render()
    
   {

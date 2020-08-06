@@ -112,16 +112,14 @@ export class ConfigurationContainer extends React.Component<
     } = this.props;
     
     const  rolesList = (usersState && usersState.rolesList) || [];
-    console.log(rolesList,"rolesList")
     const  availableUsersList = (usersState && usersState.availableUsersList) || [];
     const usersList = (usersState && usersState.usersList) || [];
     const referralList = (referralState && referralState.referralList) || [];
     const programList = (programState && programState.programList) || [];
     const locationList = (locationState && locationState.locationList) || [];
     const { match, location,user } = this.props;
-    
     const role_type:any = user && user.user && user.user.role_type
-    console.log(role_type,"conf")
+    const is_configured:any = user && user.user && user.user.is_fully_configured
     return (
       <Switch>
         <Route path={`/${domainPath}/configuration`}>

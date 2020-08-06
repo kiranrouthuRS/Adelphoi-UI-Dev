@@ -1,11 +1,12 @@
 // Model definitions
 export interface User {
   email: string;
-  password: string;
   accessToken: string;
   role_type: string;
   user_id: string;
   is_pwd_updated: string;
+  logo_path: string;
+  is_fully_configured: string;
 }
 export interface Users {
   id: string;
@@ -28,9 +29,6 @@ export interface Billing {
   eDate: string;
   
 }
-
-
-
 export interface Credential {
   email: string;
   password: string;
@@ -41,6 +39,9 @@ export interface ChangePwd {
   password: string;
   retype_password: string;
   
+}
+export interface DynamicClient {
+  [key: string]: any;
 }
 export interface Client {
   client_code: string | null;
@@ -179,7 +180,9 @@ export interface SuggestedLocations {
 interface ObjectLiteral {
   [key: string]: any;
 }
-
+export const emptyDClient: DynamicClient = {
+  
+}
 export const emptyClient: Client = {
   client_code: null,
   referral: null,

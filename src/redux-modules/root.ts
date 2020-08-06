@@ -6,6 +6,7 @@ import { locationReducer } from "./location";
 import {referralReducer} from "./referral";
 import { userReducer } from './user';
 import { usersReducer } from './users';
+import {dynamicclientReducer} from './dynamicclient'
 
 export const rootReducer = combineReducers({
   client: clientReducer,
@@ -13,7 +14,8 @@ export const rootReducer = combineReducers({
   program: programReducer,
   programLocation: locationReducer,
   user: userReducer,
-  users: usersReducer
+  users: usersReducer,
+  dynamicclient: dynamicclientReducer,
 });
  
 export type AppState = ReturnType<typeof rootReducer>;

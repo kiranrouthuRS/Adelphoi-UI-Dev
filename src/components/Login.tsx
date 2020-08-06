@@ -213,7 +213,6 @@ const Login: React.FC<LoginFormProps> = props => {
                 initialValues={initialValues}
                 validate={values => {
                   const errors: FormikErrors<LoginFormValues> = {};
-                  console.log(values,"props")  
                   if(values.forgotpassword){
                     if (!values.email_id) {
                       errors.email_id = "Required";

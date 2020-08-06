@@ -54,6 +54,7 @@ export const fieldRow = css`
 
 export const twoCol = css`
   @media all and (min-width: 520px) {
+    margin-bottom: 20px;
     margin-right: 8px;
     width: 100%;
     :last-child {

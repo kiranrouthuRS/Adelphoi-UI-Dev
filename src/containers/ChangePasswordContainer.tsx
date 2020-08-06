@@ -45,17 +45,17 @@ ChangePasswordContainerState
       retype_password: retype_password,
            
     };
-    const user_id = store.getState().user.user.user_id;
-    const accessToken = store.getState().user.user.accessToken;
-    const token = this.props.user && this.props.user.user && this.props.user.user.accessToken
+    const user_id = this.props.user && this.props.user.user && this.props.user.user.user_id;
+    const token = this.props.user && this.props.user.user && this.props.user.user.accessToken;
+    const is_configured : any = this.props.user && this.props.user.user && this.props.user.user.is_fully_configured;
     try {
   const response = await axios.patch(`${loginApiUrl}/organizations/${domainPath}/users/${user_id}/`, changepwd, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
   });
-      history.push(domainPath !== "adelphoi" ? (`/${domainPath}/welcomepage`) :
-     (`/${domainPath}/new-client`));;
+  history.push(is_configured !== true ? (`/${domainPath}/welcomepage`) :
+      domainPath == "adelphoi" ? (`/${domainPath}/new-client`):(`/${domainPath}/new-client1`));;
     } catch (e) {
       console.log(e,"error");
       const error = e.data.message;

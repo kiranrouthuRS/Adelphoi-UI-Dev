@@ -5,6 +5,7 @@ import { store } from "../index";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
 import { AppState } from "../redux-modules/root";
+import  FormData from "form-data"
 export const baseApiUrl = `http://3.7.135.210:8005/organizations`;
 export const loginApiUrl = "http://3.7.135.210:8005";
 
@@ -85,14 +86,13 @@ export const Logout = async () => {
         user.actions.update({
           user: {
             email:"",
-            password:"",
             accessToken:"",
             role_type:"",
             user_id:"",
-            is_pwd_updated: ""
-
-
-          }
+            is_pwd_updated: "",
+            logo_path:"",
+            is_fully_configured:""
+                 }
         })
       );
       return response;
@@ -176,6 +176,87 @@ export const updateClient = async (client: Types.Client) => {
   }
 };
 
+export const insertDClient = async (client_form,is_accessToken) => {
+const currentUser = store.getState().user.user.accessToken;
+var data = new FormData();
+var myJSON = JSON.stringify(client_form);
+data.append('client_form', myJSON); 
+try {
+  const response = await axios.post(`${baseApiUrl}/${domainPath}/clients`, data,{
+    headers: {
+      'Authorization': `Bearer ${is_accessToken}`
+    }
+  });
+  if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
+    throw new Error(response.data["ERROR"]);
+  }
+  if (response.data["Result"] && response.data["Result"].trim() !== "") {
+    return response.data;
+  }
+  const r = {
+    ...response,
+    // program_type: response.data.program_type[0],
+    // referred_program: response.data.program_type[0],
+    // model_program: response.data.program_type[0]
+  };
+
+  return (r as unknown) as Partial<Types.DynamicClient>;
+} catch (error) {
+  const data = error.response ? error.response : "";
+  let clientErrors: { [x: string]: any } = {};
+  Object.keys(data).map(key => {
+    return (clientErrors[key] = data[key][0]);
+  });
+  console.error("api function insertClient error");
+  throw clientErrors;
+}
+};
+
+export const updateDClient = async (client: Types.Client) => {
+  try {
+
+    const response = await axios.put(`${baseApiUrl}/${domainPath}/latest_update/${client.client_code}/`, client);
+    if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
+      throw new Error(response.data["ERROR"]);
+    }
+    if (response.data["Result"] && response.data["Result"].trim() !== "") {
+      return response.data;
+    }
+    const r = {
+      ...response.data,
+      program_type: response.data.program_type[0],
+      referred_program: response.data.program_type[0],
+      model_program: response.data.program_type[0]
+    };
+
+    return (r as unknown) as Partial<Types.Client>;
+  } catch (error) {
+    const data = error.response.data;
+    let clientErrors: { [x: string]: any } = {};
+    Object.keys(data).map(key => {
+      return (clientErrors[key] = data[key][0]);
+    });
+    console.error("api function updateClient error");
+    throw clientErrors;
+  }
+};
+
+export const fetchConfiguredQuestions = async (is_accessToken) => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/client-config`, {
+      headers: {
+        'Authorization': `Bearer ${is_accessToken}`
+      }
+    });
+    const data = response.data 
+    return data;
+  } catch (error) {
+    console.error("api function fetchConfiguredQuestions error");
+    throwError(error);
+  }
+};
+
 export const insertPrediction = async (client: Types.Client) => {
   if (!client.client_code) {
     throw new Error("client code required");
@@ -253,7 +334,6 @@ export const createUsers = async (users: Types.Users,is_accessToken:any) => {
     });
     return response.data;
   } catch (error) {
-    console.log(error,"erroruser")
     console.error("api function createUsers error");
     throwError(error);
   }
@@ -729,6 +809,8 @@ export const searchClient = async (
     throwError(error);
   }
 };
+
+
 
 // EXISTING CLIENT PAGE APIs
 // list of programs for existing client

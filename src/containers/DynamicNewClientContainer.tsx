@@ -7,20 +7,25 @@ import { AppState } from "../redux-modules/root";
 import { ContainerProps } from "./Container";
 import * as client from "../redux-modules/client";
 import * as program from "../redux-modules/program";
-import * as referral from "../redux-modules/referral";
+import * as dynamicclient from "../redux-modules/dynamicclient";
 import ReferralList from "../components/ReferralList";
-import PredictionFormStep1 from "../components/PredictionFormStep1";
+import PredictionFormStep from "../components/PredictionFormStep";
 import PredictionFormStep2 from "../components/PredictionFormStep2";
 import ProgramSelection from "../components/ProgramSelection";
 import { domainPath } from "../App"
+import { store } from "../index"; 
 
-export interface NewClientContainerState {
+export interface DynamicNewClientContainerState {
   isLoading: boolean;
   error: string;
   hasError: boolean;
 }
 
-export interface NewClientContainerProp
+export interface DynamicClient {
+  [key: string]: any;
+}
+
+export interface DynamicNewClientContainerProp
   extends ContainerProps,
     WithSnackbarProps {
   saveClient: (
@@ -28,7 +33,7 @@ export interface NewClientContainerProp
     page1FormCompleted?: boolean,
     excludePage2?: boolean
   ) => void;
-  insertClient: (client: Types.Client) => Promise<void>;
+  insertDClient: (client: Types.DynamicClient,is_accessToken:any) => Promise<void>;
   submitPrediction: (client: Types.Client) => Promise<void>;
   getLocations: (
     client_code: string,
@@ -39,16 +44,19 @@ export interface NewClientContainerProp
   clearErrors: () => void;
   clearClient: () => void;
   getAvailablePrograms: () => Promise<void>;
+  getConfiguredQuestions: (is_accessToken:any) => Promise<void>;
   getReferral: () => Promise<void>;
+  logo: () => Promise<void>;
   Referral: Types.Referral[];
   isEdit: string;
+  
 }
 
-export class NewClientContainer extends React.Component<
-  NewClientContainerProp,
-  NewClientContainerState
+export class DynamicNewClientContainer extends React.Component<
+DynamicNewClientContainerProp,
+DynamicNewClientContainerState
 > {
-  constructor(props: NewClientContainerProp) {
+  constructor(props: DynamicNewClientContainerProp) {
     super(props);
     this.state = this.getInitialState();
   }
@@ -61,37 +69,26 @@ export class NewClientContainer extends React.Component<
   }
 
   componentDidMount() {
+    const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     this.props.closeSnackbar();
     this.props.getAvailablePrograms();
-    this.props.getReferral();
+    this.props.getConfiguredQuestions(is_accessToken);
+    
+    // this.props.getReferral();
     
   }
 
-  saveClientStep1 = async (client: Types.Client) => {
+  saveClientStep1 = async (client: Types.DynamicClient) => {
     const { history } = this.props;
     this.props.clearErrors();
-    
-    // check excl criteria
-    if (client.Exclusionary_Criteria) {
-      
-      try {
-        this.setState({ isLoading: true });
-        this.props.saveClient(client, true, true);
-        await this.props.insertClient(client);
-        this.setState({ isLoading: false });
-        this.props.enqueueSnackbar(`Thanks for registering with ${domainPath}`);
-        this.props.clearErrors();
-        this.props.clearClient();
-      } catch (error) {
-        console.log(error);
-        this.setState({ isLoading: false });
-      }
-    } else {
-      this.setState({ isLoading: true });
-      this.props.saveClient(client, true, false);
-      history.push(`/${domainPath}/new-client/2`);
-      this.setState({ isLoading: false });
-    }
+    this.setState({ isLoading: true });
+      //this.props.saveClient(client, true, true);
+      const is_accessToken: any = this.props.user && this.props.user.user.accessToken
+     await this.props.insertDClient(client,is_accessToken);
+     this.setState({ isLoading: false });
+      this.props.enqueueSnackbar("New Client Created Successfully.");
+      this.props.clearErrors();
+      this.props.clearClient();
   };
 
   getLocationsAndPcr = async (selected_program: string) => {
@@ -110,12 +107,7 @@ export class NewClientContainer extends React.Component<
   };
 
   submitProgram = async (client: Types.Client) => {
-   
-    // const { client: clientState } = this.props;
-    // if (!clientState || !clientState.client) {
-    //   return false;
-    // }
-    if (!client.client_code) {
+       if (!client.client_code) {
       this.props.enqueueSnackbar(
         "Error. Client information is required to process this form."
       );
@@ -139,7 +131,7 @@ export class NewClientContainer extends React.Component<
 
   saveProgramAndLocation = async (selected_location: string) => {
     
-    // const { history } = this.props;
+    
     const { client: clientState } = this.props;
     if (!clientState || !clientState.client) {
       this.props.enqueueSnackbar("Error. Client info not available.");
@@ -150,7 +142,7 @@ export class NewClientContainer extends React.Component<
     this.setState({ isLoading: false });
     
     this.props.enqueueSnackbar("Data saved successfully.");
-    //this.props.clearClient();
+   
   };
   
 
@@ -158,17 +150,18 @@ export class NewClientContainer extends React.Component<
     
     const { history } = this.props;
     const is_role_type: any = this.props.user && this.props.user.user.role_type 
+    const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     try {
       this.setState({ isLoading: true });
       this.props.saveClient(client);
-      await this.props.insertClient(client);
+      await this.props.insertDClient(client,is_accessToken);
       this.setState({ isLoading: false });
       this.props.enqueueSnackbar("New Client Created Successfully.");
       {is_role_type === "Contributor" ?
         history.push(`/${domainPath}/new-client/`) :
         history.push(`/${domainPath}/new-client/program-selection`)
       }
-      //this.props.clearClient();
+     
     } catch (error) {
       console.log(error);
       this.setState({ isLoading: false });
@@ -177,13 +170,15 @@ export class NewClientContainer extends React.Component<
   };
 
   render() {
-    const { client: clientState, program: programState, referral: referralState, } = this.props;
+   const { client: clientState, program: programState, referral: referralState, dynamicclient:dynamicclientState } = this.props;
     const referralList = (referralState && referralState.referralList) || [];
+    const configuredQuestionsList = (dynamicclientState && dynamicclientState.configuredQuestionsList) || [];
     const { match: { params } } = this.props;
-    let currentClient: Types.Client;
+    let currentClient: Types.Client; 
     currentClient = clientState ? clientState.client : Types.emptyClient;
     const availableProgramList =
       (programState && programState.availableProgramList) || [];
+     
     return (
             <Switch>
         <Route exact path={`/${domainPath}/new-client/program-selection`}>
@@ -201,17 +196,6 @@ export class NewClientContainer extends React.Component<
           exact
           path={`/${domainPath}/new-client/2`}
           render={routeProps => {
-            // const step1 = clientState
-            //   ? clientState.page1FormCompleted
-            //   : this.state.isLoading;
-            // if (!step1) {
-            //   return (
-            //     <h1>
-            //       Error. First step of the new client form is incomplete.
-            //       <Link to="/new-client">Click here to begin.</Link>
-            //     </h1>
-            //   );
-            // }
             return (
               <PredictionFormStep2
                 {...this.state}
@@ -223,14 +207,15 @@ export class NewClientContainer extends React.Component<
             );
           }}
         ></Route>
-        <Route exact path={`/${domainPath}/new-client`}>
-          <PredictionFormStep1
+        <Route exact path={`/${domainPath}/new-client1`}>
+          <PredictionFormStep
             {...this.state}
             isEdit=""
             Referral={referralList}
+            DynamicQuestions={configuredQuestionsList}
             client={currentClient.model_program ? Types.emptyClient : currentClient}
             onFormSubmit={this.saveClientStep1}
-            errors = {(clientState && clientState.errors) || undefined}
+            errors = { undefined}
           />
         </Route>
       </Switch>
@@ -243,13 +228,15 @@ const mapStateToProps = (state: AppState) => {
     client: state.client,
     program: state.program,
     referral: state.referral,
-    user: state.user
+    user: state.user,
+    dynamicclient: state.dynamicclient
   };
 };
 
 const mapDispatchToProps = {
   saveClient: client.actions.upsertClient,
-  insertClient: client.actions.insertClient,
+  
+  insertDClient: dynamicclient.actions.insertDClient,
   submitPrediction: client.actions.submitPrediction,
   getLocations: client.actions.getLocations,
   getPcr: client.actions.getPcr,
@@ -257,10 +244,10 @@ const mapDispatchToProps = {
   clearErrors: client.actions.clearErrors,
   clearClient: client.actions.clear,
   getAvailablePrograms: program.actions.getAvailablePrograms,
-  getReferral: referral.actions.getReferral,
+  getConfiguredQuestions: dynamicclient.actions.getConfiguredQuestions,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withSnackbar(NewClientContainer));
+)(withSnackbar(DynamicNewClientContainer));

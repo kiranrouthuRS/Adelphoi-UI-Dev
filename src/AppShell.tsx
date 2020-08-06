@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import React from "react";
 import { jsx, css } from "@emotion/core";
+import { connect } from "react-redux";
 import { withRouter, Route } from "react-router-dom";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import Link from "@material-ui/core/Link";
@@ -10,20 +11,21 @@ import * as user from "./redux-modules/user";
 import { AppState } from "./redux-modules/root";
 import {  Global } from "@emotion/core";
 import { domainPath } from "./App"
-
+import { loginApiUrl } from "./api/api"
+import { store } from "./index"; 
 import {
   ConfigIcon,
   NewClientIcon,
   ExistingClientIcon
 } from "./components/icons";
-
+ 
 const App = css`
   margin: 80px auto;
   width: 100%;
   background-color: #fff;
   padding: 16px;
   position: relative;
-  @media all and (min-width: 520px) {
+  @media all and (min-width: 520px) { 
     padding: 40px;
     margin: 100px auto;
     width: 60vw;
@@ -99,7 +101,7 @@ const firstMatchLogo = css`
 const adelphoiLogo = css`
   position: absolute;
   top: -25px;
-  left: -25px;
+  left: -12px;
   @media all and (max-width: 520px) {
     top: 0;
     right: 0;
@@ -122,7 +124,7 @@ const profile = css`
   radius: 2px;
   @media all and (max-width: 520px) {
     top: 0;
-    right: 0;
+    right: 25;
   }
 `;
 
@@ -133,12 +135,15 @@ const billing = css`
   radius: 2px;
   @media all and (max-width: 520px) {
     top: 0;
-    right: 0;
+    right: 15;
   }
 `;
 
-const AppShell: React.FC = ({children},props ) => {
- return (
+const AppShell: React.FC = ( {children} , props ) => {
+ const is_configured = children&&children[1].props.user.user.is_fully_configured  
+  const logopath = children&&children[1].props.user.user.logo_path; 
+  
+ return ( 
     <Paper css={App} elevation={3}>
       
       <div css={logo}>
@@ -150,7 +155,7 @@ const AppShell: React.FC = ({children},props ) => {
         <img
           css={adelphoiLogo}
           alt={`${domainPath} Logo`}
-          src={`/img/${domainPath}_logo.png`}
+          src={`${loginApiUrl}/${logopath}`}
         />
         <a
               href={`/${domainPath}/billing`}
@@ -172,15 +177,15 @@ const AppShell: React.FC = ({children},props ) => {
             </a>
       </div>
       
-      { domainPath == "adelphoi" ? (
+      { is_configured == true ? (
                  <div css={nav}>
                  <Route
-                   path={`/${domainPath}/new-client`}
+                   path={domainPath === "adelphoi"?`/${domainPath}/new-client`:`/${domainPath}/new-client1`}
                    // exact={activeOnlyWhenExact}
                    children={({ match, history }) => (
                      <Link
                        onClick={() => {
-                         history.push(`/${domainPath}/new-client`);
+                         history.push(domainPath === "adelphoi"?`/${domainPath}/new-client`:`/${domainPath}/new-client1`);
                        }}
                        // href="#"
                        css={menuButton}
@@ -320,12 +325,19 @@ const AppShell: React.FC = ({children},props ) => {
       </div>)}  
       
       {children}
+      
     </Paper>
     
   );
 };
 
+const mapStateToProps = (state: AppState) => {
+  return {
+    user: state.user,
+    appState: state,
+  }
+};
 
+export default connect(mapStateToProps)(withRouter(AppShell));
 
-export default withRouter(AppShell);
  
