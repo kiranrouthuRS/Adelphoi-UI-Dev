@@ -141,7 +141,7 @@ const billing = css`
 
 const AppShell: React.FC = ({children},props ) => {
 //  const is_configured = children&&children[1].props.user.user.is_fully_configured  
-//   const logopath = children&&children[1].props.user.user.logo_path; 
+ const logopath = children&&children[1].props.user.user.logo_path; 
   
  return ( 
     <Paper css={App} elevation={3}>
@@ -155,7 +155,7 @@ const AppShell: React.FC = ({children},props ) => {
         <img
           css={adelphoiLogo}
           alt={`${domainPath} Logo`}
-          src={`${loginApiUrl}/${logopath}`}
+          // src={`${loginApiUrl}/${logopath}`}
         />
         <a
               href={`/${domainPath}/billing`}
