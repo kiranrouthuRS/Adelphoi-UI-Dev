@@ -140,8 +140,8 @@ const billing = css`
 `;
 
 const AppShell: React.FC = ({children},props ) => {
-//  const is_configured = children&&children[1].props.user.user.is_fully_configured  
- const logopath = children&&children[1].props.user.user.logo_path; 
+const is_configured = children&&children[1].props.user.user.is_fully_configured  
+// const logopath = children&&children[1].props.user.user.logo_path; 
   
  return ( 
     <Paper css={App} elevation={3}>
