@@ -187,12 +187,13 @@ try {
       'Authorization': `Bearer ${is_accessToken}`
     }
   });
-  if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
-    throw new Error(response.data["ERROR"]);
-  }
-  if (response.data["Result"] && response.data["Result"].trim() !== "") {
-    return response.data;
-  }
+  console.log(response,"response.hasError")
+  // if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
+  //   throw new Error(response.data["ERROR"]);
+  // }
+  // if (response.data["Result"] && response.data["Result"].trim() !== "") {
+  //   return response.data;
+  // }
   const r = {
     ...response,
     // program_type: response.data.program_type[0],

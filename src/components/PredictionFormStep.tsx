@@ -139,8 +139,10 @@ export class PredictionFormStep extends React.Component<
       DynamicQuestions[y ? y : parseInt(x) + 1].related = false 
       DynamicQuestions[this.state.prevJump[name]?this.state.prevJump[name]:0].related = this.state.prevJump[name] ?true:false; 
       }else{
+        if (type === "radio"){
         const DynamicQuestions = this.state.DynamicQuestions;
         DynamicQuestions[jump ? jump : parseInt(idx) + 1].related = jump ? false : true
+        }
             }
 
       
@@ -195,6 +197,7 @@ export class PredictionFormStep extends React.Component<
     this.setState({
       isSubmitted: true
     })
+    console.log(this.state.hasError,"this.state.hasError")
     if (!this.state.hasError) {
       this.props.onFormSubmit(client_form);
     }
@@ -257,6 +260,7 @@ export class PredictionFormStep extends React.Component<
                                       data-idx={index}
                                       data-idy={ind}
                                       name={ques.question} value={ans}
+                                      data-type={ques.answer_type.toLowerCase()}
                                     />{" "}
                                     <label htmlFor={ans}>{ans}</label>
                                   </React.Fragment>
@@ -278,6 +282,7 @@ export class PredictionFormStep extends React.Component<
                                       type="checkbox"
                                       name={ques.question} value={this.state.client_form[ques.question_id]}
                                       required={ques.required === "yes" ? true : false}
+                                      data-type={ques.answer_type.toLowerCase()}
                                       data-idx={index}
                                       data-idy={ind}
                                     />{" "}
