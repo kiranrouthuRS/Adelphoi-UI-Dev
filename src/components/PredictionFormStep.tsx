@@ -46,7 +46,7 @@ interface PredictionFormStepProps {
   error: string;
   isEdit: string;
   errors: undefined;
-  
+
 }
 export interface PredictionFormStepState {
   isLoading: boolean;
@@ -74,7 +74,7 @@ export class PredictionFormStep extends React.Component<
       DynamicQuestions: [],
       error: [],
       client_form: [],
-      prevJump:[]
+      prevJump: []
     };
   }
   componentDidMount() {
@@ -130,22 +130,30 @@ export class PredictionFormStep extends React.Component<
         let y = optionElement.getAttribute('data-jump');
         let z = optionElement.getAttribute('data-idy');
         this.setState({
-                  prevJump: {
-                    [name]: y
-                  }
-            
+          prevJump: {
+            [name]: y
+          }
+
         })
-        const DynamicQuestions = this.state.DynamicQuestions; 
-      DynamicQuestions[y ? y : parseInt(x) + 1].related = false 
-      DynamicQuestions[this.state.prevJump[name]?this.state.prevJump[name]:0].related = this.state.prevJump[name] ?true:false; 
-      }else{
-        if (type === "radio"){
         const DynamicQuestions = this.state.DynamicQuestions;
-        DynamicQuestions[jump ? jump : parseInt(idx) + 1].related = jump ? false : true
-        }
+        DynamicQuestions[y ? y : parseInt(x) + 1].related = false
+        DynamicQuestions[this.state.prevJump[name] ? this.state.prevJump[name] : 0].related = this.state.prevJump[name] ? true : false;
+      } else {
+        if (type === "radio") {
+          this.setState({
+            prevJump: {
+              [name]: jump
             }
 
-      
+          })
+          const DynamicQuestions = this.state.DynamicQuestions;
+          DynamicQuestions[jump ? jump : parseInt(idx) + 1].related = false;
+          DynamicQuestions[this.state.prevJump[name] ? 
+          this.state.prevJump[name] : 0].related = this.state.prevJump[name] ? true : false; 
+        }
+      }
+
+
       if (val1 === "") {
         this.setState({
           client_form: {
@@ -197,7 +205,7 @@ export class PredictionFormStep extends React.Component<
     this.setState({
       isSubmitted: true
     })
-    console.log(this.state.hasError,"this.state.hasError")
+    console.log(this.state.hasError, "this.state.hasError")
     if (!this.state.hasError) {
       this.props.onFormSubmit(client_form);
     }
