@@ -211,10 +211,34 @@ export class PredictionFormStep extends React.Component<
     }
 
   }
+  display = (id) => {
+    const tempArray = [] as any;
+let questions = this.state.DynamicQuestions[id].questions; 
+console.log(questions.length,"len")
+for (let i = 0; i < questions.length; i++) {
+
+if ((i + 1) % 2 !== 0) {
+  var tempArray1 = [] as any;
+  console.log(questions[i],"true")
+  tempArray1.push(questions[i]);
+  if(questions.length===1){
+    tempArray.push(tempArray1)
+  }
+
+}
+else {
+  tempArray1.push(questions[i]);
+  tempArray.push(tempArray1)
+}
+
+}
+    return tempArray
+}
   render() {
     const { DynamicQuestions } = this.state;
     var columnA = DynamicQuestions.map(sec => sec.questions.filter((ques, id) => id % 2 === 0))
     var columnB = DynamicQuestions.map(sec => sec.questions.filter((ques, id) => id % 2 !== 0))
+   console.log(this.state,"state")
     return (
       <div css={wrap}>
 
@@ -225,10 +249,120 @@ export class PredictionFormStep extends React.Component<
               sections.related === true ? "" :
                 <React.Fragment>
 
-                  <h1 css={subHeading}>{sections.section}</h1>
+                  <h1 css={subHeading}>{sections.section}</h1> 
+                  {this.display(index).map((item, ind) => { 
+        return <div css={fieldRow}>{item.map((ques, index_1) => {
+        return <div css={twoCol}><label css={label}>{ques.question}</label> 
+          {ques.answer_type === "SELECT" ?
+                          <select
+                            css={selectField}
+                            name={ques.question}
+                            data-type={ques.answer_type.toLowerCase()}
+                            data-length={ques.suggested_jump.length}
 
+                          >
+                            <option value="">Select</option>
+                            {ques.suggested_answers.map((ans, i) =>
+
+                              <option key={i}
+                                value={ans}
+                                data-idx={index}
+                                data-idy={ind}
+                                data-jump={ques.suggested_jump[i]}
+                                selected={this.state.client_form[ques.question_id] === ans}>{ans}</option>
+                            )}
+                          </select>
+                          :
+                          ques.answer_type === "RADIO" ?
+                            <React.Fragment>
+                              {ques.suggested_answers.map((ans, i) =>
+                                <div
+                                  css={fieldBox}
+                                  style={{ width: "47.8%", display: "inline-block" }}
+                                >
+                                  <React.Fragment>
+                                    <input
+                                      type="radio"
+                                      data-jump={ques.suggested_jump[i]}
+                                      data-idx={index}
+                                      data-idy={ind}
+                                      name={ques.question} value={ans}
+                                      data-type={ques.answer_type.toLowerCase()}
+                                    />{" "}
+                                    <label htmlFor={ans}>{ans}</label>
+                                  </React.Fragment>
+
+                                </div>
+
+                              )}
+                            </React.Fragment>
+                            :
+                            ques.answer_type === "CHECKBOX" ?
+
+                              ques.suggested_answers.map(ans =>
+                                <div
+                                  css={fieldBox}
+                                  style={{ width: "47.8%", display: "inline-block" }}
+                                >
+                                  <React.Fragment>
+                                    <input
+                                      type="checkbox"
+                                      name={ques.question} value={this.state.client_form[ques.question_id]}
+                                      required={ques.required === "yes" ? true : false}
+                                      data-type={ques.answer_type.toLowerCase()}
+                                      data-idx={index}
+                                      data-idy={ind}
+                                    />{" "}
+                                    <label htmlFor={ans}>{ans}</label>
+                                  </React.Fragment>
+                                </div>
+                              )
+                              :
+                              ques.answer_type === "NUMBER" ?
+                                <Fragment>
+                                  <input
+                                    css={inputField}
+                                    data-val1={ques.validation1}
+                                    data-val2={ques.validation2}
+                                    data-type={ques.answer_type.toLowerCase()}
+                                    data-msg={ques.error_msg}
+                                    data-idx={index}
+                                    data-idy={ind}
+                                    name={ques.question} value={this.state.client_form[ques.question]}
+                                    type={ques.answer_type.toLowerCase()}
+                                  //  min={ques.validation1}
+                                  //  max={ques.validation2}
+                                  //  required = {ques.required === "yes" ? true: false}
+                                  />
+                                </Fragment>
+                                :
+                                <Fragment>
+                                  <input
+                                    css={inputField}
+                                    data-val1={ques.validation1}
+                                    data-val2={ques.validation2}
+                                    data-type={ques.answer_type.toLowerCase()}
+                                    data-msg={ques.error_msg}
+                                    data-idx={index}
+                                    data-idy={ind}
+                                    name={ques.question}
+                                    value={this.state.client_form[ques.question_id]}
+                                    type={ques.answer_type.toLowerCase()}
+                                  />
+
+                                </Fragment>
+                        }
+                        {this.state.isSubmitted === true ? this.state.error[ques.question] ?
+                          <div style={{ color: "red" }}>{this.state.error[ques.question]}</div> : this.state.client_form[ques.question] ? "" :
+                            ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : "" : ""}
+          </div>
+        })}</div>
+
+      })
+      }
                   {/* <div css={fieldRow}> */}
-                  {sections.questions.map((ques, ind) =>
+                  {/* {sections.questions.map((ques, ind) =>
+                  
                     <Fragment>
 
                       <div css={twoCol}>
@@ -339,7 +473,7 @@ export class PredictionFormStep extends React.Component<
                       </div>
 
                     </Fragment>
-                  )}
+                  )} */}
 
                 </React.Fragment>
             )}
