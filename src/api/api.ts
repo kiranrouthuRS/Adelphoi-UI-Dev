@@ -5,12 +5,12 @@ import { store } from "../index";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
 import { AppState } from "../redux-modules/root";
-import  FormData from "form-data"
+import FormData from "form-data"
 export const baseApiUrl = `http://3.7.135.210:8005/organizations`;
 export const loginApiUrl = "http://3.7.135.210:8005";
 
 interface PredictionResponse {
-  referred_program: string; 
+  referred_program: string;
   model_program: string;
 }
 
@@ -70,35 +70,35 @@ export const login = async (email: string, password: string, domain: string) => 
 
 export const Logout = async () => {
   const currentUser = store.getState().user.user.accessToken;
-   try {
+  try {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${currentUser}`);
-    
+
     const formdata = new FormData();
-    
+
     const req = {
       headers: myHeaders,
       body: formdata
     }
     const response = await axios.post(`${baseApiUrl}/${domainPath}/logout`, req)
-    .then(response => {
-      store.dispatch(
-        user.actions.update({
-          user: {
-            email:"",
-            accessToken:"",
-            role_type:"",
-            user_id:"",
-            is_pwd_updated: "",
-            logo_path:"",
-            is_fully_configured:""
-                 }
-        })
-      );
-      return response;
-    });
+      .then(response => {
+        store.dispatch(
+          user.actions.update({
+            user: {
+              email: "",
+              accessToken: "",
+              role_type: "",
+              user_id: "",
+              is_pwd_updated: "",
+              logo_path: "",
+              is_fully_configured: ""
+            }
+          })
+        );
+        return response;
+      });
     return response;
-    
+
   } catch (error) {
     console.error("api function fetchLocationsList error");
     throwError(error);
@@ -176,41 +176,87 @@ export const updateClient = async (client: Types.Client) => {
   }
 };
 
-export const insertDClient = async (client_form,is_accessToken) => {
-const currentUser = store.getState().user.user.accessToken;
-var data = new FormData();
-var myJSON = JSON.stringify(client_form);
-data.append('client_form', myJSON); 
-try {
-  const response = await axios.post(`${baseApiUrl}/${domainPath}/clients`, data,{
-    headers: {
-      'Authorization': `Bearer ${is_accessToken}`
-    }
-  });
-  console.log(response,"response.hasError")
-  // if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
-  //   throw new Error(response.data["ERROR"]);
-  // }
-  // if (response.data["Result"] && response.data["Result"].trim() !== "") {
-  //   return response.data;
-  // }
-  const r = {
-    ...response,
-    // program_type: response.data.program_type[0],
-    // referred_program: response.data.program_type[0],
-    // model_program: response.data.program_type[0]
-  };
+export const uploadcsvfile = async (data, is_accessToken) => {
+  try {
+    return await axios.post(`${baseApiUrl}/${domainPath}/clients`, data, {
+      headers: {
+        'Authorization': `Bearer ${is_accessToken}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        const path = response.data.response
+        return response.data;
+      })
 
-  return (r as unknown) as Partial<Types.DynamicClient>;
-} catch (error) {
-  const data = error.response ? error.response : "";
-  let clientErrors: { [x: string]: any } = {};
-  Object.keys(data).map(key => {
-    return (clientErrors[key] = data[key][0]);
-  });
-  console.error("api function insertClient error");
-  throw clientErrors;
-}
+  }
+
+  catch (error) {
+    console.log('error')
+
+    throwError(error)
+
+  }
+};
+
+export const downloadcsvfile = async (is_accessToken) => {
+  try {
+    return await axios.get(`${baseApiUrl}/${domainPath}/client-config?download`, {
+      headers: {
+        'Authorization': `Bearer ${is_accessToken}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        const path = response.data.response
+        window.open(`${loginApiUrl}/${path}`);
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+
+    throwError(error)
+
+  }
+};
+
+export const insertDClient = async (client_form, is_accessToken) => {
+  const currentUser = store.getState().user.user.accessToken;
+  var data = new FormData();
+  var myJSON = JSON.stringify(client_form);
+  data.append('client_form', myJSON);
+  try {
+    const response = await axios.post(`${baseApiUrl}/${domainPath}/clients`, data, {
+      headers: {
+        'Authorization': `Bearer ${is_accessToken}`
+      }
+    });
+    // if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
+    //   throw new Error(response.data["ERROR"]);
+    // }
+    // if (response.data["Result"] && response.data["Result"].trim() !== "") {
+    //   return response.data;
+    // }
+    const r = {
+      ...response,
+      // program_type: response.data.program_type[0],
+      // referred_program: response.data.program_type[0],
+      // model_program: response.data.program_type[0]
+    };
+
+    return (r as unknown) as Partial<Types.DynamicClient>;
+  } catch (error) {
+    const data = error.response ? error.response : "";
+    let clientErrors: { [x: string]: any } = {};
+    Object.keys(data).map(key => {
+      return (clientErrors[key] = data[key][0]);
+    });
+    console.error("api function insertClient error");
+    throw clientErrors;
+  }
 };
 
 export const updateDClient = async (client: Types.Client) => {
@@ -250,7 +296,7 @@ export const fetchConfiguredQuestions = async (is_accessToken) => {
         'Authorization': `Bearer ${is_accessToken}`
       }
     });
-    const data = response.data 
+    const data = response.data
     return data;
   } catch (error) {
     console.error("api function fetchConfiguredQuestions error");
@@ -285,9 +331,9 @@ export const fetchUsers = async () => {
     throwError(error);
   }
 };
-export const fetchRoles = async (is_accessToken:any) => {  
+export const fetchRoles = async (is_accessToken: any) => {
   const currentUser = store.getState().user.user.accessToken;
-  
+
   try {
     const response = await axios.get(`${loginApiUrl}/organizations/${domainPath}/groups/`, {
       headers: {
@@ -296,7 +342,7 @@ export const fetchRoles = async (is_accessToken:any) => {
     });
     return response.data;
   } catch (error) {
-    
+
     console.error("api function fetchRoles error");
     throwError(error);
   }
@@ -317,7 +363,7 @@ export const fetchAvailableUsers = async (userID: any) => {
   }
 };
 
-export const createUsers = async (users: Types.Users,is_accessToken:any) => {
+export const createUsers = async (users: Types.Users, is_accessToken: any) => {
   const currentUser = store.getState().user.user.accessToken;
   const data = {
     first_name: users.first_name !== null ? users.first_name.charAt(0).toUpperCase() + users.first_name.substr(1) : "",
@@ -340,7 +386,7 @@ export const createUsers = async (users: Types.Users,is_accessToken:any) => {
   }
 };
 
-export const updateUsers = async (users: Types.Users,is_accessToken:any) => {
+export const updateUsers = async (users: Types.Users, is_accessToken: any) => {
   const currentUser = store.getState().user.user.accessToken;
   try {
     const response = await axios.put(
@@ -353,11 +399,11 @@ export const updateUsers = async (users: Types.Users,is_accessToken:any) => {
         gender: users.gender,
         group_id: users.role_type
       }
-        , { 
-          headers: {
-            'Authorization': `Bearer ${is_accessToken}`
-          }
-        });
+      , {
+        headers: {
+          'Authorization': `Bearer ${is_accessToken}`
+        }
+      });
     return response.data;
   } catch (error) {
     console.error("api function updateUsers error");
@@ -365,7 +411,7 @@ export const updateUsers = async (users: Types.Users,is_accessToken:any) => {
   }
 };
 
-export const deleteUsers = async (userID: any,is_accessToken:any) => {
+export const deleteUsers = async (userID: any, is_accessToken: any) => {
   const currentUser = store.getState().user.user.accessToken;
   try {
     const response = await axios.delete(`${loginApiUrl}/organizations/${domainPath}/users/${userID}`, {
@@ -384,7 +430,7 @@ export const fetchBillingStatus = async () => {
   const { dispatch } = store
   const currentUser = store.getState().user.user.accessToken;
   try {
-       return await axios.get(`${baseApiUrl}/${domainPath}/billing-status/`, {
+    return await axios.get(`${baseApiUrl}/${domainPath}/billing-status/`, {
       headers: {
         'Authorization': `Bearer ${currentUser}`
       }
@@ -398,18 +444,18 @@ export const fetchBillingStatus = async () => {
 
   catch (error) {
     console.log('error')
-    
+
     throwError(error)
 
   }
 };
 
-export const fetchAllRecords = async (sDate,EDate) => {
+export const fetchAllRecords = async (sDate, EDate) => {
   const { dispatch } = store
   const currentUser = store.getState().user.user.accessToken;
-  
+
   try {
-       return await axios.get(`${baseApiUrl}/${domainPath}/orders/?start_date=${sDate}&end_date=${EDate}`, {
+    return await axios.get(`${baseApiUrl}/${domainPath}/orders/?start_date=${sDate}&end_date=${EDate}`, {
       headers: {
         'Authorization': `Bearer ${currentUser}`
       }
@@ -423,7 +469,7 @@ export const fetchAllRecords = async (sDate,EDate) => {
 
   catch (error) {
     console.log('error')
-    
+
     throwError(error)
 
   }
@@ -432,16 +478,16 @@ export const fetchAllRecords = async (sDate,EDate) => {
 export const getRecord = async (id) => {
   const { dispatch } = store
   const currentUser = store.getState().user.user.accessToken;
-  
+
   try {
-       return await axios.get(`${baseApiUrl}/${domainPath}/orders/${id}/`, {
+    return await axios.get(`${baseApiUrl}/${domainPath}/orders/${id}/`, {
       headers: {
         'Authorization': `Bearer ${currentUser}`
       }
     })
       .then(response => {
         const bill = response.data
-        
+
         return response.data;
       })
 
@@ -449,7 +495,7 @@ export const getRecord = async (id) => {
 
   catch (error) {
     console.log('error')
-    
+
     throwError(error)
 
   }
@@ -457,9 +503,9 @@ export const getRecord = async (id) => {
 
 export const downloadRecords = async () => {
   const currentUser = store.getState().user.user.accessToken;
-  
+
   try {
-       return await axios.get(`${baseApiUrl}/${domainPath}/download/`, {
+    return await axios.get(`${baseApiUrl}/${domainPath}/download/`, {
       headers: {
         'Authorization': `Bearer ${currentUser}`
       }
@@ -475,7 +521,7 @@ export const downloadRecords = async () => {
 
   catch (error) {
     console.log('error')
-    
+
     throwError(error)
 
   }
@@ -483,59 +529,57 @@ export const downloadRecords = async () => {
 
 export const getOrderDownload = async (sDate, eDate) => {
   const currentUser = store.getState().user.user.accessToken;
-  
-   try {
-     return await axios.get(`${baseApiUrl}/${domainPath}/download/?start_date=${sDate}&end_date=${eDate}`, {
-       headers: {
-         'Authorization': `Bearer ${currentUser}`
-       }
-     })
-       .then(response => {
+
+  try {
+    return await axios.get(`${baseApiUrl}/${domainPath}/download/?start_date=${sDate}&end_date=${eDate}`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    })
+      .then(response => {
         const path = response.data.response
         window.open(`${loginApiUrl}/${path}`);
-         const records = response.data
-         return response.data;
-       })
-     }
- 
-   catch (error) {
-     console.log('error')
- 
-     throwError(error)
- 
-   }
- };
+        const records = response.data
+        return response.data;
+      })
+  }
 
- export const downloadReportCSV = async (id) => {
+  catch (error) {
+    console.log('error')
+
+    throwError(error)
+
+  }
+};
+
+export const downloadReportCSV = async (id) => {
   const currentUser = store.getState().user.user.accessToken;
-  
-   try {
-     return await axios.get(`${baseApiUrl}/${domainPath}/download/${id}/`, {
-       headers: {
-         'Authorization': `Bearer ${currentUser}`
-       }
-     })
-       .then(response => {
-         const bill = response.data
-         const path = response.data.response
+  try {
+    return await axios.get(`${baseApiUrl}/${domainPath}/download/${id}/`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        const path = response.data.response
         window.open(`${loginApiUrl}/${path}`);
-         return response.data;
-       })
- 
-   }
- 
-   catch (error) {
-     console.log('error')
- 
-     throwError(error)
- 
-   }
- };
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+
+    throwError(error)
+
+  }
+};
 
 export const fetchReferral = async () => {
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/referral_list`);
-    console.log(response,"res")
     const data = (response.data as unknown) as Types.Referral[];
 
     return data;
@@ -800,10 +844,12 @@ export const searchClient = async (
   client_code: string,
   client_name: string = ""
 ) => {
+  const currentUser = store.getState().user.user.accessToken;
   try {
     const response = await axios.get(
       `${baseApiUrl}/${domainPath}/search/?name=${client_name}&client_code=${client_code}`
     );
+
     return response.data;
   } catch (error) {
     console.error("api function searchClient error");
@@ -811,7 +857,34 @@ export const searchClient = async (
   }
 };
 
-
+export const searchDClient = async (
+  client_code: string,
+  client_name: string = "",
+  is_accessToken: any
+) => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    // const code : any = parseInt(client_code)
+    let config: any = {
+      method: 'get',
+      url: `${baseApiUrl}/${domainPath}/clients?client_name=${client_name}&client_code=${client_code}`,
+      headers: {
+        'Authorization': `Bearer ${is_accessToken}`
+      }
+    };
+    const response = await axios(config)
+    // const response = await axios.get(
+    //   `${baseApiUrl}/${domainPath}/clients?client_code=client_code=${parseInt(client_code)}`,{
+    //     headers: {
+    //       'Authorization': `Bearer ${currentUser}`
+    //     }
+    //   });
+    return response.data;
+  } catch (error) {
+    console.error("api function searchClient error");
+    throwError(error);
+  }
+};
 
 // EXISTING CLIENT PAGE APIs
 // list of programs for existing client
@@ -834,7 +907,7 @@ function throwError(error: any) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
     console.log(error.response.data);
-    console.log("code",error.response.status);
+    console.log("code", error.response.status);
     console.log(error.response.headers);
     const errorResponse = {
       data: error.response.data || undefined,

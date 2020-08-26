@@ -12,7 +12,7 @@ import {
   insertPrediction,
   fetchLocations,
   saveLocationAndProgram,
-  searchClient,
+  searchDClient,
   updateProgramCompletion,
   fetchPcr,
   fetchProgramsForClient,
@@ -30,6 +30,7 @@ import {
 const initialState: QuestionsState = {
    configuredQuestionsList: [],
    client: Types.emptyClient,
+   clientList: {},
    errors: {}
   
   
@@ -56,10 +57,44 @@ export const actions = {
   > {
     return async (dispatch, getState) => {
       const response = await fetchConfiguredQuestions(is_accessToken);
+      console.log(response)
       if (!response) {
         throw Error("something went wrong getting list of available referral");
       }
       dispatch(update({ configuredQuestionsList: response.response }));
+    };
+  },
+
+searchDClient(
+    client_code: string,
+    client_name: string,
+    is_accessToken: any
+  ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+    return async (dispatch, getState) => {
+      const response = await searchDClient(client_code, client_name, is_accessToken);
+      console.log(response)
+      const arr = response.response;
+      // Iterate over array
+    //   arr.forEach(function(e, i) {
+    //     // Iterate over the keys of object
+    //     console.log(e,"ee")
+    //     Object.keys(e).forEach(function(key) {
+    //      var val = e[key],
+    //         newKey = key.replace(/\s+/g, '_');
+    //       delete arr[i][key];
+    //         arr[i][newKey] = val;
+    //     });
+    //   });
+     //console.log(arr&&arr[0].sections,"arr")
+      let clientList: { [key: string]: any } = {};
+      arr&&arr.map((c: any) => {
+        if (c.client_code) {
+          return (clientList[c.client_code] = c.sections);  
+        }
+        return null;
+      });
+      dispatch(update({ clientList }));
+      return;
     };
   },
 
@@ -71,7 +106,7 @@ insertDClient(
       let locations: string[] = [];
       let updatedDClient: Types.DynamicClient; 
       try {
-        const response = await insertDClient(Dclient,is_accessToken);    
+        const response = await insertDClient(Dclient,is_accessToken);  
         const cl = {
           ...Dclient,
           // program_type: response.program_type || null,

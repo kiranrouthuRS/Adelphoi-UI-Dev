@@ -14,11 +14,14 @@ import PredictionFormStep2 from "../components/PredictionFormStep2";
 import ProgramSelection from "../components/ProgramSelection";
 import { domainPath } from "../App"
 import { store } from "../index"; 
-
+interface MatchParams {
+  index: string;
+}
 export interface DynamicNewClientContainerState {
   isLoading: boolean;
   error: string;
   hasError: boolean;
+  
 }
 
 export interface DynamicClient {
@@ -26,7 +29,7 @@ export interface DynamicClient {
 }
 
 export interface DynamicNewClientContainerProp
-  extends ContainerProps,
+  extends ContainerProps<MatchParams>,
     WithSnackbarProps {
   saveClient: (
     client: Types.Client,
@@ -57,6 +60,7 @@ DynamicNewClientContainerProp,
 DynamicNewClientContainerState
 > {
   constructor(props: DynamicNewClientContainerProp) {
+    
     super(props);
     this.state = this.getInitialState();
   }
@@ -64,12 +68,14 @@ DynamicNewClientContainerState
     return {
       isLoading: false,
       hasError: false,
-      error: ""
+      error: "",
+      
     };
   }
 
   componentDidMount() {
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
+    const  {index}  = this.props.match.params;     
     this.props.closeSnackbar();
     this.props.getAvailablePrograms();
     this.props.getConfiguredQuestions(is_accessToken);
@@ -170,10 +176,12 @@ DynamicNewClientContainerState
   };
 
   render() {
-   const { client: clientState, program: programState, referral: referralState, dynamicclient:dynamicclientState } = this.props;
+   const {client: clientState, program: programState, referral: referralState, dynamicclient:dynamicclientState } = this.props;
     const referralList = (referralState && referralState.referralList) || [];
+    const clientList = (clientState && clientState.clientList) || {};
     const configuredQuestionsList = (dynamicclientState && dynamicclientState.configuredQuestionsList) || [];
-    const { match: { params } } = this.props;
+    const { match: { params } } = this.props; 
+    const { index } = this.props.match.params;
     let currentClient: Types.Client; 
     currentClient = clientState ? clientState.client : Types.emptyClient;
     const availableProgramList =
@@ -207,12 +215,13 @@ DynamicNewClientContainerState
             );
           }}
         ></Route>
-        <Route exact path={`/${domainPath}/new-client1`}>
+        <Route exact path={ index ?`/${domainPath}/existing-client/edit-details/:index,:isEdit`:`/${domainPath}/new-client1`}>
           <PredictionFormStep
             {...this.state}
             isEdit=""
             Referral={referralList}
-            DynamicQuestions={configuredQuestionsList}
+            user={this.props&&this.props.user}
+            DynamicQuestions={index ? Object.keys(clientList[index]).map((key,id) => clientList[index][key] && clientList[index][key].hasOwnProperty("section") ?clientList[index][key]:""):configuredQuestionsList}
             client={currentClient.model_program ? Types.emptyClient : currentClient}
             onFormSubmit={this.saveClientStep1}
             errors = { undefined}

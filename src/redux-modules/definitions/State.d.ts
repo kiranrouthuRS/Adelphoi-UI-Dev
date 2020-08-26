@@ -34,6 +34,7 @@ export interface QuestionsState {
   configuredQuestionsList: Types.DynamicClient[];
   client: Types.DynamicClient;
   errors: any;
+  clientList: any;
 }
 
 export const emptyReferral: Types.Referral = {

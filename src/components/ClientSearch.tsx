@@ -9,6 +9,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import { domainPath } from "../App"
 import {
   wrap,
   subHeading,
@@ -23,7 +24,7 @@ import {
 import * as Types from "../api/definitions";
 
 interface ClientSearchProps {
-  clientList: Types.Client[];
+  clientList: any;
   onFormSubmit: (client_code: string, client_name: string) => void;
   isLoading: boolean;
   hasError: boolean;
@@ -44,6 +45,8 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
   const history = useHistory();
   /** */
   const { clientList } = props;
+  const client = domainPath === "adelphoi" ? [] : clientList.map(q => q[0].questions)
+
   return (
     <div css={wrap}>
       <div css={mainContent}>
@@ -58,7 +61,8 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
             return errors;
           }}
           onSubmit={async (values, helpers) => {
-            await props.onFormSubmit(values.client_code, values.client_name);
+            const code: any = values.client_code ? parseInt(values.client_code) : ""
+            await props.onFormSubmit(code, values.client_name);
             // helpers.resetForm();
           }}
         >
@@ -81,7 +85,7 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
                     type="text"
                     name="client_name"
                     css={inputField}
-                    placeholder="client Name"
+                    placeholder="Client Name"
                     value={values.client_name || ""}
                     onChange={handleChange}
                   />
@@ -102,47 +106,96 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
         </Formik>
         <div>
           <h1 css={subHeading}>Client List</h1>
-          <Table aria-label="clients table" css={dataTable}>
-            <TableHead>
-              <TableRow css={tableHeader}>
-                <TableCell>Client Name</TableCell>
-                <TableCell>Client Code</TableCell>
-                <TableCell>Age</TableCell>
-                <TableCell>Gender</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {clientList.length > 0 ? (
-                clientList.map(cl => (
+          {domainPath === "adelphoi" ?
+            <Table aria-label="clients table" css={dataTable}>
+              <TableHead>
+                <TableRow css={tableHeader}>
+                  <TableCell>Client Name</TableCell>
+                  <TableCell>Client Code</TableCell>
+                  <TableCell>Age</TableCell>
+                  <TableCell>Gender</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {clientList.length > 0 ? (
+                  clientList.map(cl => (
+                    <TableRow
+                      hover
+                      key={cl.client_code || undefined}
+                      onClick={() =>
+                        history.push(
+                          `existing-client/client-details/${cl.client_code}`
+                        )
+                      }
+                      css={tableRow}
+                    >
+                      <TableCell>{cl.name}</TableCell>
+                      <TableCell>{cl.client_code}</TableCell>
+                      <TableCell>{cl.age}</TableCell>
+                      <TableCell>
+                        {cl.gender && cl.gender.toString() === "1"
+                          ? "Female"
+                          : "Male"}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                    <TableRow key={9999}>
+                      <TableCell colSpan={4} style={{ textAlign: "center" }}>
+                        No results found
+                </TableCell>
+                    </TableRow>
+                  )}
+              </TableBody>
+            </Table>
+            :
+
+            <Table aria-label="clients table" css={dataTable}>
+              <TableHead>
+                <TableRow css={tableHeader}>
+                  <TableCell>Client Code</TableCell>
+                  <TableCell>First Name</TableCell>
+                  <TableCell>Last Name</TableCell>
+                  {/* <TableCell>Gender</TableCell> */}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {/* {clientList.questions.length > 0 ? ( */}
+                {client.length > 0 ? client.map(cl => (
                   <TableRow
                     hover
-                    key={cl.client_code || undefined}
+                    key={cl.Client_Code || undefined}
                     onClick={() =>
                       history.push(
-                        `existing-client/client-details/${cl.client_code}`
+                        `existing-client/client-details/${cl[0].answer}`
                       )
                     }
                     css={tableRow}
                   >
-                    <TableCell>{cl.name}</TableCell>
-                    <TableCell>{cl.client_code}</TableCell>
-                    <TableCell>{cl.age}</TableCell>
-                    <TableCell>
+                    <TableCell>{cl[0].answer}</TableCell>
+                    <TableCell>{cl[1].answer}</TableCell>
+                    <TableCell>{cl[2].answer}</TableCell>
+
+                    {/* <TableCell>
                       {cl.gender && cl.gender.toString() === "1"
                         ? "Female"
                         : "Male"}
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))
-              ) : (
-                <TableRow key={9999}>
-                  <TableCell colSpan={4} style={{ textAlign: "center" }}>
-                    No results found
+                  : (
+                    <TableRow key={9999}>
+                      <TableCell colSpan={4} style={{ textAlign: "center" }}>
+                        No results found
                   </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                    </TableRow>
+                  )}
+
+              </TableBody>
+            </Table>
+
+          }
+
         </div>
       </div>
       {/* MAIN CONTENT */}

@@ -8,21 +8,22 @@ import * as referral from "../redux-modules/referral";
 import ReferralList from "../components/ReferralList";
 import { ContainerProps } from "./Container";
 import * as client from "../redux-modules/client";
+import * as dynamicclient from "../redux-modules/dynamicclient";
 import * as Types from "../api/definitions";
-import ClientDetails from "../components/ClientDetails";
+import DynamicClientDetails from "../components/DynamicClientDetails";
 import { domainPath } from "../App"
 interface MatchParams {
   index: string;
 }
 
-export interface ClientDetailsContainerState {
+export interface DynamicClientDetailsContainerState {
   isLoading: boolean;
   error: string;
   hasError: boolean;
   program_completion_response: string | null;
 }
 
-export interface ClientDetailsContainerProps
+export interface DynamicClientDetailsContainerProps
   extends ContainerProps<MatchParams>,
     WithSnackbarProps {
   searchClient: (client_code: string, client_name: string) => Promise<void>;
@@ -54,11 +55,11 @@ export interface ClientDetailsContainerProps
   Referral: Types.Referral[];
 }
 
-export class ClientDetailsContainer extends React.Component<
-  ClientDetailsContainerProps,
-  ClientDetailsContainerState
+export class DynamicClientDetailsContainer extends React.Component<
+DynamicClientDetailsContainerProps,
+DynamicClientDetailsContainerState
 > {
-  constructor(props: ClientDetailsContainerProps) {
+  constructor(props: DynamicClientDetailsContainerProps) {
     super(props);
     this.state = this.getInitialState();
   }
@@ -176,9 +177,10 @@ export class ClientDetailsContainer extends React.Component<
       <div css={wrap}>
         <div css={mainContent}>
           {!clientList[index] ? null : (
-            <ClientDetails
+            <DynamicClientDetails
             is_role_type={is_role_type}
               client={clientList[index]}
+              index={index} 
               onProgramSelect={this.getLocationsAndPcr}
               // onLocationSelect={this.saveProgramAndLocation}
               {...this.state}
@@ -222,4 +224,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withSnackbar(ClientDetailsContainer));
+)(withSnackbar(DynamicClientDetailsContainer));

@@ -429,11 +429,13 @@ export const actions = {
   },
 
   searchClient(
-    client_code: string,
+    client_code: string, 
     client_name: string
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
+   
       const response = await searchClient(client_code, client_name);
+      console.log(response,"hhh")
       let clientList: { [key: string]: Types.Client } = {};
       response.map((c: Types.Client) => {
         if (c.client_code) {

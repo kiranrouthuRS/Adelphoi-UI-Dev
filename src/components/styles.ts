@@ -22,7 +22,7 @@ export const wrap = css`
 `;
 
 export const mainContent = css`
-  margin-top: 24px;
+  margin-top: 12px;
   width: 100%;
   box-sizing: border-box;
 `;

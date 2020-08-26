@@ -17,6 +17,7 @@ import AppShell from "./AppShell";
 import NewClientContainer from "./containers/NewClientContainer";
 import DynamicNewClientContainer from "./containers/DynamicNewClientContainer";
 import ExistingClientContainer from "./containers/ExistingClientContainer";
+import DynamicExistingClientContainer from "./containers/DynamicExistingClientContainer";
 import ConfigurationContainer from "./containers/ConfigurationContainer";
 import LoginContainer from "./containers/LoginContainer";
 import Logout from "./components/Logout"; 
@@ -47,7 +48,7 @@ const App: React.FC = (props) => {
          
                 <Route exact path={`/${dom}`}>
                 {is_configured === true ? (
-                    <Redirect to={`/${dom}/new-client`} /> 
+                    <Redirect to={domainPath === "adelphoi" ?`/${dom}/new-client`:`/${dom}/new-client1`} /> 
                   ):(
                     <Redirect to={`/${dom}/welcomepage`} /> 
                     
@@ -65,7 +66,7 @@ const App: React.FC = (props) => {
                 <PrivateRoute exact path={`/${dom}/new-client1`} component={DynamicNewClientContainer} />
                 <PrivateRoute
                   path={`/${dom}/existing-client`}
-                  component={ExistingClientContainer}
+                  component={dom === "adelphoi" ? ExistingClientContainer:DynamicExistingClientContainer}
                 />
                 <PrivateRoute
                   path={`/${dom}/configuration`}

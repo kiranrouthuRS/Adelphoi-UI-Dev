@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
+import { jsx, css } from "@emotion/core";  
 import { Formik, FormikProps, FormikErrors, FieldProps, Field } from "formik";
 import Button from "@material-ui/core/Button";
 import DateFnsUtils from "@date-io/date-fns";
@@ -113,7 +113,27 @@ const DobPicker: React.FC<FormikProps<Types.Client> & FieldProps> = props => {
     </MuiPickersUtilsProvider> 
   );
 };
-
+const logout = css`
+  position: relative;
+  top: -25px;
+  right: 25px;
+  radius: 2px;
+  
+  @media all and (max-width: 520px) {
+    top: 0;
+    right: 0;
+  }
+`;
+const profile = css`
+  position: relative;
+  top: -25px;
+  right: -1 0px; 
+  radius: 2px;
+  @media all and (max-width: 520px) {
+    top: 0;
+    right: 25;
+  }
+`;
 const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
   const { Referral, isEdit  } = props;
   const renderErrorNotification = () => {
@@ -125,7 +145,6 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
     return <SnackNotification errors={errors} />;
   };
   
-
   return (
     <div css={wrap}>
       {renderErrorNotification()}
@@ -156,6 +175,30 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
         >
           {({ values, handleSubmit, handleChange, errors }) => (
             <form name="newClientForm" onSubmit={handleSubmit}>
+              {/* <h5 css={subHeading}>Download CSV template</h5>
+              <h5 css={subHeading}>Upload</h5> */}
+              <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
+       <a
+              href={`/billing`}
+              css={logout}
+            >
+              Download CSV template
+            </a>
+        <a
+              href={`/changepassword`}
+              css={profile} 
+            >
+             <input
+                    css={inputField}
+                    name="client_code"
+                    type="file"
+                    placeholder=""
+                    value={values.client_code || ""}
+                    onChange={handleChange}
+                  /> Upload
+            </a>
+                
+      </div>
               <h1 css={subHeading}>Demographics</h1>
               <div css={fieldRow}>
                 <div css={twoCol}>

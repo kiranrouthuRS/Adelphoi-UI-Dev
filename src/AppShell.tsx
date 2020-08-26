@@ -111,6 +111,7 @@ const logout = css`
   top: -25px;
   right: -25px;
   radius: 2px;
+  
   @media all and (max-width: 520px) {
     top: 0;
     right: 0;
@@ -139,12 +140,9 @@ const billing = css`
 `;
 
 const AppShell: React.FC = ({children},props ) => {
-  console.log(children,"children")
  const is_configured = children&&children[1].props.user.user.is_fully_configured  
 const logopath = children&&children[1].props.user.user.logo_path; 
-// const is_configured = store.getState().user.user.is_fully_configured  
-// const logopath = store.getState().user.user.logo_path;  
-  
+ 
  return ( 
     <Paper css={App} elevation={3}>
       
@@ -200,17 +198,17 @@ const logopath = children&&children[1].props.user.user.logo_path;
                          fillColor={match ? "white" : "#9d9d9d"}
                        />
                        :""}
-                      {is_configured === true ? "New Client" :""}
+                      {is_configured === true ? "New Client" :""} 
                      </Link>
                    )}
                  />
          
-                 <Route
-                   path={`/${domainPath}/existing-client`}
+                 <Route 
+                   path={ is_configured === true ? `/${domainPath}/existing-client`:`/${domainPath}/configuration`}
                    children={({ match, history }) => (
                      <Link
                        onClick={() => {
-                         history.push(`/${domainPath}/existing-client`);
+                         history.push(is_configured === true ? `/${domainPath}/existing-client`:`/${domainPath}/configuration`);
                        }}
                        css={menuButton}
                        style={
@@ -222,8 +220,11 @@ const logopath = children&&children[1].props.user.user.logo_path;
                       {is_configured === true ? <ExistingClientIcon
                          css={menuIcon}
                          fillColor={match ? "white" : "#9d9d9d"}
-                       />:""}
-                     {is_configured === true ?  "Existing Client" :""} 
+                       />:<ConfigIcon
+                       css={menuIcon}
+                       fillColor={match ? "white" : "#9d9d9d"}
+                     />}
+                     {is_configured === true ?  "Existing Client" :"Configuration"} 
                      </Link>
                    )}
                  />
@@ -242,11 +243,11 @@ const logopath = children&&children[1].props.user.user.logo_path;
                            : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
                        }
                      >
-                       <ConfigIcon
+                      {is_configured === true ? <ConfigIcon
                          css={menuIcon}
                          fillColor={match ? "white" : "#9d9d9d"}
-                       />
-                       Configuration
+                       />:""} 
+                       {is_configured === true ? "Configuration":""}
                      </Link>
                    )}
                  />
