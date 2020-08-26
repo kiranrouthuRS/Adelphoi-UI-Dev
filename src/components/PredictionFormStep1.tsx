@@ -177,28 +177,7 @@ const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
             <form name="newClientForm" onSubmit={handleSubmit}>
               {/* <h5 css={subHeading}>Download CSV template</h5>
               <h5 css={subHeading}>Upload</h5> */}
-              <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
-       <a
-              href={`/billing`}
-              css={logout}
-            >
-              Download CSV template
-            </a>
-        <a
-              href={`/changepassword`}
-              css={profile} 
-            >
-             <input
-                    css={inputField}
-                    name="client_code"
-                    type="file"
-                    placeholder=""
-                    value={values.client_code || ""}
-                    onChange={handleChange}
-                  /> Upload
-            </a>
-                
-      </div>
+              
               <h1 css={subHeading}>Demographics</h1>
               <div css={fieldRow}>
                 <div css={twoCol}>
