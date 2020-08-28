@@ -56,6 +56,7 @@ interface DynamicClientDetailsProps {
   isLoading: boolean;
   hasError: boolean;
   error: string;
+  searchData: any;
   program_completion_response: string | null;
   // getReferral: () => Promise<void>;
   Referral: Types.Referral[],
@@ -86,6 +87,20 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
   const [predicted_location, setPredictedLocation] = useState<string | null>(
     null
   );
+
+  const [SelectedVersion, setSelectedVersion] = useState<any | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (
+      !SelectedVersion ||
+      SelectedVersion === props.searchData
+    ) {
+      const length = props.searchData.length - 1
+      setSelectedVersion([searchData[length]]);
+    }
+  }, [props.searchData]);
 
   useEffect(() => {
     if (
@@ -122,27 +137,8 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
   if (!index) {
     return <h1 css={subHeading}>No client found</h1>;
   }
-  const { client, Referral } = props;
-  // const programOptions = props.client.SuggestedPrograms
-  //   ? props.client.SuggestedPrograms.map(p => {
-  //     return {
-  //       label: p,
-  //       value: p,
-  //       predicted: p === predicted_program
-  //     };
-  //   })
-  //   : [];
+  const { client, Referral, searchData } = props;
 
-
-  // const locationOptions = props.client.SuggestedLocations
-  //   ? props.client.SuggestedLocations.map(l => {
-  //     return {
-  //       label: l,
-  //       value: l,
-  //       predicted: l === predicted_location
-  //     };
-  //   })
-  //   : [];
 
   const getInitialValues = () => {
     const { client, is_role_type } = props;
@@ -150,53 +146,16 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     let location: any = null;
     let referral: any = null;
 
-    // if (client.selected_referral) {
-    //   referral = {
-    //     label: client.selected_referral,
-    //     value: client.selected_referral,
-    //     predicted: client.selected_referral === predicted_referral
-    //   };
-    // }
-    // if (client.selected_program) {
-    //   program = {
-    //     label: client.selected_program,
-    //     value: client.selected_program,
-    //     predicted: client.selected_program === predicted_program
-    //   };
-    // }
-    // if (client.selected_location) {
-    //   location = {
-    //     label: client.selected_location,
-    //     value: client.selected_location,
-    //     predicted: client.selected_location === predicted_location
-    //   };
-    // }
-    // return {
-    //   Program_Completion:
-    //     client.Program_Completion === null
-    //       ? ""
-    //       : client.Program_Completion.toString(),
-    //   Returned_to_Care:
-    //     client.Returned_to_Care === null
-    //       ? ""
-    //       : client.Returned_to_Care.toString(),
-    //   program_significantly_modified: Number(
-    //     client.program_significantly_modified
-    //   ),
-    //   roc_confidence:
-    //     client.roc_confidence !== null ? client.roc_confidence.toString() : "",
-    //   Program: program,
-    //   Referral: referral,
-
-
-    //   confidence:
-    //     client.confidence !== null ? client.confidence.toString() : "",
-    //   Location: location || ""
-    // };
   };
-  const display = (id) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const val = searchData.filter((sec, i) => sec.version === value && sec)
+    setSelectedVersion(val)
+  }
+  
+  const display = (id, ver) => {
     const tempArray = [] as any;
-    let questions = client[id] && client[id].hasOwnProperty("section") ? client[id].questions : ""
+   let questions = SelectedVersion && SelectedVersion[0].sections[id].questions
     const length: any = questions && questions.length
     for (let i = 0; i < length; i++) {
       if ((i + 1) % 2 !== 0) {
@@ -215,66 +174,89 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     return tempArray
 
   }
+  
   return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
       {props.is_role_type === "Contributor" ? "" : (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            textAlign: "right",
-            paddingTop: 20,
-            paddingBottom: 20
-          }}
-        >
-          <a
-            rel="noopener noreferrer"
-            target="_blank"
-            css={txtDetail}
-            href={`${baseApiUrl}/${domainPath}/index/${client.client_code}`}
+        <div css={fieldRow}>
+          <div css={twoCol}>&nbsp;</div>
+          <div
+            css={twoCol} >
+            <div css={txtDetail}>
+              <select
+                css={selectField}
+                name="versions"
+                onChange={handleChange}
+              >
+                <option value="">Select Version</option>
+                {searchData.map((data, i) =>
+
+                  <option key={i} value={data.version} selected={data.version === searchData[searchData.length - 1].version}>{data.date_created}</option>
+
+
+                )}
+              </select>
+            </div>
+          </div>
+          <div
+            css={twoCol}
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              textAlign: "center",
+              paddingTop: 13,
+              paddingBottom: 20
+            }}
           >
-            <PictureAsPdfIcon /> Download Report
-          </a>
+            <a
+              rel="noopener noreferrer"
+              target="_blank"
+              css={txtDetail}
+              href={`${baseApiUrl}/${domainPath}/index/${client.client_code}`}
+            >
+              <PictureAsPdfIcon /> Download Report
+        </a>
+          </div>
         </div>
       )}
       {
-        Object.keys(client).map((key, id) =>
-          client[key] && client[key].hasOwnProperty("section") ?
-            <ExpansionPanel defaultExpanded={id === 0 ? true : false}>
-              <ExpansionPanelSummary
-                css={panelHeader}
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-              >
-                <h1 css={panelHeading}>{client[key].section}</h1>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails css={panel}>
-                {display(id).map((item, index) => {
-                  return <div css={fieldRow}>{item.map((item_1, index_1) => {
-                    return <div css={twoCol}>
-                      <label css={txtLabel}>{item_1.question}</label>
-                      <div css={txtDetail}>
-                        {item_1.answer}
-                      </div>
+        SelectedVersion && SelectedVersion[0].sections.map((ques, id) =>
+          <ExpansionPanel defaultExpanded={id === 0 ? true : false}>
+            <ExpansionPanelSummary
+              css={panelHeader}
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+            >
+              <h1 css={panelHeading}>{ques.section}</h1>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails css={panel}>
+              {display(id, SelectedVersion).map((item, index) => {
+                return <div css={fieldRow}>{item.map((item_1, index_1) => {
+                  return <div css={twoCol}>
+                    <label css={txtLabel}>{item_1.question}</label>
+                    <div css={txtDetail}>
+                      {item_1.answer}
                     </div>
-                  })}
                   </div>
-                })
-                }
+                })}
+                </div>
+              })
+              }
 
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            : ""
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+
+
         )
       }
-      <h3> Click <a onClick={() =>
+      <h3> Click <a href="#" onClick={() =>
         history.push(
-          `/${domainPath}/existing-client/edit-details/${index},true`
+          `/${domainPath}/existing-client/edit-details/${index}&true`
         )
-      }><u style={{ color: "red" }}>here</u></a> to Edit Client details Or update below details.</h3>
+      }><u style={{ color: "red" }}>here</u></a> to update latest version of Client details.</h3>
 
 
     </div>

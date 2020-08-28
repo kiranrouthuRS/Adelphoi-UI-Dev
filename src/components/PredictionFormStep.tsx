@@ -2,7 +2,6 @@
 import { jsx, css } from "@emotion/core";
 import React from "react";
 import Modal from "react-modal";
-import { connect } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -47,7 +46,7 @@ interface PredictionFormStepProps {
   hasError: boolean;
   error: string;
   isEdit: string;
-  errors: undefined;
+  errors: any;
   user: any;
 
 
@@ -55,6 +54,7 @@ interface PredictionFormStepProps {
 export interface PredictionFormStepState {
   isLoading: boolean;
   error: any;
+  errors: any;
   hasError: boolean;
   isSubmitted: boolean;
   client_form: any;
@@ -90,11 +90,10 @@ const customStyles = {
   content: {
     top: '50%',
     left: '50%',
-    right: '50%',
+    right: 'auto',
     bottom: 'auto',
     marginRight: '-50%',
-    transform: 'translate(-50%, -110%)',
-    position: 'absolute'
+    transform: 'translate(-50%, -110%)'
   }
 };
 
@@ -113,6 +112,7 @@ export class PredictionFormStep extends React.Component<
       isSubmitted: false,
       DynamicQuestions: [],
       error: [],
+      errors: "",
       client_form: [],
       prevJump: [],
       csvfile: "",
@@ -124,12 +124,15 @@ export class PredictionFormStep extends React.Component<
     let client_form = [] as any;
     this.props.DynamicQuestions.map
       (sec => sec.questions && sec.questions.map(ques => {
-        client_form.push({ [ques.question]: ques.answer });
+        client_form.push({ [ques.question]: ques.answer ? ques.answer : "" });
 
       }))
     this.setState({
       DynamicQuestions: this.props.DynamicQuestions,
-      client_form: Object.assign({}, ...client_form)
+      client_form: Object.assign({}, ...client_form),
+      isOpen: this.props.errors ? true : false,
+      err_msg: this.props.errors ? this.props.errors : "",
+
     })
   }
 
@@ -327,6 +330,7 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions } = this.state;
+    console.log(this.props)
     return (
       <div css={wrap}>
 
@@ -508,17 +512,6 @@ export class PredictionFormStep extends React.Component<
   }
 };
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    client: state.client,
-    program: state.program,
-    referral: state.referral,
-    user: state.user,
-    dynamicclient: state.dynamicclient
-  };
-};
-export default connect(
-  mapStateToProps,
-  null
-)(PredictionFormStep);
+
+export default PredictionFormStep;
 

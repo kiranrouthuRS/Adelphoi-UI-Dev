@@ -22,6 +22,7 @@ const initialState: ClientState = {
   client: Types.emptyClient,
   clientList: {},
   errors: {},
+  searchData: "",
   excludePage2: false,
   page1FormCompleted: false,
   page2FormCompleted: false
@@ -435,7 +436,6 @@ export const actions = {
     return async (dispatch, getState) => {
    
       const response = await searchClient(client_code, client_name);
-      console.log(response,"hhh")
       let clientList: { [key: string]: Types.Client } = {};
       response.map((c: Types.Client) => {
         if (c.client_code) {

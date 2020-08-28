@@ -72,7 +72,7 @@ DynamicExistingClientContainerState
     const referralList = (referralState && referralState.referralList) || [];
     const clientList = (clientState && clientState.clientList) || {};
   const {is_Searched}= this.state
-    return (
+  return (
       <Switch>
         <Route exact path={`/${domainPath}/existing-client`}>
           <ClientSearch
@@ -98,7 +98,7 @@ DynamicExistingClientContainerState
         ></Route>
         <Route
           exact
-          path={`/${domainPath}/existing-client/edit-details/:index,:isEdit`}
+          path={`/${domainPath}/existing-client/edit-details/:index&:isEdit`}
           component={DynamicNewClientContainer}
         ></Route>
       </Switch>

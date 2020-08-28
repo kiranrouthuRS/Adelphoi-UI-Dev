@@ -9,6 +9,7 @@ export interface ClientState {
   excludePage2: boolean;
   page1FormCompleted: boolean;
   page2FormCompleted: boolean;
+  searchData: any; 
 }
 
 export interface ConfigurationState {
@@ -35,6 +36,7 @@ export interface QuestionsState {
   client: Types.DynamicClient;
   errors: any;
   clientList: any;
+  searchData: any;
 }
 
 export const emptyReferral: Types.Referral = {

@@ -172,7 +172,8 @@ DynamicClientDetailsContainerState
     const referralList = (referralState && referralState.referralList) || [];
     const clientList = (clientState && clientState.clientList) || {};
     const { index } = this.props.match.params;
-    const is_role_type: any = this.props.user && this.props.user.user.role_type 
+    const is_role_type: any = this.props.user && this.props.user.user.role_type  
+    const searchData :any = this.props&&this.props.client&&this.props.client.searchData&&this.props.client.searchData
     return (
       <div css={wrap}>
         <div css={mainContent}>
@@ -181,6 +182,7 @@ DynamicClientDetailsContainerState
             is_role_type={is_role_type}
               client={clientList[index]}
               index={index} 
+              searchData={searchData.filter(s=> s.client_code == index)}
               onProgramSelect={this.getLocationsAndPcr}
               // onLocationSelect={this.saveProgramAndLocation}
               {...this.state}

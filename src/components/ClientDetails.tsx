@@ -121,11 +121,8 @@ const ClientDetails: React.FC<ClientDetailsProps> = props => {
   if (!index) {
     return <h1 css={subHeading}>No client found</h1>;
   }
-  const { client, Referral } = props;
-
- 
-  
-  const RefSource  = Referral.map(d =>{
+  const { client , Referral } = props;
+const RefSource  = Referral.map(d =>{
     
     return (`${d.referral_name}`);
   
