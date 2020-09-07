@@ -92,6 +92,7 @@ export class DynamicNewClientContainer extends React.Component<
     //this.props.saveClient(client, true, true);
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     const res: any = await this.props.insertDClient(client, is_accessToken);
+    console.log(res)
     this.setState({ isLoading: false });
     if (res !== null && res === "client registered") {
       this.props.enqueueSnackbar(index ? "Client details updated Successfully." : "New Client Created Successfully.");
@@ -196,7 +197,6 @@ export class DynamicNewClientContainer extends React.Component<
     currentClient = clientState ? clientState.client : Types.emptyClient;
     const availableProgramList =
       (programState && programState.availableProgramList) || [];
-    console.log(this.state.error)
     return (
       <Switch>
         <Route exact path={`/${domainPath}/new-client/program-selection`}>

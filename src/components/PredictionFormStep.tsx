@@ -22,7 +22,7 @@ import {
   mainContent,
   twoCol,
   inputField,
-  label,
+  label1,
   fieldBox,
   fieldBox1,
   selectField,
@@ -87,15 +87,15 @@ const profile = css`
   }
 `;
 const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -110%)'
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
   }
-};
+}; 
 
 export class PredictionFormStep extends React.Component<
   PredictionFormStepProps,
@@ -116,14 +116,15 @@ export class PredictionFormStep extends React.Component<
       client_form: [],
       prevJump: [],
       csvfile: "",
-      err_msg: "",
+      err_msg: [],
       isOpen: false
     };
   }
-  componentDidMount() {
+ async componentDidMount() { 
     let client_form = [] as any;
+    console.log(this.props.DynamicQuestions)
     this.props.DynamicQuestions.map
-      (sec => sec.questions && sec.questions.map(ques => {
+      (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
         client_form.push({ [ques.question]: ques.answer ? ques.answer : "" });
 
       }))
@@ -131,9 +132,8 @@ export class PredictionFormStep extends React.Component<
       DynamicQuestions: this.props.DynamicQuestions,
       client_form: Object.assign({}, ...client_form),
       isOpen: this.props.errors ? true : false,
-      err_msg: this.props.errors ? this.props.errors : "",
-
-    })
+      err_msg: this.props.errors,
+       })
   }
 
   handleClose = () => {
@@ -182,26 +182,33 @@ export class PredictionFormStep extends React.Component<
       const val2: any = e.target.dataset.val2;
       const type = e.target.dataset.type;
       const error_msg = e.target.dataset.msg;
-      const jump = e.target.dataset.jump;
-      const idx = e.target.dataset.idx;
+     
       if (type === "select") {
         const length = e.target.dataset.length;
         var optionElement = e.target.childNodes[e.target.selectedIndex]
-        let x = optionElement.getAttribute('data-idx');
-        let y = optionElement.getAttribute('data-jump');
-        let z = optionElement.getAttribute('data-idy');
+        let idx = optionElement.getAttribute('data-idx');
+        let jump = optionElement.getAttribute('data-jump');
+        let idy = optionElement.getAttribute('data-idy');
         this.setState({
           prevJump: {
-            [name]: y,
+            [name]: jump,
             hasError: false,
           }
 
         })
         const DynamicQuestions = this.state.DynamicQuestions;
-        DynamicQuestions[y ? y : parseInt(x) + 1].related = false
-        DynamicQuestions[this.state.prevJump[name] ? this.state.prevJump[name] : 0].related = this.state.prevJump[name] ? true : false;
+        DynamicQuestions.map((sec,i) => sec.section_id === parseInt(jump) ? (
+          DynamicQuestions[i].related = "false"
+        )
+        : 
+          sec.section_id.toString() === this.state.prevJump[name] && (
+          DynamicQuestions[i].related = "true"
+        )
+        )
       } else {
         if (type === "radio") {
+          const jump = e.target.dataset.jump;
+          const idx = e.target.dataset.idx;
           this.setState({
             prevJump: {
               [name]: jump,
@@ -210,11 +217,15 @@ export class PredictionFormStep extends React.Component<
 
           })
           const DynamicQuestions = this.state.DynamicQuestions;
-          const length = this.state.DynamicQuestions.length;
-          DynamicQuestions[jump ? jump : length === parseInt(idx) + 1 ? parseInt(idx) : parseInt(idx) + 1].related = "false";
-          DynamicQuestions[this.state.prevJump[name] ?
-            this.state.prevJump[name] : 0].related = this.state.prevJump[name] ? "true" : "false";
-        }
+          DynamicQuestions.map((sec,i) => sec.section_id === parseInt(jump) ? (
+            DynamicQuestions[i].related = "false"
+          )
+          : 
+            sec.section_id.toString() === this.state.prevJump[name] && (
+            DynamicQuestions[i].related = "true"
+          )
+          )
+          }
       }
       if (val1 === "") {
         this.setState({
@@ -228,8 +239,8 @@ export class PredictionFormStep extends React.Component<
       }
       else {
         if (type === "number") {
-          const err = parseInt(value) <= parseInt(val1)
-          const err1 = parseInt(value) >= parseInt(val2)
+          const err = parseInt(value) < parseInt(val1) 
+          const err1 = parseInt(value) > parseInt(val2)
           this.setState({
             client_form: {
               ...this.state.client_form,
@@ -261,14 +272,19 @@ export class PredictionFormStep extends React.Component<
     }
 
   }
-  handleSubmit = (e) => {
+  handleSubmit = async(e) => {
     e.preventDefault();
     const client_form = this.state.client_form;
     this.setState({
       isSubmitted: true
     })
     if (!this.state.hasError) {
-      this.props.onFormSubmit(client_form);
+     await this.props.onFormSubmit(client_form);
+     this.setState({
+      isSubmitted: false,
+      err_msg: this.props.errors,
+      isOpen: this.props.errors ? true : false
+    })
     } else {
 
     }
@@ -295,7 +311,7 @@ export class PredictionFormStep extends React.Component<
     }
     else {
       this.setState({
-        err_msg: res.response.toString().replace(/,/g, ' \n '),
+        err_msg: res.response,
         isOpen: true
       })
     }
@@ -330,7 +346,7 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions } = this.state;
-    console.log(this.props)
+    const { errors } = this.props;
     return (
       <div css={wrap}>
 
@@ -367,7 +383,8 @@ export class PredictionFormStep extends React.Component<
           >
             <div>
               <h1 css={subHeading}>Please correct the following errors and try again.</h1>
-              <div style={{ color: "red" }}>{this.state.err_msg}</div>
+    {this.state.err_msg&&this.state.err_msg.map((e,i)=> <div style={{ color: "red" }}>{this.state.err_msg[i]}</div>)}
+              
             </div>
 
           </Modal>
@@ -380,7 +397,11 @@ export class PredictionFormStep extends React.Component<
                   <h1 css={subHeading}>{sections.section}</h1>
                   {this.display(index).map((item, ind) => {
                     return <div css={fieldRow}>{item.map((ques, index_1) => {
-                      return <div css={twoCol}><label css={label}>{ques.question}</label>
+                      return <div css={twoCol}>
+                       <label css={label1} >{ques.question}</label> {ques.description && <label style={{fontSize:"16px"}}> ({ques.description})</label>} <br/>
+                        {/* <label css={label} >{ques.question} 
+                        </label>
+                        <label style={{fontSize:"14px"}}>{ques.description}</label>  */}
                         {ques.answer_type === "SELECT" ?
                           <select
                             css={selectField}
@@ -411,7 +432,7 @@ export class PredictionFormStep extends React.Component<
                                   <React.Fragment>
                                     <input
                                       type="radio"
-                                      data-jump={ques.suggested_jump[i]}
+                                      data-jump={ques.suggested_jump[i]?ques.suggested_jump[i]:""} 
                                       data-idx={index}
                                       data-idy={ind}
                                       name={ques.question} value={ans}
@@ -485,7 +506,7 @@ export class PredictionFormStep extends React.Component<
                         }
                         {this.state.isSubmitted === true ? this.state.error[ques.question] ?
                           <div style={{ color: "red" }}>{this.state.error[ques.question]}</div> : this.state.client_form[ques.question] ? "" :
-                            ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : "" : ""}
+                        ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : "" : ""}
                       </div>
                     })}</div>
 

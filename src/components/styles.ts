@@ -114,6 +114,13 @@ export const txtLabel = css`
   font-size: 16px;
 `;
 
+export const label1 = css`
+font-weight: bold;
+font-size: 18px;
+color: #000;
+margin-bottom: 5px;
+  `;
+
 export const fieldBox = css`
   display: inline-block;
   padding: 12px;

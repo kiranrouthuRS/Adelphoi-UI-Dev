@@ -201,7 +201,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
               </select>
             </div>
           </div>
-          <div
+          {/* <div
             css={twoCol}
             style={{
               display: "flex",
@@ -219,7 +219,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
             >
               <PictureAsPdfIcon /> Download Report
         </a>
-          </div>
+          </div> */}
         </div>
       )}
       {
