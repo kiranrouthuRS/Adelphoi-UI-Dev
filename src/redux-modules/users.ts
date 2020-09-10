@@ -109,6 +109,7 @@ export const actions = {
         throw Error("something went wrong getting list of users");
       }
       dispatch(update({ usersList: response1 }));
+      return response;
     };
   },
 
@@ -118,6 +119,7 @@ export const actions = {
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const response = await updateUsers(users,is_accessToken);
+      console.log(response)
       if (!response) {
         throw Error("something went wrong while updating the users");
       }
@@ -135,8 +137,10 @@ export const actions = {
         throw Error("something went wrong getting list of users");
       }
       dispatch(update({ usersList: response1 }));
+      return response;
     };
   },
+
   deleteUsers(
     userID: any,
     is_accessToken: any

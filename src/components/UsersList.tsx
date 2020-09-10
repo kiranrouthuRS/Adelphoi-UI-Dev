@@ -101,16 +101,17 @@ export class UsersList extends React.Component<
       role_type: this.state.role_type
     };
     if (isEdit) {
-      await this.props.updateUsers(users,is_accessToken); 
+     const response: any = await this.props.updateUsers(users,is_accessToken); 
+     console.log(response) 
       this.setState({
-        message: "User updated successfully",
+        message: response.status === "failed" ? response.message:"User updated successfully",
         isEdit : false
       });
      
     } else {
-      await this.props.createUsers(users,is_accessToken);
+      const response: any =  await this.props.createUsers(users,is_accessToken);
       this.setState({
-        message: "User created successfully"
+        message: response.status === "failed" ? response.message:"User created successfully"
       })
     }
     this.setState({
@@ -176,9 +177,11 @@ export class UsersList extends React.Component<
       userID = e.currentTarget.dataset.id;
     }
      const response = await this.props.getAvailableUsers(userID) 
+     console.log(response)
     const singleuser = (this.props.availableUsersList && this.props.availableUsersList) || [];
     const singlerole = (this.props.rolesList && this.props.rolesList) || [];
     const roleID: any = singlerole.filter(id => id.name == singleuser[0].role_type)
+    console.log(singleuser,singleuser[0].gender)
      this.setState({
       id: singleuser[0].id,
       full_name: "",
@@ -186,8 +189,8 @@ export class UsersList extends React.Component<
       last_name: singleuser[0].last_name,
       email_id: singleuser[0].email_id,
       mobile: singleuser[0].mobile,
-      gender: `${singleuser[0].gender}`,
-      role_type: roleID[0].id,
+      gender: singleuser[0].gender === "Male" ? "2" : singleuser[0].gender === "Female" ? "1":"", 
+      role_type: roleID[0].id, 
       role_type_text: singleuser[0].role_type,
       isEdit: true
     });
@@ -212,6 +215,7 @@ export class UsersList extends React.Component<
     const acctoken = this.props
     const isEdit = this.state.isEdit
     const arr = Array.isArray(rolesList)
+    console.log(this.state)
     return (
       <form name="UsersForm" onSubmit={this.handleSubmit}>
         <h1 css={subHeading}>{isEdit ? "Edit User" : "Add New User"}</h1>
