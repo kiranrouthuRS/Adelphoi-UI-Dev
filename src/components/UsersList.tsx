@@ -102,8 +102,7 @@ export class UsersList extends React.Component<
     };
     if (isEdit) {
      const response: any = await this.props.updateUsers(users,is_accessToken); 
-     console.log(response) 
-      this.setState({
+     this.setState({
         message: response.status === "failed" ? response.message:"User updated successfully",
         isEdit : false
       });
@@ -177,11 +176,9 @@ export class UsersList extends React.Component<
       userID = e.currentTarget.dataset.id;
     }
      const response = await this.props.getAvailableUsers(userID) 
-     console.log(response)
     const singleuser = (this.props.availableUsersList && this.props.availableUsersList) || [];
     const singlerole = (this.props.rolesList && this.props.rolesList) || [];
     const roleID: any = singlerole.filter(id => id.name == singleuser[0].role_type)
-    console.log(singleuser,singleuser[0].gender)
      this.setState({
       id: singleuser[0].id,
       full_name: "",
@@ -215,7 +212,6 @@ export class UsersList extends React.Component<
     const acctoken = this.props
     const isEdit = this.state.isEdit
     const arr = Array.isArray(rolesList)
-    console.log(this.state)
     return (
       <form name="UsersForm" onSubmit={this.handleSubmit}>
         <h1 css={subHeading}>{isEdit ? "Edit User" : "Add New User"}</h1>

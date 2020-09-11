@@ -178,6 +178,7 @@ const logopath = children&&children[1].props.user.user.logo_path;
       </div>
       
            <div css={nav}>
+           {is_configured === true ?
                  <Route
                    path={domainPath === "adelphoi"?`/${domainPath}/new-client`:`/${domainPath}/new-client1`}
                    // exact={activeOnlyWhenExact}
@@ -202,13 +203,14 @@ const logopath = children&&children[1].props.user.user.logo_path;
                      </Link>
                    )}
                  />
+                 :""}
          
                  <Route 
                    path={ is_configured === true ? `/${domainPath}/existing-client`:`/${domainPath}/configuration`}
                    children={({ match, history }) => (
                      <Link
                        onClick={() => {
-                         history.push(is_configured === true ? `/${domainPath}/existing-client`:`/${domainPath}/configuration`);
+                         history.push(is_configured === true ? `/${domainPath}/existing-client`:`/${domainPath}/configuration/users`);
                        }}
                        css={menuButton}
                        style={
@@ -228,29 +230,33 @@ const logopath = children&&children[1].props.user.user.logo_path;
                      </Link>
                    )}
                  />
+                 {is_configured === true ?
                  <Route
-                   path={`/${domainPath}/configuration`}
-                   // exact={activeOnlyWhenExact}
-                   children={({ match, history }) => (
-                     <Link
-                       onClick={() => {
-                         history.push(`/${domainPath}/configuration/programs`); 
-                       }}
-                       css={menuButton}
-                       style={
-                         match
-                           ? { backgroundColor: "#8284e5", color: "white" }
-                           : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
-                       }
-                     >
-                      {is_configured === true ? <ConfigIcon
-                         css={menuIcon}
-                         fillColor={match ? "white" : "#9d9d9d"}
-                       />:""} 
-                       {is_configured === true ? "Configuration":""}
-                     </Link>
-                   )}
-                 />
+                 path={`/${domainPath}/configuration`}
+                 // exact={activeOnlyWhenExact}
+                 children={({ match, history }) => (
+                   <Link
+                     onClick={() => {
+                       history.push(`/${domainPath}/configuration/users`); 
+                     }}
+                     css={menuButton}
+                     style={
+                       match
+                         ? 
+                         { backgroundColor: "#8284e5", color: "white" }
+                         : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
+                     }
+                   >
+                    {is_configured === true ? <ConfigIcon
+                       css={menuIcon}
+                       fillColor={match ? "white" : "#9d9d9d"}
+                     />:""} 
+                     {is_configured === true ? "Configuration":""}
+                   </Link>
+                 )}
+               />
+                 :""}
+                 
                </div>
      
         <div css={nav}>

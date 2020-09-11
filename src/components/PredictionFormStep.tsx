@@ -122,7 +122,6 @@ export class PredictionFormStep extends React.Component<
   }
  async componentDidMount() { 
     let client_form = [] as any;
-    console.log(this.props.DynamicQuestions)
     this.props.DynamicQuestions.map
       (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
         client_form.push({ [ques.question]: ques.answer ? ques.answer : "" });
@@ -351,6 +350,7 @@ export class PredictionFormStep extends React.Component<
       <div css={wrap}>
 
         <div css={mainContent}>
+          {DynamicQuestions&&
           <div css={fieldRow} style={{ justifyContent: "center" }}>
             <Button
               type="submit"
@@ -374,6 +374,7 @@ export class PredictionFormStep extends React.Component<
                 style={{ marginRight: 10 }}>Upload</Button>
             </div>
           </div>
+  }
           <Modal
             isOpen={this.state.isOpen}
             ariaHideApp={false}
