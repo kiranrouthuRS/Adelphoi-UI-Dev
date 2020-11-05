@@ -192,8 +192,6 @@ const RefSource  = Referral.map(d =>{
         client.roc_confidence !== null ? client.roc_confidence.toString() : "",
       Program: program,
       Referral: referral,
-      
-      
       confidence:
         client.confidence !== null ? client.confidence.toString() : "",
       Location: location || ""
@@ -733,8 +731,7 @@ const RefSource  = Referral.map(d =>{
           if (!client.client_code) {
             return false;
           }
-
-          const Program_Completion =
+         const Program_Completion =
             values.Program_Completion === ""
               ? null
               : Number(values.Program_Completion);

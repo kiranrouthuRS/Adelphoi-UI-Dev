@@ -63,6 +63,7 @@ export interface PredictionFormStepState {
   csvfile: any;
   isOpen: boolean;
   err_msg: any;
+  isEdit: string;
 
 }
 const logout = css`
@@ -117,16 +118,24 @@ export class PredictionFormStep extends React.Component<
       prevJump: [],
       csvfile: "",
       err_msg: [],
-      isOpen: false
+      isOpen: false,
+      isEdit: this.props.isEdit
     };
   }
  async componentDidMount() { 
     let client_form = [] as any;
     this.props.DynamicQuestions.map
       (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
-        client_form.push({ [ques.question]: ques.answer ? ques.answer : "" });
+        client_form.push({ [ques.question.replace(/ /g,"_")]: ques.answer === 0 ? ques.answer :ques.suggested_answers.length >= 1 ? ques.answer&&ques.suggested_answers.filter((p,i)=>p.value === ques.answer)[0].id : ques.answer?ques.answer:"" });
 
       }))
+        // console.log(
+        //   this.props.DynamicQuestions.map
+        //   (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
+        //     client_form.push({ [ques.question.replace(/ /g,"_")]: ques.answer === 0 ? ques.answer :ques.suggested_answers.length   });
+    
+        //   }))
+        // )
     this.setState({
       DynamicQuestions: this.props.DynamicQuestions,
       client_form: Object.assign({}, ...client_form),
@@ -141,9 +150,9 @@ export class PredictionFormStep extends React.Component<
     })
   }
 
-  getAge = (value) => {
-    const date = value;
-    const fromDate = value;
+  getAge = (date ,fromDate) => {
+    // const date = value;
+    // const fromDate = value;
     if (!date) {
       return "";
     }
@@ -151,7 +160,7 @@ export class PredictionFormStep extends React.Component<
     if (!fromDate) {
       today = new Date();
     } else {
-      today = new Date();
+      today = new Date(fromDate);
     }
     var birthDate = new Date(date);
     var age = today.getFullYear() - birthDate.getFullYear();
@@ -165,12 +174,12 @@ export class PredictionFormStep extends React.Component<
   handleChange = (e) => {
     const { name, value } = e.target;
     //let data = [...this.state.data]
-    if (name === "Date of Birth") {
-      const age = this.getAge(value) || "";
-      this.setState({
+    if (name === "Date_of_Birth") { 
+      const age = this.getAge(value,"") || "";
+     this.setState({
         client_form: {
           ...this.state.client_form,
-          [name]: value,
+          [name]: value, 
           Age: age
 
         }
@@ -188,39 +197,40 @@ export class PredictionFormStep extends React.Component<
         let idx = optionElement.getAttribute('data-idx');
         let jump = optionElement.getAttribute('data-jump');
         let idy = optionElement.getAttribute('data-idy');
+        let jumpto = jump && jump.replace(/,/g, '')
         this.setState({
           prevJump: {
-            [name]: jump,
+            [name.replace(/ /g,"_")]: jumpto, 
             hasError: false,
           }
 
         })
         const DynamicQuestions = this.state.DynamicQuestions;
-        DynamicQuestions.map((sec,i) => sec.section_id === parseInt(jump) ? (
+        DynamicQuestions.map((sec,i) => sec.section === jumpto ? (
           DynamicQuestions[i].related = "false"
         )
         : 
-          sec.section_id.toString() === this.state.prevJump[name] && (
+          sec.section === this.state.prevJump[name.replace(/ /g,"_")] && (
           DynamicQuestions[i].related = "true"
         )
         )
       } else {
         if (type === "radio") {
-          const jump = e.target.dataset.jump;
+          const jump = e.target.dataset.jump.replace(/,/g, '');
           const idx = e.target.dataset.idx;
           this.setState({
             prevJump: {
-              [name]: jump,
+              [name.replace(/ /g,"_")]: jump,
               hasError: false,
             }
 
           })
           const DynamicQuestions = this.state.DynamicQuestions;
-          DynamicQuestions.map((sec,i) => sec.section_id === parseInt(jump) ? (
+          DynamicQuestions.map((sec,i) => sec.section === `${jump}` ? (
             DynamicQuestions[i].related = "false"
           )
           : 
-            sec.section_id.toString() === this.state.prevJump[name] && (
+            sec.section == this.state.prevJump[name.replace(/ /g,"_")] && (
             DynamicQuestions[i].related = "true"
           )
           )
@@ -277,15 +287,21 @@ export class PredictionFormStep extends React.Component<
     this.setState({
       isSubmitted: true
     })
-    if (!this.state.hasError) {
-     await this.props.onFormSubmit(client_form);
-     this.setState({
+//  const ageAtEpisodeStart = await this.getAge( new Date(client_form.Date_of_Birth), new Date(client_form.Date_of_Referral))
+   let data = [] as any;
+  Object.keys(client_form).map((ele,i)=> 
+     (data.push( {[ele.replace(/_/g, ' ')]: client_form[ele]}))
+     )
+  const formData = Object.assign({}, ...data)
+  if (this.state.isEdit === "true" ||!this.state.hasError) {
+     await this.props.onFormSubmit(formData);
+      this.setState({ 
       isSubmitted: false,
       err_msg: this.props.errors,
       isOpen: this.props.errors ? true : false
     })
     } else {
-
+    
     }
 
   }
@@ -346,7 +362,7 @@ export class PredictionFormStep extends React.Component<
   render() {
     const { DynamicQuestions } = this.state;
     const { errors } = this.props;
-    return (
+   return (
       <div css={wrap}>
 
         <div css={mainContent}>
@@ -397,16 +413,18 @@ export class PredictionFormStep extends React.Component<
 
                   <h1 css={subHeading}>{sections.section}</h1>
                   {this.display(index).map((item, ind) => {
-                    return <div css={fieldRow}>{item.map((ques, index_1) => {
-                      return <div css={twoCol}>
-                       <label css={label1} >{ques.question}</label> {ques.description && <label style={{fontSize:"16px"}}> ({ques.description})</label>} <br/>
-                        {/* <label css={label} >{ques.question} 
-                        </label>
-                        <label style={{fontSize:"14px"}}>{ques.description}</label>  */}
+                    return <div css={fieldRow}>{item.map((ques, index_1) =>
+                      ques.flag === "0" &&
+                      ( <div css={twoCol}>
+                       <label css={label1} >{ques.question}</label> 
+                       {ques.description && 
+                       <label style={{fontSize:"16px"}}> ({ques.description})</label>
+                       } <br/>
+                        
                         {ques.answer_type === "SELECT" ?
                           <select
                             css={selectField}
-                            name={ques.question}
+                            name={ques.question.replace(/ /g,"_")}
                             data-type={ques.answer_type.toLowerCase()}
                             data-length={ques.suggested_jump.length}
 
@@ -415,11 +433,11 @@ export class PredictionFormStep extends React.Component<
                             {ques.suggested_answers.map((ans, i) =>
 
                               <option key={i}
-                                value={ans}
+                                value={ans.id}
                                 data-idx={index}
                                 data-idy={ind}
-                                data-jump={ques.suggested_jump[i]}
-                                selected={this.state.client_form[ques.question] === ans}>{ans}</option>
+                                data-jump={ques.suggested_jump.map(sj=> ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "":"")}
+                                selected={this.state.client_form[ques.question.replace(/ /g,"_")] === ans.id}>{ans.value}</option>
                             )}
                           </select>
                           :
@@ -433,14 +451,15 @@ export class PredictionFormStep extends React.Component<
                                   <React.Fragment>
                                     <input
                                       type="radio"
-                                      data-jump={ques.suggested_jump[i]?ques.suggested_jump[i]:""} 
+                                      data-jump={ques.suggested_jump.map(sj=> ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "":"")} 
                                       data-idx={index}
                                       data-idy={ind}
-                                      name={ques.question} value={ans}
-                                      checked={this.state.client_form[ques.question] === ans}
-                                      data-type={ques.answer_type.toLowerCase()}
+                                      name={ques.question.replace(/ /g,"_")} value={ans.id} 
+                                      checked={this.state.client_form[ques.question.replace(/ /g,"_")] === ans.id.toString() ? true :
+                                      this.state.client_form[ques.question.replace(/ /g,"_")] === ans.id } 
+                                      data-type={ques.answer_type.toLowerCase()} 
                                     />{" "}
-                                    <label htmlFor={ans}>{ans}</label>
+                                    <label htmlFor={i}>{ans.value}</label> 
                                   </React.Fragment>
 
                                 </div>
@@ -458,14 +477,15 @@ export class PredictionFormStep extends React.Component<
                                   <React.Fragment>
                                     <input
                                       type="checkbox"
-                                      name={ques.question}
+                                      name={ques.question.replace(/ /g,"_")}
                                       value={this.state.client_form[ques.question]}
                                       required={ques.required === "yes" ? true : false}
                                       data-type={ques.answer_type.toLowerCase()}
                                       data-idx={index}
                                       data-idy={ind}
+                                      checked={this.state.client_form[ques.question.replace(/ /g,"_")] === ans.id.toString()}
                                     />{" "}
-                                    <label htmlFor={ans}>{ans}</label>
+                                    <label htmlFor={ans}>{ans.value}</label>
                                   </React.Fragment>
                                 </div>
                               )
@@ -480,14 +500,16 @@ export class PredictionFormStep extends React.Component<
                                     data-msg={ques.error_msg}
                                     data-idx={index}
                                     data-idy={ind}
-                                    name={ques.question}
-                                    value={this.state.client_form[ques.question]}
+                                    name={ques.question.replace(/ /g,"_")}
+                                    value={this.state.client_form[ques.question.replace(/ /g,"_")]}
                                     type={ques.answer_type.toLowerCase()}
                                   //  min={ques.validation1}
                                   //  max={ques.validation2}
                                   //  required = {ques.required === "yes" ? true: false}
                                   />
+                                 
                                 </Fragment>
+                               
                                 :
                                 <Fragment>
                                   <input
@@ -498,23 +520,33 @@ export class PredictionFormStep extends React.Component<
                                     data-msg={ques.error_msg}
                                     data-idx={index}
                                     data-idy={ind}
-                                    name={ques.question}
-                                    value={this.state.client_form[ques.question]}
+                                    name={ques.question.replace(/ /g,"_")}
+                                    value={this.state.client_form[ques.question.replace(/ /g,"_")]}
                                     type={ques.answer_type.toLowerCase()}
                                   />
-
+                                     
                                 </Fragment>
                         }
-                        {this.state.isSubmitted === true ? this.state.error[ques.question] ?
-                          <div style={{ color: "red" }}>{this.state.error[ques.question]}</div> : this.state.client_form[ques.question] ? "" :
+                        {this.state.isSubmitted === true ? this.state.error[ques.question.replace(/ /g,"_")] ?
+                          <div style={{ color: "red" }}>{this.state.error[ques.question.replace(/ /g,"_")]}</div> : this.state.client_form[ques.question.replace(/ /g,"_")] ? "" :
                         ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : "" : ""}
                       </div>
-                    })}</div>
+                    ))}</div>
 
                   })
                   }
                 </React.Fragment>
             )}
+            {/* <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  size="large"
+                  style={{ marginRight: 10 }}
+                >
+                  {values.Exclusionary_Criteria ? "Submit" : "Next"}
+                </Button>
+              </div> */}
             <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
               <Button
                 type="submit"

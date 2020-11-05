@@ -25,6 +25,7 @@ import PrivateRoute from './PrivateRoute';
 import Welcomepage from './components/welcomepage'
 import ChangePasswordContainer from './containers/ChangePasswordContainer'
 import BillingDetailsContainer from './containers/BillingDetailsContainer'
+import DashboardContainer from './containers/Dashboardcontainer'
 export const { store } = configureStore(createHistory());
 const url = typeof window !== 'undefined' ? window.location.pathname : '';
   let str1 = url.split('/');
@@ -48,7 +49,7 @@ const App: React.FC = (props) => {
          
                 <Route exact path={`/${dom}`}>
                 {is_configured === true ? (
-                    <Redirect to={domainPath === "adelphoi" ?`/${dom}/new-client`:`/${dom}/new-client1`} /> 
+                    <Redirect to={`/${dom}/new-client`} /> 
                   ):(
                     <Redirect to={`/${dom}/welcomepage`} /> 
                     
@@ -62,11 +63,11 @@ const App: React.FC = (props) => {
                 </Switch>
                 <Switch>
                 <PrivateRoute path={`/${dom}/welcomepage`} component={Welcomepage} />
-                <PrivateRoute path={`/${dom}/new-client`} component={NewClientContainer} />
-                <PrivateRoute exact path={`/${dom}/new-client1`} component={DynamicNewClientContainer} />
+                <PrivateRoute path={`/${dom}/new-client`} component={dom === "adelphoiDDD" ?NewClientContainer:DynamicNewClientContainer} />
+                {/* <PrivateRoute exact path={`/${dom}/new-client1`} component={DynamicNewClientContainer} /> */}
                 <PrivateRoute
                   path={`/${dom}/existing-client`}
-                  component={dom === "adelphoi" ? ExistingClientContainer:DynamicExistingClientContainer}
+                  component={dom === "adelphoiDDD" ? ExistingClientContainer:DynamicExistingClientContainer}
                 />
                 <PrivateRoute
                   path={`/${dom}/configuration`}
@@ -79,6 +80,10 @@ const App: React.FC = (props) => {
                 <PrivateRoute
                   path={`/${dom}/changepassword`}
                   component={ChangePasswordContainer}
+                />
+                <PrivateRoute
+                  path={`/${dom}/dashboard`}
+                  component={DashboardContainer}
                 />
                 <PrivateRoute
                   path={`/${dom}/billing`}

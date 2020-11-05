@@ -135,28 +135,28 @@ export class ConfigurationContainer extends React.Component<
                 />
                 }
                 {role_type === "Consultant"  || role_type === "Contributor" ? "":
-                domainPath !== "adelphoi" ?"":
+                domainPath !== "adelphoiDDD" ?"":
                 <Tab
                   label="Referral Sources"
                   component={Link}
                   to={`${match.url}/referral`}
                   value={`${match.url}/referral`} 
                 />}
-                {domainPath !== "adelphoi" ?"":
+                {domainPath !== "adelphoiDDD" ?"":
                 <Tab
                   label="Programs"
                   component={Link}
                   to={`${match.url}/programs`}
                   value={`${match.url}/programs`}
                 />}
-                {domainPath !== "adelphoi" ?"":
+                {domainPath !== "adelphoiDDD" ?"":
                 <Tab
                   label="Locations"
                   component={Link}
                   to={`${match.url}/locations`}
                   value={`${match.url}/locations`}
                 />}
-                {domainPath !== "adelphoi" ?"":
+                {domainPath !== "adelphoiDDD" ?"":
                 <Tab
                   label="Configuration"   
                   component={Link}
@@ -183,7 +183,7 @@ export class ConfigurationContainer extends React.Component<
               </Route>
               <Route path={`${match.url}/referral`}>
               {role_type === "Consultant"  || role_type === "Contributor" ? "":
-                domainPath !== "adelphoi" ?"":
+                domainPath !== "adelphoiDDD" ?"":
                 <ReferralList
                   referralList={referralList}
                   {...this.state}
@@ -193,7 +193,7 @@ export class ConfigurationContainer extends React.Component<
                 />}
               </Route>
               <Route path={`${match.url}/programs`}>
-              {domainPath !== "adelphoi" ?"":
+              {domainPath !== "adelphoiDDD" ?"":
                 <ProgramList
                   programList={programList}
                   {...this.state}
@@ -203,7 +203,7 @@ export class ConfigurationContainer extends React.Component<
                 />}
               </Route>
               <Route path={`${match.url}/locations`}>
-              {domainPath !== "adelphoi" ?"":
+              {domainPath !== "adelphoiDDD" ?"":
                 <LocationList
                   locationList={locationList}
                   {...this.state}
@@ -213,7 +213,7 @@ export class ConfigurationContainer extends React.Component<
                 />}
               </Route>
               <Route path={`${match.url}/linking`}>
-              {domainPath !== "adelphoi" ?"":
+              {domainPath !== "adelphoiDDD" ?"":
                 <ConfigurationForm
                   referral={referralList}
                   locations={locationList}

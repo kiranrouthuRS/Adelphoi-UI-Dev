@@ -27,7 +27,8 @@ import {
   panelHeading,
   panelHeader,
   txtDetail,
-  fieldBox
+  fieldBox,
+  fieldBox1
 } from "./styles";
 import Dropdown from "./Dropdown";
 import * as Types from "../api/definitions";
@@ -51,6 +52,10 @@ interface DynamicClientDetailsProps {
     program_significantly_modified: number,
     Program: string | null,
     Location: string | null,
+    start_date: any | null,
+    end_date: any | null,
+    referral_status: any | null,
+
     //Referral: string | null
   ) => void;
   isLoading: boolean;
@@ -68,6 +73,9 @@ interface FormValues {
   Returned_to_Care: string | number | null;
   program_significantly_modified: number | string | null;
   Program: any;
+  start_date: string;
+  end_date: string;
+  referral_status: any;
   confidence: string;
   roc_confidence: string;
   Location: any;
@@ -91,7 +99,6 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
   const [SelectedVersion, setSelectedVersion] = useState<any | null>(
     null
   );
-
   useEffect(() => {
     if (
       !SelectedVersion ||
@@ -107,7 +114,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
       !predicted_program ||
       predicted_program === props.client.selected_program
     ) {
-      setPredictedProgram(props.client.model_program);
+      setPredictedProgram(searchData[0].model_program);
     }
   }, [props.client.selected_program]);
   useEffect(() => {
@@ -130,7 +137,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
   }, [props.client.selected_location]);
 
   const onProgramChange = (program: any, values: any) => {
-    props.onProgramSelect(props.client.client_code!, program.value, values);
+    props.onProgramSelect(props.searchData[0].client_code!, program.value, values);
   };
 
   let { index } = useParams();
@@ -138,24 +145,105 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     return <h1 css={subHeading}>No client found</h1>;
   }
   const { client, Referral, searchData } = props;
+  const programOptions = props.client.SuggestedPrograms
+    ? props.client.SuggestedPrograms.map(p => {
+      return {
+        label: p,
+        value: p,
+        predicted: p === predicted_program
+      };
+    })
+    : [];
 
 
-  const getInitialValues = () => {
-    const { client, is_role_type } = props;
+  const locationOptions = props.client.SuggestedLocations
+    ? props.client.SuggestedLocations.map(l => {
+      return {
+        label: l,
+        value: l,
+        predicted: l === predicted_location
+      };
+    })
+    : [];
+  const getInitialValues = (): FormValues => {
+    const { client, is_role_type, searchData } = props;
     let program: any = null;
     let location: any = null;
     let referral: any = null;
+    let start_date: any = null;
+    let end_date: any = null;
+    let referral_status: any = null;
+    let role_type: any = is_role_type;
+    if (client.selected_referral) {
+      referral = {
+        label: client.selected_referral,
+        value: client.selected_referral,
+        predicted: client.selected_referral === predicted_referral
+      };
+    }
+    if (client.selected_program) {
+      program = {
+        label: client.selected_program,
+        value: client.selected_program,
+        predicted: client.selected_program === predicted_program
+      };
+    }
+    if (client.selected_location) {
+      location = {
+        label: client.selected_location,
+        value: client.selected_location,
+        predicted: client.selected_location === predicted_location
+      };
+    }
+    return {
+       Program_Completion:
+        client.Program_Completion === null
+          ? ""
+          : client.Program_Completion.toString(),
+      Returned_to_Care:
+        client.Returned_to_Care === null
+          ? ""
+          : client.Returned_to_Care.toString(),
+      program_significantly_modified: Number(
+        client.program_significantly_modified
+      ),
+      roc_confidence:
+        client.roc_confidence !== null ? client.roc_confidence.toString() : "",
+      Program: program,
+      Referral: referral,
+
+
+      confidence:
+        client.confidence !== null ? client.confidence.toString() : "",
+      Location: location || "",
+
+      start_date:
+        client.start_date !== null ? client.start_date : "",
+
+      end_date:
+        client.end_date !== null ? client.end_date : "",
+
+      referral_status:
+        client.referral_status !== null ? client.referral_status : ""
+    };
 
   };
+  // const getInitialValues = () => {
+  //   const { client, is_role_type } = props;
+  //   let program: any = null;
+  //   let location: any = null;
+  //   let referral: any = null;
+
+  // };
   const handleChange = (e) => {
     const { name, value } = e.target;
     const val = searchData.filter((sec, i) => sec.version === value && sec)
     setSelectedVersion(val)
   }
-  
+
   const display = (id, ver) => {
     const tempArray = [] as any;
-   let questions = SelectedVersion && SelectedVersion[0].sections[id].questions
+    let questions = SelectedVersion && SelectedVersion[0].sections[id].questions
     const length: any = questions && questions.length
     for (let i = 0; i < length; i++) {
       if ((i + 1) % 2 !== 0) {
@@ -174,7 +262,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     return tempArray
 
   }
-  
+
   return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -201,7 +289,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
               </select>
             </div>
           </div>
-          {/* <div
+          <div
             css={twoCol}
             style={{
               display: "flex",
@@ -219,7 +307,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
             >
               <PictureAsPdfIcon /> Download Report
         </a>
-          </div> */}
+          </div>
         </div>
       )}
       {
@@ -258,6 +346,360 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
         )
       }><u style={{ color: "red" }}>here</u></a> to update latest version of Client details.</h3>
 
+      {props.is_role_type === "Contributor" ? "" : (
+        <Formik
+          initialValues={getInitialValues()}
+          enableReinitialize
+          validate={values => {
+            const errors: FormikErrors<FormValues> = {};
+           if (values.Program !== predicted_program) {
+              if (!values.Location) {
+                errors.Location = "Required";
+              }
+              if (!values.start_date) {
+                errors.start_date = "Required";
+              }
+              if (!values.referral_status) {
+                errors.referral_status = "Required";
+              }
+            }
+            if (values.Program_Completion === "1") {
+              if (!values.end_date) {
+                errors.end_date = "Required";
+              }
+
+            }
+            return errors;
+          }}
+
+          onSubmit={async (values, helpers) => {
+            if (!searchData[0].client_code) {
+              return false;
+            }
+            
+            const Program_Completion =
+              values.Program_Completion === ""
+                ? null
+                : Number(values.Program_Completion);
+            const Returned_to_Care =
+              values.Returned_to_Care === ""
+                ? null
+                : Number(values.Returned_to_Care);
+            const start_date =
+              values.start_date === ""
+                ? null
+                : values.start_date;
+            const end_date =
+              values.end_date === ""
+                ? null
+                : values.end_date;
+            const referral_status =
+              values.referral_status === ""
+                ? null
+                : values.referral_status;
+            await props.onFormSubmit(
+              searchData[0].client_code,
+              Program_Completion,
+              Returned_to_Care,
+              Number(values.program_significantly_modified),
+              values.Program!.value!,
+              values.Location!.value!,
+              start_date,
+              end_date,
+              referral_status
+
+              // values.Referral!.value!,
+              //values.roc_confidence!.value!
+            );
+            // helpers.resetForm();
+          }}
+        >
+          {({ values, handleSubmit, handleChange }) => (
+
+            <form
+              name="clientDetailsForm"
+              onSubmit={handleSubmit}
+              style={{ marginTop: 20 }}
+            >
+              <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label}>Program</label>
+                </div>
+                <div css={twoCol}>
+                  <Dropdown
+                    name="Program"
+                    disabled={values.Program_Completion !== ""}
+                    options={programOptions}
+                    onChange={(p: any) => onProgramChange(p, values)}
+                    defaultValue={programOptions.find(
+                      p => p.value === predicted_program
+                    )}
+                    value={values.Program || null}
+                  />
+                </div>
+              </div>
+              <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label}>Location</label>
+                </div>
+                <div css={twoCol}>
+                  <Dropdown
+                    name="Location"
+                    disabled={values.Program_Completion !== ""}
+                    options={locationOptions}
+                    // onChange={(p: any) => onLocationChange(p, values)}
+                    defaultValue={locationOptions.find(
+                      l => l.value === predicted_location
+                    )}
+                    value={values.Location || null}
+                  />
+
+                  {/* <select
+                  css={selectField}
+                  name="Location"
+                  disabled={values.Program_Completion !== ""}
+                  value={values.Location}
+                  onChange={handleChange}
+                >
+                  <option value="">Select</option>
+                  {props.client.SuggestedLocations &&
+                    props.client.SuggestedLocations.map(loc => (
+                      <option key={loc} value={loc}>
+                        {loc}
+                      </option>
+                    ))}
+                </select> 
+                <ErrorMessage component="span" name="Location" />*/}
+                </div>
+              </div>
+              <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label}>Start Date</label>
+                </div>
+                <div css={twoCol}>
+                  <input
+                    type="date"
+                    name="start_date"
+                    css={inputField}
+                    // disabled={Number(values.Program_Completion) === 0}
+                    placeholder=""
+                    value={values.start_date || ""}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage component="span" name="start_date" />
+
+                </div>
+              </div>
+              <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label}>Program Completion Likelihood</label>
+                </div>
+                <div css={twoCol}>
+                  <input
+                    type="text"
+                    name="confidence"
+                    readOnly
+                    css={inputField}
+                    // disabled={Number(values.Program_Completion) === 0}
+                    placeholder=""
+                    value={values.confidence || ""}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage component="span" name="confidence" />
+                </div>
+              </div>
+              <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label}>Remain out of care Likelihood</label>
+                </div>
+                <div css={twoCol}>
+                  <input
+                    type="text"
+                    name="roc_confidence"
+                    readOnly
+                    css={inputField}
+                    // disabled={Number(values.Program_Completion) === 0}
+                    placeholder=""
+                    value={values.roc_confidence || ""}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage component="span" name="roc_confidence" />
+                </div>
+              </div>
+              <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label}>Program Completion</label>
+                </div>
+                <div css={twoCol}>
+                  <select
+                    css={selectField}
+                    onChange={handleChange}
+                    name="Program_Completion"
+                    value={
+                      values.Program_Completion !== null
+                        ? values.Program_Completion && values.Program_Completion.toString()
+                        : ""
+                    }
+                  >
+                    <option value="">Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                  <ErrorMessage component="span" name="Program_Completion" />
+                </div>
+              </div>
+              {values.Program_Completion === "1" &&
+                <div css={fieldRow}>
+                  <div css={twoCol}>
+                    <label css={label}>End Date</label>
+                  </div>
+                  <div css={twoCol}>
+                    <input
+                      type="date"
+                      name="end_date"
+                      css={inputField}
+                      // disabled={Number(values.Program_Completion) === 0}
+                      placeholder=""
+                      value={values.end_date || ""}
+                      onChange={handleChange}
+                    />
+                    <ErrorMessage component="span" name="end_date" />
+                  </div>
+                </div>
+              }
+              <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label} htmlFor="program_significantly_modified">
+                    Was the program significantly modified to treat this client?
+                </label>
+                </div>
+                <div css={twoCol}>
+                  <div css={fieldBox}>
+                    <input
+                      type="checkbox"
+                      disabled={
+                        values.Program_Completion !== ""
+                          ? values.Program_Completion === "0"
+                          : true
+                      }
+                      onChange={handleChange}
+                      name="program_significantly_modified"
+                      id="program_significantly_modified"
+                      value="true"
+                      checked={
+                        values.program_significantly_modified !== null
+                          ? Number(values.program_significantly_modified) === 1
+                          : false
+                      }
+                    />
+                  </div>
+                  <ErrorMessage
+                    component="span"
+                    name="program_significantly_modified"
+                  />
+                </div>
+              </div>
+              <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label} htmlFor="program_significantly_modified">
+                    Referral Status
+                </label>
+                </div>
+                <div css={twoCol}>
+                  <div css={fieldBox}>
+                    <input
+                      type="radio"
+                      onChange={handleChange}
+                      name="referral_status"
+                      value="placed"
+                      checked={
+                        values.referral_status !== null
+                          ? values.referral_status === "placed"
+                          : false
+                      }
+                    />
+                    <label >Placed</label>
+                  </div>
+                  <div css={fieldBox}>
+                    <input
+                      type="radio"
+                      onChange={handleChange}
+                      name="referral_status"
+                      value="not_placed"
+                      checked={
+                        values.referral_status !== null
+                          ? values.referral_status === "not_placed"
+                          : false
+                      }
+                    />
+                    <label >Not Placed</label>
+                  </div>
+                  <div css={fieldBox}>
+                    <input
+                      type="radio"
+                      onChange={handleChange}
+                      name="referral_status"
+                      value="rejected"
+                      checked={
+                        values.referral_status !== null
+                          ? values.referral_status === "rejected"
+                          : false
+                      }
+                    />
+                    <label >Rejected</label>
+                  </div>
+                  <ErrorMessage
+                    component="span"
+                    name="referral_status"
+                  />
+                </div>
+                
+              </div>
+              <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label}>Remained out of care</label>
+                </div>
+                <div css={twoCol}>
+                  <select
+                    css={selectField}
+                    onChange={handleChange}
+                    disabled={
+                      values.Program_Completion !== ""
+                        ? values.Program_Completion === "0"
+                        : true
+                    }
+                    name="Returned_to_Care"
+                    value={
+                      values.Returned_to_Care !== null
+                        ? values.Returned_to_Care && values.Returned_to_Care.toString()
+                        : ""
+                    }
+                  >
+                    <option value="">Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </div>
+
+                <ErrorMessage component="span" name="Returned_to_Care" />
+              </div>
+
+              <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
+                <Button
+                  type="submit"
+                  size="large"
+                  variant="contained"
+                  color="primary"
+                >
+                  Submit
+              </Button>
+              </div>
+            </form>
+          )}
+        </Formik>)}
+      {props.program_completion_response && (
+        <div css={subHeading}>{props.program_completion_response}</div>
+      )}
 
     </div>
   );

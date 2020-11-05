@@ -77,8 +77,7 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
   const onProgramChange = (program: any) => {
     props.onProgramSelect(program.value);
   };
-  
-  return (
+   return (
     <div css={wrap}>
       <div css={mainContent}>
         <Backdrop css={backdrop} open={props.isLoading}>
@@ -96,7 +95,7 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
           }}
           enableReinitialize
           onSubmit={async values => {
-            const clientCode = props.client.client_code;
+            const clientCode = props.client["Client Code"];
             await props.onLocationSelect(values.client_selected_location);
             setClientCode(clientCode);
           }}
@@ -109,7 +108,7 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
                 css={fieldRow}
                 style={{ justifyContent: "flex-end", alignItems: "center" }}
               >
-                Prediction program for client {props.client.name} has been created with client-id {props.client.client_code}. 
+                Prediction program for client {props.client["First Name"]} {props.client["Last Name"]} has been created with client-id {props.client["Client Code"]}. 
                   <a
                     css={[txtDetail]}
                     style={{ display: "flex", marginRight: 15 }}
@@ -126,7 +125,7 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
                   <div>
                   <div css={fieldRow}>
                   <div css={twoCol}>
-                    <label css={label}>Program</label>
+                <label css={label}>Program{props.client.client_selected_program}</label>
                   </div>
                   <div css={twoCol}>
                     <Dropdown

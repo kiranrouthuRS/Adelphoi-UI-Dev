@@ -44,9 +44,9 @@ const initialValues: FormValues = {
 const ClientSearch: React.FC<ClientSearchProps> = props => {
   const history = useHistory();
   /** */
-  const { clientList } = props;
-  const client = domainPath === "adelphoi" ? [] : clientList.map(q => q[0].questions)
-
+  let { clientList } = props;
+  clientList = clientList.map(sec=>sec.sections)
+  const client = domainPath === "adelphoiDDD" ? [] : clientList.map(q => q[0].questions)
   return (
     <div css={wrap}>
       <div css={mainContent}>
@@ -106,7 +106,7 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
         </Formik>
         <div>
           <h1 css={subHeading}>Client List</h1>
-          {domainPath === "adelphoi" ?
+          {domainPath === "adelphoiDDD" ?
             <Table aria-label="clients table" css={dataTable}>
               <TableHead>
                 <TableRow css={tableHeader}>

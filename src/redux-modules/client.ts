@@ -51,13 +51,17 @@ export const actions = {
   ): ThunkAction<Promise<string>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       if (program && location) {
-        await saveLocationAndProgram(client_code, program, location);
+        await saveLocationAndProgram(client_code, program, location,"fff");
       }
       const response = await updateProgramCompletion(
         client_code,
         Program_Completion,
         Returned_to_Care,
-        program_significantly_modified
+        program_significantly_modified,
+        "ddd",
+        "hhh",
+        "mmm",
+        "kkk"
       );
       if (!response) {
         throw Error("something went wrong while submitting");
@@ -96,7 +100,7 @@ export const actions = {
     selected_program: string
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchLocations(client_code, selected_program);
+      const response = await fetchLocations(client_code, selected_program, "dddd");    
       const locations = response ? response["Suggested Locations"] : [];
       if (locations.length > 0) {
         const cl: Types.Client = {
@@ -128,7 +132,7 @@ export const actions = {
     selected_program: string
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchPcr(client_code, selected_program);
+      const response = await fetchPcr(client_code, selected_program,"ddd");
     
       const pcr: number | null = response ? response.pcr : null;
       const roc_confidence: number | null = response ? response.roc_confidence : null;
@@ -184,7 +188,7 @@ export const actions = {
     client_code: string
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchProgramsForClient(client_code);
+      const response = await fetchProgramsForClient(client_code,"");
       const clientList = getState().client?.clientList;
       if (!clientList || !clientList[Number(client_code)]) {
         throw new Error("client not found");
@@ -229,7 +233,8 @@ export const actions = {
       const response = await saveLocationAndProgram(
         client.client_code!,
         programParam,
-        selected_location
+        selected_location,
+        "fff"
       );
       if (!response) {
         throw Error("something went wrong while submitting");
@@ -321,7 +326,8 @@ export const actions = {
         }
         const response = await fetchLocations(
           updatedClient.client_code,
-          updatedClient.program_type
+          updatedClient.program_type,
+          "ffff"
         );
         if (response && response["result"] && response["result"] !== "") {
           throw new Error(response["result"]);
@@ -406,7 +412,9 @@ export const actions = {
         }
         const response = await fetchLocations(
           updatedClient.client_code,
-          updatedClient.program_type
+          updatedClient.program_type,
+          "dffg"
+          
         );
         if (response && response["result"] && response["result"] !== "") {
           throw new Error(response["result"]);

@@ -132,11 +132,26 @@ export interface Client {
   Program_Completion: number | null;
   Returned_to_Care: number | null;
   referral: string | null;
-   program_significantly_modified: number | null;
+  program_significantly_modified: number | null;
+  sections: any ;
 }
 export interface Referral {
   referral_code: number;
   referral_name: string;
+  
+}
+
+export interface Analytics {
+  start_date: string | null ;
+  end_date: string | null ;
+  referral_status: string | null;
+  referral_source: string | null;
+  location: string | null;
+  in_house: string | null;
+  placed: string | null; 
+  week: string | null;
+  month: string | null;
+  life_time: string | null;
   
 }
 
@@ -185,6 +200,7 @@ export const emptyDClient: DynamicClient = {
 }
 export const emptyClient: Client = {
   client_code: null,
+  sections: null,
   referral: null,
   episode_start: null,
   episode_number: null,
@@ -233,7 +249,7 @@ export const emptyClient: Client = {
   yls_PriorCurrentOffenses_Score: null,
   family_support: null,
   fire_setting: null,
-  level_of_aggression: null,
+  level_of_aggression: null, 
   client_self_harm: null,
   Screening_tool_Trauma: null,
   cans_LifeFunctioning: null,
@@ -285,6 +301,19 @@ export const emptyConfiguration: Configuration = {
   program_model_suggested: "",
   program_type: ""
 };
+
+export const emptyAnalytics: Analytics = {
+  start_date: null,
+  end_date:null,
+  referral_status:  null,
+  referral_source:  null,
+  location:  null,
+  in_house: null,
+  placed: null,
+  week: null,
+  month: null,
+  life_time: null
+};   
 
 export const emptyBilling: Billing = { 
   id:'',

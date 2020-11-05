@@ -197,6 +197,17 @@ export class NewClientContainer extends React.Component<
             programList={availableProgramList}
           />
         </Route>
+        <Route exact path={`/${domainPath}/new-client/program-selection`}>
+          <ProgramSelection
+            client={currentClient}
+            {...this.state}
+            onProgramSelect={this.getLocationsAndPcr}
+            onLocationSelect={this.saveProgramAndLocation}
+            submitPrediction={this.submitProgram}
+            isLoading={this.state.isLoading}
+            programList={availableProgramList}
+          />
+        </Route>
         <Route
           exact
           path={`/${domainPath}/new-client/2`}

@@ -9,6 +9,7 @@ import FormData from "form-data"
 export const baseApiUrl = `http://3.7.135.210:8005/organizations`;
 export const loginApiUrl = "http://3.7.135.210:8005";
 
+
 interface PredictionResponse {
   referred_program: string;
   model_program: string;
@@ -208,7 +209,7 @@ export const downloadcsvfile = async (is_accessToken) => {
     })
       .then(response => {
         const bill = response.data
-        const path = response.data.response
+        const path = response.data.response.csv
         window.open(`${loginApiUrl}/${path}`);
         return response.data;
       })
@@ -234,7 +235,7 @@ export const insertDClient = async (client_form, is_accessToken) => {
         'Authorization': `Bearer ${is_accessToken}`
       }
     });
-    console.log(response)
+     console.log(response)
     // if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
     //   throw new Error(response.data["ERROR"]);
     // }
@@ -243,9 +244,9 @@ export const insertDClient = async (client_form, is_accessToken) => {
     // }
     const r = {
       ...response,
-      // program_type: response.data.program_type[0],
-      // referred_program: response.data.program_type[0],
-      // model_program: response.data.program_type[0]
+      program_type: response.data.response.program_type[0],
+      referred_program: response.data.response.program_type[0],
+      model_program: response.data.response.program_type[0]
     };
 
     return (r as unknown) as Partial<Types.DynamicClient>;
@@ -270,6 +271,7 @@ export const updateDClient = async (client: Types.Client) => {
     if (response.data["Result"] && response.data["Result"].trim() !== "") {
       return response.data;
     }
+
     const r = {
       ...response.data,
       program_type: response.data.program_type[0],
@@ -314,6 +316,7 @@ export const insertPrediction = async (client: Types.Client) => {
       `${baseApiUrl}/${domainPath}/refer/${client.client_code}/`,
       { referred_program: client.program_type }
     );
+
     return response;
   } catch (error) {
     console.error("api function insertPrediction error");
@@ -648,6 +651,7 @@ export const deleteReferral = async (referral: Types.Referral) => {
 export const fetchPrograms = async () => {
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/program_list`);
+
     const data = (response.data as unknown) as Types.Program[];
 
     return data;
@@ -660,6 +664,7 @@ export const fetchPrograms = async () => {
 export const fetchAvailablePrograms = async () => {
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/available_programs`);
+
     const data = (response.data as unknown) as Types.Program[];
 
     return data;
@@ -767,11 +772,17 @@ export const deleteLocation = async (location: Types.Location) => {
 
 export const fetchLocations = async (
   client_code: string,
-  referred_program: string
+  referred_program: string,
+  is_accessToken: any
 ) => {
   try {
+    const currentUser = store.getState().user.user.accessToken;
     const response = await axios.get(
-      `${baseApiUrl}/${domainPath}/location/${client_code}?referred_program=${referred_program}`
+      `${baseApiUrl}/${domainPath}/location/${client_code}?referred_program=${referred_program}`, {
+      headers: {
+        'Authorization': `Bearer ${is_accessToken}`
+      }
+    }
     );
     const data = (response.data as unknown) as LocationsResponse;
     return data;
@@ -782,15 +793,165 @@ export const fetchLocations = async (
   }
 };
 
+export const fetchAnalytics = async () => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?days_count=2000`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[]; 
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchAnalytics error");
+    throwError(error);
+  }
+};
+
+export const fetchDateAnalytics = async (
+  analytics: any
+) => {
+  const currentUser = store.getState().user.user.accessToken; 
+  console.log(analytics)
+  if(typeof analytics === "object"){
+    try {
+      const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?start_date=${analytics.start_date}&end_date=${analytics.end_date}`, {
+        headers: {
+          'Authorization': `Bearer ${currentUser}` 
+        }
+      });
+      console.log(response)
+      const data = (response.data.response as unknown) as Types.Analytics[]; 
+  
+      return data;
+    } catch (error) {
+      console.error("api function fetchReferral error");
+      throwError(error);
+    }
+  }else{
+    try {
+      const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?days_count=${analytics}`, {
+        headers: {
+          'Authorization': `Bearer ${currentUser}` 
+        }
+      });
+      console.log(response)
+      const data = (response.data.response as unknown) as Types.Analytics[]; 
+  
+      return data;
+    } catch (error) {
+      console.error("api function fetchReferral error");
+      throwError(error);
+    }
+  }
+
+  
+};
+
+export const fetchPCRAnalytics = async () => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/pcr?days_count=2000`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[]; 
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchprogramAnalytics error");
+    throwError(error);
+  }
+};
+export const fetchROCAnalytics = async () => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/roc?days_count=2000`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[]; 
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchprogramAnalytics error");
+    throwError(error);
+  }
+};
+export const fetchReplacementAnalytics = async () => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/replacement?days_count=2000`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[]; 
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchprogramAnalytics error");
+    throwError(error);
+  }
+};
+export const fetchStayAnalytics = async () => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/stay?days_count=2000`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[]; 
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchprogramAnalytics error");
+    throwError(error);
+  }
+};
+export const fetchOccupancyAnalytics = async () => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/occupancy?days_count=2000`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchprogramAnalytics error");
+    throwError(error);
+  }
+};
 export const fetchPcr = async (
   client_code: string,
-  referred_program: string
+  referred_program: string,
+  currentUser: any
 ) => {
+
   try {
     const response = await axios.put(
       `${baseApiUrl}/${domainPath}/program_pcr/${client_code}/`,
-      { client_selected_program: referred_program }
+      { client_selected_program: referred_program }, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    }
     );
+
     const data = (response.data as unknown) as any;
     return data;
   } catch (error) {
@@ -802,15 +963,21 @@ export const fetchPcr = async (
 export const saveLocationAndProgram = async (
   client_code: string,
   selected_program: string,
-  selected_location: string
+  selected_location: string,
+  is_accessToken: any
 ) => {
+  const currentUser = store.getState().user.user.accessToken;
   try {
     const response = await axios.put(
       `${baseApiUrl}/${domainPath}/update_list/${client_code}/`,
       {
         client_selected_program: selected_program,
         client_selected_locations: selected_location
+      }, {
+      headers: {
+        'Authorization': `Bearer ${is_accessToken}`
       }
+    }
     );
     return response.data;
   } catch (error) {
@@ -819,21 +986,36 @@ export const saveLocationAndProgram = async (
   }
 };
 
+
+
 export const updateProgramCompletion = async (
   client_code: string,
   Program_Completion: number | null,
   Returned_to_Care: number | null,
-  program_significantly_modified: number
+  program_significantly_modified: number,
+  start_date: any,
+  end_date: any,
+  referral_status: any,
+  currentUser: any
 ) => {
   try {
+    console.log(end_date)
     const response = await axios.put(
       `${baseApiUrl}/${domainPath}/program_complete/${client_code}/`,
       {
         Program_Completion,
         Returned_to_Care,
-        program_significantly_modified
+        program_significantly_modified,
+         start_date,
+         end_date,
+         referral_status
+      }, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
       }
+    }
     );
+console.log(response)
     return response.data.data;
   } catch (error) {
     console.error("api function updateProgramCompletion error");
@@ -874,12 +1056,7 @@ export const searchDClient = async (
       }
     };
     const response = await axios(config)
-    // const response = await axios.get(
-    //   `${baseApiUrl}/${domainPath}/clients?client_code=client_code=${parseInt(client_code)}`,{
-    //     headers: {
-    //       'Authorization': `Bearer ${currentUser}`
-    //     }
-    //   });
+    console.log(response)
     return response.data;
   } catch (error) {
     console.error("api function searchClient error");
@@ -892,9 +1069,14 @@ export const searchDClient = async (
 // http://13.232.1.126:8000/first_match/program/100/
 // Program completion likelihood
 
-export const fetchProgramsForClient = async (client_code: string) => {
+export const fetchProgramsForClient = async (client_code: string, currentUser: any) => {
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/program/${client_code}/`);
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/program/${client_code}/`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    });
+
     const data = (response.data as unknown) as any;
     return data;
   } catch (error) {

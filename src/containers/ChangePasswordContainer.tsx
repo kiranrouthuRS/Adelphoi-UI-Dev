@@ -55,9 +55,8 @@ ChangePasswordContainerState
     }
   });
   history.push(is_configured !== true ? (`/${domainPath}/welcomepage`) :
-      domainPath == "adelphoi" ? (`/${domainPath}/new-client`):(`/${domainPath}/new-client1`));;
+      (`/${domainPath}/new-client`));
     } catch (e) {
-      console.log(e,"error");
       const error = e.data.message;
       this.setState({
         error,

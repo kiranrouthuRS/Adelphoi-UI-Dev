@@ -49,7 +49,7 @@ export class LoginContainer extends React.Component<
       password: password,
       domain: domainPath
       
-    };
+    }; 
     try {
       const r = await this.props.dispatch(user.actions.login(credentials));
       const accessToken = store.getState().user.user.accessToken; 
@@ -57,7 +57,7 @@ export class LoginContainer extends React.Component<
       const pwd_updated = this.props.user && this.props.user.user && this.props.user.user.is_pwd_updated
       if(pwd_updated){
         history.push(is_configured !== true ? (`/${domainPath}/welcomepage`) :
-        domainPath == "adelphoi" ? (`/${domainPath}/new-client`):(`/${domainPath}/new-client1`));;
+        domainPath == "adelphoiDDD" ? (`/${domainPath}/new-client`):(`/${domainPath}/new-client`));;
         
       }else{
         history.push(`/${domainPath}/changepassword`);

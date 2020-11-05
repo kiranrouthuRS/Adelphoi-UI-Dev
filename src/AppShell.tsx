@@ -11,6 +11,7 @@ import { AppState } from "./redux-modules/root";
 import {  Global } from "@emotion/core";
 import { domainPath } from "./App"
 import { loginApiUrl } from "./api/api"
+import MenuIcon from '@material-ui/icons/Menu';
 import { store } from "./index"; 
 import {
   ConfigIcon,
@@ -120,7 +121,7 @@ const logout = css`
 const profile = css`
   position: absolute;
   top: -25px;
-  right: 85px;
+  right: 14px;
   radius: 2px;
   @media all and (max-width: 520px) {
     top: 0;
@@ -138,6 +139,7 @@ const billing = css`
     right: 15;
   }
 `;
+
 
 const AppShell: React.FC = ({children},props ) => {
  const is_configured = children&&children[1].props.user.user.is_fully_configured  
@@ -157,13 +159,24 @@ const logopath = children&&children[1].props.user.user.logo_path;
           alt={`${domainPath} Logo`}
           src={`${loginApiUrl}/${logopath}`}
         />
-        <a
+        {/* <a
               href={`/${domainPath}/billing`}
               css={billing}
             >
               Billing
-            </a>
-        <a
+            </a> */}
+         <div css={profile} className="dropdown"> 
+  <button className="dropbtn">
+    <MenuIcon style={{fontSize:"18px"}}/>
+    <span >Menu</span></button>
+  <div className="dropdown-content"> 
+  <a href={`/${domainPath}/dashboard`}>Dashboard</a>
+    <a  href={`/${domainPath}/billing`}>Billing</a>
+    <a href={`/${domainPath}/changepassword`}>Profile</a>
+    <a href={`/${domainPath}/logout`}>Logout</a>
+  </div>
+</div>   
+        {/* <a
               href={`/${domainPath}/changepassword`}
               css={profile}
             >
@@ -174,18 +187,18 @@ const logopath = children&&children[1].props.user.user.logo_path;
               css={logout}
             >
               Logout
-            </a>
+            </a> */}
       </div>
       
            <div css={nav}>
            {is_configured === true ?
                  <Route
-                   path={domainPath === "adelphoi"?`/${domainPath}/new-client`:`/${domainPath}/new-client1`}
+                   path={`/${domainPath}/new-client`}
                    // exact={activeOnlyWhenExact}
                    children={({ match, history }) => ( 
                      <Link
                        onClick={() => {
-                         history.push(domainPath === "adelphoi"?`/${domainPath}/new-client`:`/${domainPath}/new-client1`);
+                         history.push(`/${domainPath}/new-client`);
                        }}
                        css={menuButton}
                        style={

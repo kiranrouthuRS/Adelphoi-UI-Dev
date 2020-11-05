@@ -71,7 +71,7 @@ export const twoCol = css`
 export const inputField = css`
   box-sizing: border-box;
   min-width: 0px;
-  display: block;
+  display: inline;
   background-color: #f5f5f5;
   border-radius: 0;
   border-top: none;

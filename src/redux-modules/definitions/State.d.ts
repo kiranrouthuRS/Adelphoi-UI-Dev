@@ -2,6 +2,7 @@ import * as Types from "../../api/definitions"; // CRA does not support abs path
 import { FormikErrors } from "formik";
 export interface ClientState {
   client: Types.Client;
+  
   clientList: {
     [key: string]: Types.Client;
   };
@@ -29,6 +30,16 @@ export const emptyUsers: Types.Users = {
 export interface ReferralState {
   referralList: Types.Referral[];
   availableReferralList: Types.Referral[];
+}
+
+export interface AnalyticsState {
+  analyticsList: Types.Analytics[];
+  PCRAnalyticsList: Types.Analytics[];
+  ROCAnalyticsList: Types.Analytics[];
+  ReplacementList: Types.Analytics[];
+  StayList: Types.Analytics[];
+  OccupancyList: Types.Analytics[];
+  
 }
 
 export interface QuestionsState {

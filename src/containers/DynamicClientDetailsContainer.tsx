@@ -33,16 +33,20 @@ export interface DynamicClientDetailsContainerProps
     returned_to_care: number | null,
     program_significantly_modified: number,
     program: string | null,
-    location: string | null
+    location: string | null,
+    start_date: string | null,
+    end_date: string | null,
+    referral_status: string | null
   ) => Promise<string>;
   getAvailablePrograms: () => Promise<void>;
   submitPrediction: (client: Types.Client) => Promise<void>;
   getLocations: (
     client_code: string,
-    selected_program: string
+    selected_program: string,
+    is_accessToken: any
   ) => Promise<void>;
   getPcr: (client_code: string, selected_program: string) => Promise<void>;
-  saveLocationAndProgram: (
+  DsaveLocationAndProgram: (
     selected_location: string,
     selected_program: string,
     client_code: string
@@ -50,7 +54,7 @@ export interface DynamicClientDetailsContainerProps
   clearErrors: () => void;
   clearClient: () => void;
   getProgramsForClient: (client_code: string) => Promise<void>;
-  updateFormValues: (client_code: string, values: any) => void;
+  updateFormValues: (client_code: string, values: any) => void; 
   getReferral: () => Promise<void>;
   Referral: Types.Referral[];
 }
@@ -99,9 +103,11 @@ DynamicClientDetailsContainerState
     returned_to_care: number | null,
     program_significantly_modified: number,
     program: string | null,
-    location: string | null
+    location: string | null,
+    start_date: string | null,
+    end_date: string | null,
+    referral_status: string | null
   ) => {
-    
     try {
       this.setState({ isLoading: true });
 
@@ -111,7 +117,10 @@ DynamicClientDetailsContainerState
         returned_to_care,
         program_significantly_modified,
         program,
-        location
+        location,
+        start_date,
+        end_date,
+        referral_status
       );
       this.setState({
         isLoading: false
@@ -133,8 +142,9 @@ DynamicClientDetailsContainerState
     values: any
   ) => {
     this.setState({ isLoading: true });
+    const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
     await this.props.getPcr(client_code, selected_program);
-    await this.props.getLocations(client_code, selected_program);
+    await this.props.getLocations(client_code, selected_program, is_accessToken);
     this.props.updateFormValues(client_code, values);
     this.setState({ isLoading: false });
   };
@@ -187,7 +197,7 @@ DynamicClientDetailsContainerState
               // onLocationSelect={this.saveProgramAndLocation}
               {...this.state}
               Referral={referralList}
-              onFormSubmit={this.updateProgramCompletion}
+              onFormSubmit={this.updateProgramCompletion} 
               program_completion_response={
               this.state.program_completion_response
               }
@@ -211,16 +221,16 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
   getReferral: referral.actions.getReferral,
   searchClient: client.actions.searchClient,
-  updateProgramCompletion: client.actions.updateProgramCompletion,
+  updateProgramCompletion: dynamicclient.actions.updateProgramCompletion,
   getAvailablePrograms: program.actions.getAvailablePrograms,
   submitPrediction: client.actions.submitPrediction,
-  getLocations: client.actions.getLocations,
-  getPcr: client.actions.getPcr,
-  saveLocationAndProgram: client.actions.saveLocationAndProgram,
+  getLocations: dynamicclient.actions.getLocations,
+  getPcr: dynamicclient.actions.getPcr,
+  saveLocationAndProgram: dynamicclient.actions.saveLocationAndProgram, 
   clearErrors: client.actions.clearErrors,
   clearClient: client.actions.clear,
-  getProgramsForClient: client.actions.getProgramsForClient,
-  updateFormValues: client.actions.updateFormValues
+  getProgramsForClient: dynamicclient.actions.getProgramsForClient,
+  updateFormValues: dynamicclient.actions.updateFormValues
 };
 
 export default connect(
