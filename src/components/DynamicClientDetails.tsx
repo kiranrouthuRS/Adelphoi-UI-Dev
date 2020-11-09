@@ -167,6 +167,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     : [];
   const getInitialValues = (): FormValues => {
     const { client, is_role_type, searchData } = props;
+    console.log(props)
     let program: any = null;
     let location: any = null;
     let referral: any = null;
@@ -197,24 +198,24 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     }
     return {
        Program_Completion:
-        client.Program_Completion === null
+       client.Program_Completion === null 
           ? ""
-          : client.Program_Completion.toString(),
+          : client.Program_Completion&&client.Program_Completion.toString(),
       Returned_to_Care:
         client.Returned_to_Care === null
           ? ""
-          : client.Returned_to_Care.toString(),
+          : client.Returned_to_Care&&client.Returned_to_Care.toString(),
       program_significantly_modified: Number(
         client.program_significantly_modified
       ),
       roc_confidence:
-        client.roc_confidence !== null ? client.roc_confidence.toString() : "",
+      client.roc_confidence&&client.roc_confidence !== null ? client.roc_confidence.toString() : "",
       Program: program,
       Referral: referral,
 
 
       confidence:
-        client.confidence !== null ? client.confidence.toString() : "",
+      client.confidence&&client.confidence !== null ? client.confidence.toString() : "",
       Location: location || "",
 
       start_date:
