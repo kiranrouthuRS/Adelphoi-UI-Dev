@@ -176,9 +176,13 @@ export class UsersList extends React.Component<
       userID = e.currentTarget.dataset.id;
     }
      const response = await this.props.getAvailableUsers(userID) 
+     
     const singleuser = (this.props.availableUsersList && this.props.availableUsersList) || [];
     const singlerole = (this.props.rolesList && this.props.rolesList) || [];
     const roleID: any = singlerole.filter(id => id.name == singleuser[0].role_type)
+    console.log(JSON.stringify(singleuser))
+    console.log(singlerole)
+    console.log(roleID)
      this.setState({
       id: singleuser[0].id,
       full_name: "",
@@ -186,7 +190,7 @@ export class UsersList extends React.Component<
       last_name: singleuser[0].last_name,
       email_id: singleuser[0].email_id,
       mobile: singleuser[0].mobile,
-      gender: singleuser[0].gender === "Male" ? "2" : singleuser[0].gender === "Female" ? "1":"", 
+      gender: singleuser[0].gender.toString(),  
       role_type: roleID[0].id, 
       role_type_text: singleuser[0].role_type,
       isEdit: true
