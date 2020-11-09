@@ -8,7 +8,7 @@ import { ContainerProps } from "./Container";
 import * as client from "../redux-modules/client";
 import * as program from "../redux-modules/program";
 import * as dynamicclient from "../redux-modules/dynamicclient";
-import ReferralList from "../components/ReferralList";
+import ReferralList from "../components/ReferralList"; 
 import PredictionFormStep from "../components/PredictionFormStep";
 import PredictionFormStep2 from "../components/PredictionFormStep2";
 import ProgramSelection from "../components/ProgramSelection";
@@ -93,11 +93,12 @@ export class DynamicNewClientContainer extends React.Component<
     //this.props.saveClient(client, true, true);
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     const is_role_type: any = this.props.user && this.props.user.user.role_type 
-    const res: any = await this.props.insertDClient(client, is_accessToken);
-    this.setState({ isLoading: false });
+    const is_prediction_available: any = this.props.user && this.props.user.user.is_prediction_available 
+     const res: any = await this.props.insertDClient(client, is_accessToken);
+     this.setState({ isLoading: false });
     if (res !== null && res.message === "client registered") {
       this.props.enqueueSnackbar(index ? "Client details updated Successfully." : "New Client Created Successfully.");
-      {is_role_type === "Contributor" ?
+      {is_role_type === "Contributor" || client["Exclusionary Criteria Exists/Referral Rejected"] === 0 || !is_prediction_available ? 
       history.push(`/${domainPath}/new-client/`) :
       history.push(`/${domainPath}/new-client/program-selection`)
     }

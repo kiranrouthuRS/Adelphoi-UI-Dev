@@ -182,14 +182,15 @@ DynamicClientDetailsContainerState
     const referralList = (referralState && referralState.referralList) || [];
     const clientList = (clientState && clientState.clientList) || {};
     const { index } = this.props.match.params;
-    const is_role_type: any = this.props.user && this.props.user.user.role_type  
+    const{ is_role_type,is_prediction_available}: any = this.props.user && this.props.user.user
     const searchData :any = this.props&&this.props.client&&this.props.client.searchData&&this.props.client.searchData
     return (
       <div css={wrap}>
         <div css={mainContent}>
           {!clientList[index] ? null : (
             <DynamicClientDetails
-            is_role_type={is_role_type}
+              is_role_type={is_role_type}
+              is_prediction_available={is_prediction_available}
               client={clientList[index]}
               index={index} 
               searchData={searchData.filter(s=> s.client_code == index)}

@@ -65,7 +65,8 @@ interface DynamicClientDetailsProps {
   program_completion_response: string | null;
   // getReferral: () => Promise<void>;
   Referral: Types.Referral[],
-  is_role_type: string
+  is_role_type: string,
+  is_prediction_available: string
 }
 
 interface FormValues {
@@ -347,7 +348,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
         )
       }><u style={{ color: "red" }}>here</u></a> to update latest version of Client details.</h3>
 
-      {props.is_role_type === "Contributor" ? "" : (
+      {props.is_role_type === "Contributor" || !props.is_prediction_available? "" : (
         <Formik
           initialValues={getInitialValues()}
           enableReinitialize

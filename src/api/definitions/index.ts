@@ -7,6 +7,7 @@ export interface User {
   is_pwd_updated: string;
   logo_path: string;
   is_fully_configured: string;
+  is_prediction_available: string;
 }
 export interface Users {
   id: string;

@@ -347,7 +347,7 @@ export const actions = {
     return async (dispatch, getState) => {
       let locations: string[] = [];
       let updatedDClient: Types.DynamicClient;
-
+      const is_prediction_available = getState().user?.user.is_prediction_available
       try {
         return await insertDClient(Dclient, is_accessToken)
           .then(async response => {
@@ -361,30 +361,35 @@ export const actions = {
               SuggestedPrograms: response.data.response.list_program_types || null
             };
             dispatch(update({ client: cl }));
-            let data = [] as any;
-            updatedDClient = cl;
-            const res = await fetchLocations(
-              updatedDClient["Client Code"],
-              updatedDClient.program_type,
-              is_accessToken
-            );
-            if (res && res["result"] && res["result"] !== "") {
-              // throw new Error(res["result"]);
-            }
-            if (res && res["Suggested Locations"]) {
-              locations = res["Suggested Locations"];
-            }
-            if (locations.length > 0) {
-              const cl: Types.DynamicClient = {
-                ...updatedDClient,
-                SuggestedLocations: [...locations],
-                client_selected_program: updatedDClient.program_type
+            console.log(Dclient)
+            if(is_prediction_available){
+              let data = [] as any;
+              updatedDClient = cl; 
+              const res = await fetchLocations(
+                updatedDClient["Client Code"],
+                updatedDClient.program_type,
+                is_accessToken
+              );
+              console.log(res)
+              if (res && res["result"] && res["result"] !== "") {
+                 throw new Error(res["result"]);
               }
-              dispatch(update({ client: cl }));
+              if (res && res["Suggested Locations"]) {
+                locations = res["Suggested Locations"];
+              }
+              if (locations.length > 0) {
+                const cl: Types.DynamicClient = {
+                  ...updatedDClient,
+                  SuggestedLocations: [...locations],
+                  client_selected_program: updatedDClient.program_type
+                }
+                dispatch(update({ client: cl }));
+              }
             }
+            
             // return cl;
             return response.data;
-            //  return response.data.response?response.data.response:response.data.message;
+            
 
           })
 

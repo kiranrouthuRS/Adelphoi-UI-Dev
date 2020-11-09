@@ -109,6 +109,7 @@ export class UsersList extends React.Component<
      
     } else {
       const response: any =  await this.props.createUsers(users,is_accessToken);
+      console.log(response)
       this.setState({
         message: response.status === "failed" ? response.message:"User created successfully"
       })

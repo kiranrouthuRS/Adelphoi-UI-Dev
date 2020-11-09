@@ -15,7 +15,8 @@ export const emptyUser: Types.User = {
   user_id:"",
   is_pwd_updated:"",
   logo_path:"",
-  is_fully_configured:""
+  is_fully_configured:"",
+  is_prediction_available:""
 };
 
 const initialState: UserState = {
@@ -40,8 +41,12 @@ export const actions = {
       const domain = credential.domain;
       let user: Types.User;
       const response = await login(email,password,domain);
+      console.log(response)
       if (response && response.data) {
-        const { token,role_type,user_id,is_pwd_updated,logo_path,is_fully_configured } = response.data.response;
+        const { token,role_type,
+          user_id,is_pwd_updated,
+          logo_path,is_fully_configured,
+          is_prediction_available } = response.data.response;
         user = {
           email,
          accessToken: token,
@@ -49,7 +54,8 @@ export const actions = {
           user_id: user_id,
           is_pwd_updated: is_pwd_updated,
           logo_path: logo_path,
-          is_fully_configured: is_fully_configured
+          is_fully_configured: is_fully_configured,
+          is_prediction_available: is_prediction_available 
         };
         dispatch(update({ user }));
       }

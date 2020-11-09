@@ -92,7 +92,8 @@ export const Logout = async () => {
               user_id: "",
               is_pwd_updated: "",
               logo_path: "",
-              is_fully_configured: ""
+              is_fully_configured: "",
+              is_prediction_available: "", 
             }
           })
         );
@@ -244,9 +245,9 @@ export const insertDClient = async (client_form, is_accessToken) => {
     // }
     const r = {
       ...response,
-      program_type: response.data.response.program_type[0],
-      referred_program: response.data.response.program_type[0],
-      model_program: response.data.response.program_type[0]
+      program_type: response.data.response&&response.data.response.program_type[0],
+      referred_program: response.data.response&&response.data.response.program_type[0],
+      model_program: response.data.response&& response.data.response.program_type[0]
     };
 
     return (r as unknown) as Partial<Types.DynamicClient>;
