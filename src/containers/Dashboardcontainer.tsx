@@ -8,7 +8,7 @@ import * as referral from "../redux-modules/referral";
 import * as analytics from "../redux-modules/analytics";
 import { ContainerProps } from "./Container";
 import * as Types from "../api/definitions";
-import Dashboard from "../components/Dashboard"; 
+import Dashboard from "../components/Dashboard";
 import { domainPath } from "../App"
 interface MatchParams {
   index: string;
@@ -18,28 +18,29 @@ export interface DashboardContainerState {
   isLoading: boolean;
   error: string;
   hasError: boolean;
- 
+  filters: any;
+
 }
 
 export interface DashboardContainerProps
   extends ContainerProps<MatchParams>,
-    WithSnackbarProps {
-  getDateAnalytics: (analytics: Types.Analytics) => Promise<void>;
+  WithSnackbarProps {
+  getDateAnalytics: (analytics: any) => Promise<void>;
   getReferral: () => Promise<void>;
   getAnalytics: () => Promise<void>;
-  getPCRAnalytics: () => Promise<void>;
-  getROCAnalytics: () => Promise<void>;
-  getReplacementAnalytics: () => Promise<void>;
-  getOccupancyAnalytics: () => Promise<void>;
-  getStayAnalytics: () => Promise<void>;
+  getPCRAnalytics: (analytics: any) => Promise<void>;
+  getROCAnalytics: (analytics: any) => Promise<void>;
+  getReplacementAnalytics: (analytics: any) => Promise<void>;
+  getOccupancyAnalytics: (analytics: any) => Promise<void>;
+  getStayAnalytics: (analytics: any) => Promise<void>;
   getLocations: () => Promise<void>;
   Referral: Types.Referral[];
 }
 
 export class DashboardContainer extends React.Component<
-DashboardContainerProps,
-DashboardContainerState
-> {
+  DashboardContainerProps,
+  DashboardContainerState
+  > {
   constructor(props: DashboardContainerProps) {
     super(props);
     this.state = this.getInitialState();
@@ -49,7 +50,9 @@ DashboardContainerState
       isLoading: false,
       hasError: false,
       error: "",
-      
+      filters: {
+        days_count: "2000"
+      }
     };
   }
 
@@ -60,34 +63,51 @@ DashboardContainerState
     this.setState({ isLoading: true });
 
     this.setState({ isLoading: false });
-    this.props.getReferral();
-    this.props.getAnalytics();
-    this.props.getLocations(); 
-    this.props.getPCRAnalytics();
-    this.props.getROCAnalytics();
-    this.props.getReplacementAnalytics(); 
-    this.props.getOccupancyAnalytics();
-    this.props.getStayAnalytics();
+    await this.props.getReferral();
+    await this.props.getDateAnalytics(this.state.filters);
+    await this.props.getLocations();
+    await this.props.getPCRAnalytics(this.state.filters);
+    await this.props.getROCAnalytics(this.state.filters);
+    await this.props.getReplacementAnalytics(this.state.filters);
+    await this.props.getOccupancyAnalytics(this.state.filters);
+    await this.props.getStayAnalytics(this.state.filters);
   }
 
-   getDateAnalytics = async (analytics: Types.Analytics) => {
-     console.log(analytics)
-    await this.props.getDateAnalytics(analytics); 
+  getDateAnalytics = async (analytics: any) => {
+    console.log(analytics)
+    await this.props.getDateAnalytics(analytics);
+    await this.props.getPCRAnalytics(analytics);
+    await this.props.getROCAnalytics(analytics);
+    await this.props.getReplacementAnalytics(analytics);
+    await this.props.getOccupancyAnalytics(analytics);
+    await this.props.getStayAnalytics(analytics);
   };
 
   getTotalAnalytics = async (filter: any) => {
     console.log(analytics)
-   await this.props.getDateAnalytics(filter); 
- };
+    await this.props.getDateAnalytics(filter);
+  };
+
+  getProgramAnalytics = async (filter: any) => {
+    console.log(filter)
+    await this.props.getPCRAnalytics(filter);
+    await this.props.getROCAnalytics(filter);
+  };
+  getOtherAnalytics = async (filter: any) => {
+    console.log(filter)
+    await this.props.getReplacementAnalytics(filter);
+    await this.props.getOccupancyAnalytics(filter);
+    await this.props.getStayAnalytics(filter);
+  };
 
   render() {
     const {
       //  client: clientState,
-            referral: referralState,
-             analytics: analyticsState,
-             programLocation: locationState,} = this.props;
+      referral: referralState,
+      analytics: analyticsState,
+      programLocation: locationState, } = this.props;
     const referralList = (referralState && referralState.referralList) || [];
-    const locationList = (locationState && locationState.locationList) || []; 
+    const locationList = (locationState && locationState.locationList) || [];
     const analyticsList = (analyticsState && analyticsState.analyticsList) || [];
     const pcrList = (analyticsState && analyticsState.PCRAnalyticsList) || [];
     const rocList = (analyticsState && analyticsState.ROCAnalyticsList) || [];
@@ -98,20 +118,21 @@ DashboardContainerState
     return (
       <div css={wrap}>
         <div css={mainContent}>
-        <Dashboard
-           {...this.state}
-              Referral={referralList}
-              Analytics={analyticsList}
-              PCR_analytics={pcrList}
-              ROC_analytics={rocList}
-              Replace_analytics={replaceList}
-              Stay_analytics={stayList}
-              Occupancy_analytics={occupancyList}
-              Location={locationList} 
-              onFormSubmit={this.getDateAnalytics} 
-              totalAnalytics={this.getTotalAnalytics}
-              
-            />
+          <Dashboard
+            {...this.state}
+            Referral={referralList}
+            Analytics={analyticsList}
+            PCR_analytics={pcrList}
+            ROC_analytics={rocList}
+            Replace_analytics={replaceList}
+            Stay_analytics={stayList}
+            Occupancy_analytics={occupancyList}
+            Location={locationList}
+            onFormSubmit={this.getDateAnalytics}
+            totalAnalytics={this.getTotalAnalytics}
+            Program_Analytics={this.getProgramAnalytics}
+            Other_Analytics={this.getOtherAnalytics}
+          />
         </div>
       </div>
     );

@@ -41,45 +41,55 @@ export const actions = {
       dispatch(update({ analyticsList: response })); 
     };
   },
-  getPCRAnalytics(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+  getPCRAnalytics(
+    filter: any
+  ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchPCRAnalytics();
+      const response = await fetchPCRAnalytics(filter);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
       dispatch(update({ PCRAnalyticsList: response }));  
     };
   },
-  getROCAnalytics(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+  getROCAnalytics(
+    filter: any
+  ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchROCAnalytics();
+      const response = await fetchROCAnalytics(filter);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
       dispatch(update({ ROCAnalyticsList: response })); 
     };
   },
-  getReplacementAnalytics(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+  getReplacementAnalytics(
+    filter: any
+  ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchReplacementAnalytics();
+      const response = await fetchReplacementAnalytics(filter);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
       dispatch(update({ ReplacementList: response })); 
     };
   },
-  getStayAnalytics(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+  getStayAnalytics(
+    filter: any
+  ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchStayAnalytics();
+      const response = await fetchStayAnalytics(filter);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
       dispatch(update({ StayList: response })); 
     };
   },
-  getOccupancyAnalytics(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+  getOccupancyAnalytics(
+    filter: any
+  ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchOccupancyAnalytics();
+      const response = await fetchOccupancyAnalytics(filter);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }

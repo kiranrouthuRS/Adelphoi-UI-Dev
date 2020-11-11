@@ -361,9 +361,10 @@ export const actions = {
               SuggestedPrograms: response.data.response.list_program_types || null
             };
             dispatch(update({ client: cl }));
-            console.log(Dclient)
-            if(is_prediction_available){
-              let data = [] as any;
+           
+            if(is_prediction_available){ 
+              if(Dclient["Exclusionary Criteria Exists/Referral Rejected"] !== "0"){
+                let data = [] as any;
               updatedDClient = cl; 
               const res = await fetchLocations(
                 updatedDClient["Client Code"],
@@ -386,6 +387,8 @@ export const actions = {
                 dispatch(update({ client: cl }));
               }
             }
+              }
+              
             
             // return cl;
             return response.data;

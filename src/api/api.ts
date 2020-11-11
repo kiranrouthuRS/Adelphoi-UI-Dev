@@ -816,10 +816,19 @@ export const fetchDateAnalytics = async (
   analytics: any
 ) => {
   const currentUser = store.getState().user.user.accessToken; 
-  console.log(analytics)
-  if(typeof analytics === "object"){
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  console.log(analytics) 
+  for (const [key, value] of Object.entries(analytics)) {
+      console.log(analytics[key]);
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    console.log(queryString)
     try {
-      const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?start_date=${analytics.start_date}&end_date=${analytics.end_date}`, {
+      const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?${queryString}`, {
         headers: {
           'Authorization': `Bearer ${currentUser}` 
         }
@@ -832,30 +841,27 @@ export const fetchDateAnalytics = async (
       console.error("api function fetchReferral error");
       throwError(error);
     }
-  }else{
-    try {
-      const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?days_count=${analytics}`, {
-        headers: {
-          'Authorization': `Bearer ${currentUser}` 
-        }
-      });
-      console.log(response)
-      const data = (response.data.response as unknown) as Types.Analytics[]; 
+
   
-      return data;
-    } catch (error) {
-      console.error("api function fetchReferral error");
-      throwError(error);
+};
+
+export const fetchPCRAnalytics = async (
+  filter: any
+  ) => {
+  const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(filter).length
+  console.log(filter) 
+  for (const [key, value] of Object.entries(filter)) {
+      console.log(filter[key]);
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
     }
-  }
-
-  
-};
-
-export const fetchPCRAnalytics = async () => {
-  const currentUser = store.getState().user.user.accessToken;
+    console.log(queryString)
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/pcr?days_count=2000`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/pcr?${queryString}`, { 
       headers: {
         'Authorization': `Bearer ${currentUser}` 
       }
@@ -869,10 +875,23 @@ export const fetchPCRAnalytics = async () => {
     throwError(error);
   }
 };
-export const fetchROCAnalytics = async () => {
+export const fetchROCAnalytics = async (
+  analytics: any
+  ) => {
   const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  console.log(analytics) 
+  for (const [key, value] of Object.entries(analytics)) {
+      console.log(analytics[key]);
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    console.log(queryString)
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/roc?days_count=2000`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/roc?${queryString}`, { 
       headers: {
         'Authorization': `Bearer ${currentUser}` 
       }
@@ -886,10 +905,24 @@ export const fetchROCAnalytics = async () => {
     throwError(error);
   }
 };
-export const fetchReplacementAnalytics = async () => {
+
+export const fetchReplacementAnalytics = async (
+  analytics: any
+) => {
   const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  console.log(analytics) 
+  for (const [key, value] of Object.entries(analytics)) {
+      console.log(analytics[key]);
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    console.log(queryString)
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/replacement?days_count=2000`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/replacement?${queryString}`, { 
       headers: {
         'Authorization': `Bearer ${currentUser}` 
       }
@@ -903,10 +936,23 @@ export const fetchReplacementAnalytics = async () => {
     throwError(error);
   }
 };
-export const fetchStayAnalytics = async () => {
+export const fetchStayAnalytics = async (
+  analytics: any
+) => {
   const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  console.log(analytics) 
+  for (const [key, value] of Object.entries(analytics)) {
+      console.log(analytics[key]);
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    console.log(queryString)
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/stay?days_count=2000`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/stay?${queryString}`, { 
       headers: {
         'Authorization': `Bearer ${currentUser}` 
       }
@@ -920,10 +966,23 @@ export const fetchStayAnalytics = async () => {
     throwError(error);
   }
 };
-export const fetchOccupancyAnalytics = async () => {
+export const fetchOccupancyAnalytics = async (
+  analytics: any
+) => {
   const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  console.log(analytics) 
+  for (const [key, value] of Object.entries(analytics)) {
+      console.log(analytics[key]);
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    console.log(queryString)
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/occupancy?days_count=2000`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/occupancy?${queryString}`, { 
       headers: {
         'Authorization': `Bearer ${currentUser}` 
       }

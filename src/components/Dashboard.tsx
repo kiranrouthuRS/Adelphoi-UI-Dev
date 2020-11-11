@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import { useHistory } from "react-router-dom";
 import { Formik, ErrorMessage } from "formik";
 import { makeStyles } from '@material-ui/core/styles';
@@ -59,6 +59,8 @@ interface ConfigurationFormProps {
     Location: Types.Location[];
     onFormSubmit: (analytics: Types.Analytics) => void;
     totalAnalytics: (filter: any) => void;
+    Program_Analytics: (filter: any) => void;
+    Other_Analytics: (filter: any) => void; 
     isLoading: boolean;
     hasError: boolean;
     error: string;
@@ -68,7 +70,7 @@ interface ConfigurationFormProps {
 const Dashboard: React.FC<ConfigurationFormProps> = props => {
     // const history = useHistory();
     const classes = useStyles();
-    const [filters, setFilters] = useState({
+    const initialState = {
         start_date: '',
         end_date: '',
         referral_status: '',
@@ -83,37 +85,81 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
         week: '',
         month: '',
         life_time: '',
-        days_count: ''
-    });
+        days_count: '2000'
+    }
+    const [filters, setFilters] = useState(initialState);
     const { onFormSubmit, Analytics, Referral, Location } = props;
     const filterAnalytics = async (e) => {
-        setFilters({
-            ...filters,
-            days_count: e.target.dataset.id,
-            start_date:"",
-            end_date:"",
-            [e.target.dataset.name]: e.target.dataset.id
-        });
-        await props.onFormSubmit(e.target.dataset.id);
+    let filter = initialState
+        filter.days_count = e.target.dataset.id
+        setFilters(filter)
+        // setFilters(prevState => {
+        //     return { ...prevState, days_count: e.target.dataset.id,start_date: "", end_date: "" }
+        // });
+        await props.onFormSubmit(filter);
     };
-    const onChange = async(e)  => {
+    const onChange = async (e) => {
         console.log(e.target.value)
-    await setFilters(prevState => {
-        return { ...prevState, [e.target.name]: e.target.value }
-      });
+        await setFilters(prevState => {
+            return { ...prevState, [e.target.name]: e.target.value }
+        });
     }
     const totalHandleChange = async (e) => {
-        
+
         let filter = filters
         filter[e.target.name] = e.target.value
         console.log(filter)
-        
+
         setFilters(prevState => {
             return { ...prevState, [e.target.name]: e.target.value }
-          });
-          await props.totalAnalytics(filter);
-       
+        });
+        await props.totalAnalytics(filter);
+
     };
+    const PGM_HandleChange = async (e) => {
+
+        let filter = filters
+        filter[e.target.name] = e.target.value
+        console.log(filter)
+
+        setFilters(prevState => {
+            return { ...prevState, [e.target.name]: e.target.value }
+        });
+        await props.Program_Analytics(filter);
+
+    };
+    const OTH_HandleChange = async (e) => {
+
+        let filter = filters
+        filter[e.target.name] = e.target.value
+        console.log(filter)
+
+        setFilters(prevState => {
+            return { ...prevState, [e.target.name]: e.target.value }
+        });
+        await props.Other_Analytics(filter);
+
+    };
+    console.log(props.PCR_analytics)
+    
+    const program = props.PCR_analytics && props.ROC_analytics ? {
+        labels: [
+            'Program completed',
+            'Remained out of care'
+        ],
+        datasets: [{
+            data: [props.PCR_analytics.pcr ? props.PCR_analytics.pcr.percentage : 0, props.ROC_analytics.roc ? props.ROC_analytics.roc.percentage : 0],
+            backgroundColor: [
+                '#FF6384',
+                '#36A2EB'
+            ],
+            hoverBackgroundColor: [
+                '#FF6384',
+                '#36A2EB'
+            ]
+        }],
+
+    }:[];
     const data = {
         labels: [
             'Accepted & placed',
@@ -135,25 +181,8 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
         }],
 
     };
-    const program = {
-        labels: [
-            'Program completed',
-            'Remained out of care'
-        ],
-        datasets: [{
-            //data: [props.PCR_analytics ? props.PCR_analytics.pcr.percentage : 0, props.ROC_analytics ? props.ROC_analytics.roc.percentage : 0],
-            backgroundColor: [
-                '#FF6384',
-                '#36A2EB'
-            ],
-            hoverBackgroundColor: [
-                '#FF6384',
-                '#36A2EB'
-            ]
-        }],
-
-    };
     
+
     console.log(filters)
     return (
         <div className={classes.root}>
@@ -163,8 +192,12 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                 enableReinitialize
                 validationSchema=""
                 onSubmit={async (values, helpers) => {
-                    console.log(values)
-                    await onFormSubmit(values);
+                    let filter = initialState
+                    filter.start_date = filters.start_date;
+                    filter.end_date = filters.end_date;
+                    filter.days_count = ""
+                    setFilters(filter)
+                    await onFormSubmit(filter);
                 }}
             >
                 {({ values, handleSubmit, handleChange }) => (
@@ -172,8 +205,7 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                         <Grid item xs={12}>
                             <h2 css={subHeading}>Dashboard</h2>
                         </Grid>
-                        Coming soon ...
-                        {/* <Grid container item xs={12} spacing={3}>
+                        <Grid container item xs={12} spacing={3}>
 
 
                             <Grid item xs={4}>
@@ -321,8 +353,8 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
 
                                     <div style={{
                                         background: "#36A2EB",
-                                        width: "50%",
-                                        height: "90%",
+                                        width: "150px",
+                                        height: "150px",
                                         borderRadius: "50%",
                                         display: "flex",
                                         alignItems: "center",
@@ -385,7 +417,7 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                                         css={selectField}
                                         name="pgm_referral_source"
                                         value={filters.pgm_referral_source || ""}
-                                        onChange={totalHandleChange}
+                                        onChange={PGM_HandleChange} 
                                     >
                                         <option value="">Select</option>
                                         {Referral.map(r => (
@@ -406,7 +438,7 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                                         css={selectField}
                                         name="pgm_location"
                                         value={filters.pgm_location || ""}
-                                        onChange={totalHandleChange}
+                                        onChange={PGM_HandleChange}
                                     >
                                         <option value="">Select</option>
                                         {Location.map(l => (
@@ -420,12 +452,12 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={3} >
-                                <Grid item xs={4}>
+                                <Grid item xs={3}>
 
                                     <div style={{
                                         background: "#36A2EB",
-                                        width: "50%",
-                                        height: "90%",
+                                        width: "150px",
+                                        height: "150px",
                                         borderRadius: "50%",
                                         display: "flex",
                                         alignItems: "center",
@@ -441,12 +473,12 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                                         Program completion rate
 
                                 </Grid>
-                                <Grid item xs={4}>
+                                <Grid item xs={3}>
 
                                     <div style={{
                                         background: "#36A2EB",
-                                        width: "50%",
-                                        height: "90%",
+                                        width: "150px",
+                                        height: "150px",
                                         borderRadius: "50%",
                                         display: "flex",
                                         alignItems: "center",
@@ -462,7 +494,7 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
     Remain out of care
 
 </Grid>
-                                <Grid item xs={4}>
+                                <Grid item xs={6}>
 
                                     <Pie data={program}
                                         options={{
@@ -510,7 +542,7 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                                         css={selectField}
                                         name="oth_referral_source"
                                         value={filters.oth_referral_source || ""}
-                                        onChange={totalHandleChange}
+                                        onChange={OTH_HandleChange}
                                     >
                                         <option value="">Select</option>
                                         {Referral.map(r => (
@@ -531,7 +563,7 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                                         css={selectField}
                                         name="oth_location"
                                         value={filters.oth_location || ""}
-                                        onChange={totalHandleChange}
+                                        onChange={OTH_HandleChange}
                                     >
                                         <option value="">Select</option>
                                         {Location.map(l => (
@@ -543,13 +575,14 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                                     </select>
                                 </Grid>
                             </Grid>
-                            <div css={fieldRow} style={{ justifyContent: "center", marginTop: "10px", height: "500" }}>
+                            
+                            <div css={fieldRow} style={{ justifyContent: "center", marginTop: "10px" }}>
                                 <div css={twoCol}>
 
                                     <div style={{
                                         background: "#36A2EB",
-                                        width: "20%",
-                                        height: "95%",
+                                        width: "150px",
+                                        height: "150px",
                                         borderRadius: "50%",
                                         display: "flex",
                                         alignItems: "center",
@@ -559,7 +592,7 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                                         // marginBottom: "10px"
 
                                     }} >
-                                        <strong> {props.Replace_analytics.replacement_rate}</strong>
+                                        <strong> {props.Replace_analytics.replacement_rate?props.Replace_analytics.replacement_rate:0}</strong>
                                     </div>
 Replacement rate
 
@@ -568,8 +601,8 @@ Replacement rate
 
                                     <div style={{
                                         background: "#36A2EB",
-                                        width: "20%",
-                                        height: "95%",
+                                        width: "150px",
+                                        height: "150px",
                                         borderRadius: "50%",
                                         display: "flex",
                                         alignItems: "center",
@@ -579,7 +612,7 @@ Replacement rate
                                         //marginBottom: "10px"
 
                                     }} >
-                                        <strong> {props.Stay_analytics ? props.Stay_analytics.avg_length_of_stay : 0}</strong>
+                                        <strong> {props.Stay_analytics.avg_length_of_stay ? props.Stay_analytics.avg_length_of_stay : 0}</strong>
                                     </div>
                                         Average Length of stay
 
@@ -588,8 +621,8 @@ Replacement rate
 
                                     <div style={{
                                         background: "#36A2EB",
-                                        width: "20%",
-                                        height: "95%",
+                                        width: "150px",
+                                        height: "150px",
                                         borderRadius: "50%",
                                         display: "flex",
                                         alignItems: "center",
@@ -600,7 +633,7 @@ Replacement rate
 
                                     }} >
                                         <strong>
-                                            {props.Occupancy_analytics ? props.Occupancy_analytics.occupancy_rate ? props.Occupancy_analytics.occupancy_rate : 0 : 0}
+                                            {props.Occupancy_analytics.occupancy_rate ? props.Occupancy_analytics.occupancy_rate : 0 }
                                         </strong>
                                     </div>
 Occupancy rate
@@ -609,7 +642,7 @@ Occupancy rate
 
                             </div>
 
-                        </div> */}
+                        </div>
                     </form>
                 )}
             </Formik>
