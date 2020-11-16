@@ -289,20 +289,25 @@ export class PredictionFormStep extends React.Component<
     })
 //  const ageAtEpisodeStart = await this.getAge( new Date(client_form.Date_of_Birth), new Date(client_form.Date_of_Referral))
    let data = [] as any;
+   let isValid_Data = true as any;
   Object.keys(client_form).map((ele,i)=> 
-     (data.push( {[ele.replace(/_/g, ' ')]: client_form[ele]}))
+  client_form[ele] ?
+     (data.push( {[ele.replace(/_/g, ' ')]: client_form[ele]})):(isValid_Data = false)
      )
   const formData = Object.assign({}, ...data)
-  if (this.state.isEdit === "true" ||!this.state.hasError) {
-     await this.props.onFormSubmit(formData);
+  if(isValid_Data){
+    if (this.state.isEdit === "true" ||!this.state.hasError) {
+      await this.props.onFormSubmit(formData);
       this.setState({ 
-      isSubmitted: false,
-      err_msg: this.props.errors,
-      isOpen: this.props.errors ? true : false
-    })
-    } else {
-    
-    }
+       isSubmitted: false,
+       err_msg: this.props.errors,
+       isOpen: this.props.errors ? true : false
+     })
+     } else {
+     
+     }
+  }
+  
 
   }
 
