@@ -168,7 +168,6 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     : [];
   const getInitialValues = (): FormValues => {
     const { client, is_role_type, searchData } = props;
-    console.log(props)
     let program: any = null;
     let location: any = null;
     let referral: any = null;

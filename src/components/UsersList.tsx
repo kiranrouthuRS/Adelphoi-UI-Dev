@@ -109,7 +109,6 @@ export class UsersList extends React.Component<
      
     } else {
       const response: any =  await this.props.createUsers(users,is_accessToken);
-      console.log(response)
       this.setState({
         message: response.status === "failed" ? response.message:"User created successfully"
       })
@@ -181,9 +180,6 @@ export class UsersList extends React.Component<
     const singleuser = (this.props.availableUsersList && this.props.availableUsersList) || [];
     const singlerole = (this.props.rolesList && this.props.rolesList) || [];
     const roleID: any = singlerole.filter(id => id.name == singleuser[0].role_type)
-    console.log(JSON.stringify(singleuser))
-    console.log(singlerole)
-    console.log(roleID)
      this.setState({
       id: singleuser[0].id,
       full_name: "",

@@ -74,7 +74,6 @@ export class DashboardContainer extends React.Component<
   }
 
   getDateAnalytics = async (analytics: any) => {
-    console.log(analytics)
     await this.props.getDateAnalytics(analytics);
     await this.props.getPCRAnalytics(analytics);
     await this.props.getROCAnalytics(analytics);
@@ -84,17 +83,14 @@ export class DashboardContainer extends React.Component<
   };
 
   getTotalAnalytics = async (filter: any) => {
-    console.log(analytics)
-    await this.props.getDateAnalytics(filter);
+     await this.props.getDateAnalytics(filter);
   };
 
   getProgramAnalytics = async (filter: any) => {
-    console.log(filter)
     await this.props.getPCRAnalytics(filter);
     await this.props.getROCAnalytics(filter);
   };
   getOtherAnalytics = async (filter: any) => {
-    console.log(filter)
     await this.props.getReplacementAnalytics(filter);
     await this.props.getOccupancyAnalytics(filter);
     await this.props.getStayAnalytics(filter);

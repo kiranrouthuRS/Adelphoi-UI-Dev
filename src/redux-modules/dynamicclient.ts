@@ -353,12 +353,12 @@ export const actions = {
           .then(async response => {
             const cl = {
               ...Dclient,
-              program_type: response.data.response.program_type || null,
-              Confidence: response.data.response.confidence || null,
-              Roc_confidence: response.data.response.roc_confidence || null,
-              referred_program: response.data.response.program_type || null,
-              model_program: response.data.response.model_program || null,
-              SuggestedPrograms: response.data.response.list_program_types || null
+              program_type: response.data.response.program_type && response.data.response.program_type || null,
+              Confidence: response.data.response.confidence && response.data.response.confidence|| null,
+              Roc_confidence: response.data.response.roc_confidence && response.data.response.roc_confidence|| null,
+              referred_program: response.data.response.program_type && response.data.response.program_type || null,
+              model_program:  response.data.response.model_program && response.data.response.model_program || null,
+              SuggestedPrograms: response.data.response.list_program_types && response.data.response.list_program_types || null 
             };
             dispatch(update({ client: cl }));
            
@@ -371,7 +371,6 @@ export const actions = {
                 updatedDClient.program_type,
                 is_accessToken
               );
-              console.log(res)
               if (res && res["result"] && res["result"] !== "") {
                  throw new Error(res["result"]);
               }
@@ -391,7 +390,7 @@ export const actions = {
               
             
             // return cl;
-            return response.data;
+            return response;
             
 
           })

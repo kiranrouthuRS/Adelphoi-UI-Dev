@@ -99,7 +99,6 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
         await props.onFormSubmit(filter);
     };
     const onChange = async (e) => {
-        console.log(e.target.value)
         await setFilters(prevState => {
             return { ...prevState, [e.target.name]: e.target.value }
         });
@@ -108,8 +107,6 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
 
         let filter = filters
         filter[e.target.name] = e.target.value
-        console.log(filter)
-
         setFilters(prevState => {
             return { ...prevState, [e.target.name]: e.target.value }
         });
@@ -120,8 +117,6 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
 
         let filter = filters
         filter[e.target.name] = e.target.value
-        console.log(filter)
-
         setFilters(prevState => {
             return { ...prevState, [e.target.name]: e.target.value }
         });
@@ -132,16 +127,12 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
 
         let filter = filters
         filter[e.target.name] = e.target.value
-        console.log(filter)
-
         setFilters(prevState => {
             return { ...prevState, [e.target.name]: e.target.value }
         });
         await props.Other_Analytics(filter);
 
     };
-    console.log(props.PCR_analytics)
-    
     const program = props.PCR_analytics && props.ROC_analytics ? {
         labels: [
             'Program completed',
@@ -181,9 +172,6 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
         }],
 
     };
-    
-
-    console.log(filters)
     return (
         <div className={classes.root}>
 
