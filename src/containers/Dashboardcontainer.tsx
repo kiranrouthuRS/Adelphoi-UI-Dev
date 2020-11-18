@@ -26,7 +26,7 @@ export interface DashboardContainerProps
   extends ContainerProps<MatchParams>,
   WithSnackbarProps {
   getDateAnalytics: (analytics: any) => Promise<void>;
-  getDReferral: () => Promise<void>;
+  getReferral: () => Promise<void>;
   getAnalytics: () => Promise<void>;
   getPCRAnalytics: (analytics: any) => Promise<void>;
   getROCAnalytics: (analytics: any) => Promise<void>;
@@ -63,7 +63,7 @@ export class DashboardContainer extends React.Component<
     this.setState({ isLoading: true });
 
     this.setState({ isLoading: false });
-    await this.props.getDReferral();
+    await this.props.getReferral();
     await this.props.getDateAnalytics(this.state.filters);
     await this.props.getLocations();
     await this.props.getPCRAnalytics(this.state.filters);
@@ -147,7 +147,7 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps = {
-  getDReferral: referral.actions.getDReferral,
+  getReferral: referral.actions.getReferral,
   getAnalytics: analytics.actions.getAnalytics,
   getDateAnalytics: analytics.actions.getDateAnalytics,
   getLocations: programLocation.actions.getLocations,
