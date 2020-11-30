@@ -230,13 +230,14 @@ export const insertDClient = async (client_form, is_accessToken) => {
   var data = new FormData();
   var myJSON = JSON.stringify(client_form);
   data.append('client_form', myJSON);
+  console.log(client_form)
   try {
     const response = await axios.post(`${baseApiUrl}/${domainPath}/clients`, data, {
       headers: {
         'Authorization': `Bearer ${is_accessToken}`
       }
     });
-     
+     console.log(response)
     // if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
     //   throw new Error(response.data["ERROR"]);
     // }
@@ -586,7 +587,25 @@ export const fetchReferral = async () => {
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/referral_list`);
     const data = (response.data as unknown) as Types.Referral[];
+   console.log(response)
+    return data;
+  } catch (error) {
+    console.error("api function fetchReferral error");
+    throwError(error);
+  }
+};
 
+export const fetchDReferral = async () => {
+  const currentUser = store.getState().user.user.accessToken;
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/clients/referralsources`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+     const data = (response.data.response as unknown) as any;
+    
+   console.log(response)
     return data;
   } catch (error) {
     console.error("api function fetchReferral error");
@@ -598,7 +617,7 @@ export const fetchAvailableReferral = async () => {
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/referral_list`);
     const data = (response.data as unknown) as Types.Referral[];
-
+    console.log(response)
     return data;
   } catch (error) {
     console.error("api function fetchAvailableReferral error");
@@ -797,7 +816,7 @@ export const fetchLocations = async (
 export const fetchAnalytics = async () => {
   const currentUser = store.getState().user.user.accessToken;
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?days_count=2000`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?days_count=30`, { 
       headers: {
         'Authorization': `Bearer ${currentUser}` 
       }
@@ -830,7 +849,7 @@ export const fetchDateAnalytics = async (
         }
       });
       const data = (response.data.response as unknown) as Types.Analytics[]; 
-  
+  console.log(response)
       return data;
     } catch (error) {
       console.error("api function fetchReferral error");
@@ -846,12 +865,15 @@ export const fetchPCRAnalytics = async (
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
   let length :any = Object.keys(filter).length
+  console.log(filter)
   for (const [key, value] of Object.entries(filter)) {
+       
        if(value){
         queryString = `${key}=${value}&`+queryString  
       }
       
     }
+    console.log(queryString)
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/pcr?${queryString}`, { 
       headers: {
@@ -859,7 +881,7 @@ export const fetchPCRAnalytics = async (
       }
     });
     const data = (response.data.response as unknown) as Types.Analytics[]; 
-
+console.log(response)
     return data;
   } catch (error) {
     console.error("api function fetchprogramAnalytics error");
@@ -887,7 +909,7 @@ export const fetchROCAnalytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    
+    console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[]; 
 
     return data;
@@ -918,7 +940,7 @@ export const fetchReplacementAnalytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    
+    console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[]; 
 
     return data;
@@ -948,7 +970,7 @@ export const fetchStayAnalytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    
+    console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[]; 
 
     return data;
@@ -978,12 +1000,286 @@ export const fetchOccupancyAnalytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    
+    console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[];   
 
     return data;
   } catch (error) {
     console.error("api function fetchprogramAnalytics error");
+    throwError(error);
+  }
+};
+
+export const fetchAllocationAnalytics = async (
+  analytics: any
+) => {
+  const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  
+  for (const [key, value] of Object.entries(analytics)) {
+      
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/statistics?${queryString}&q=all`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchprogramAnalytics error");
+    throwError(error);
+  }
+};
+
+export const fetchAllocated_ProgramAnalytics = async (
+  analytics: any
+) => {
+  const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  
+  for (const [key, value] of Object.entries(analytics)) {
+      
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/statistics?q=programs&${queryString}`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchprogramAnalytics error");
+    throwError(error);
+  }
+};
+
+export const fetch_Market_Analytics = async (
+  analytics: any
+) => {
+  const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  
+  for (const [key, value] of Object.entries(analytics)) {
+      
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/market?${queryString}`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    return data;
+  } catch (error) {
+    console.error("api function fetch_Market_Analytics error");
+    throwError(error);
+  }
+};
+
+export const fetch_Performance_Analytics = async (
+  analytics: any
+) => {
+  const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  console.log(analytics)
+  for (const [key, value] of Object.entries(analytics)) {
+      
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/performance?${queryString}`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchPerformance_Analytics error");
+    throwError(error);
+  }
+};
+export const fetch_Tool_Analytics = async (
+  analytics: any
+) => {
+  const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  console.log(analytics)
+  for (const [key, value] of Object.entries(analytics)) {
+      
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=table&${queryString}`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchAge_Analytics error");
+    throwError(error);
+  }
+};
+export const fetch_Calibration_Analytics = async (
+  analytics: any
+) => {
+  const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  console.log(analytics)
+  for (const [key, value] of Object.entries(analytics)) {
+      
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=graph&${queryString}`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchAge_Analytics error");
+    throwError(error);
+  }
+};
+export const fetch_Gender_Analytics = async (
+  analytics: any
+) => {
+  const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  console.log(analytics)
+  for (const [key, value] of Object.entries(analytics)) {
+      
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?q=sex&${queryString}`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchGender_Analytics error");
+    throwError(error);
+  }
+};
+export const fetch_Age_Analytics = async (
+  analytics: any
+) => {
+  const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  console.log(analytics)
+  for (const [key, value] of Object.entries(analytics)) {
+      
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?q=age&${queryString}`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchAge_Analytics error");
+    throwError(error);
+  }
+};
+export const fetch_Demo_Analytics = async ( 
+  analytics: any
+) => {
+  const currentUser = store.getState().user.user.accessToken;
+  let queryString: any = "";
+  let length :any = Object.keys(analytics).length
+  console.log(analytics)
+  for (const [key, value] of Object.entries(analytics)) {
+      
+      if(value){
+        queryString = `${key}=${value}&`+queryString  
+      }
+      
+    }
+    
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?${queryString}`, { 
+      headers: {
+        'Authorization': `Bearer ${currentUser}` 
+      }
+    });
+    console.log(response)
+    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchAge_Analytics error");
     throwError(error);
   }
 };
@@ -1030,6 +1326,8 @@ export const saveLocationAndProgram = async (
       }
     }
     );
+    console.log(selected_program,selected_location)
+    console.log(response)
     return response.data;
   } catch (error) {
     console.error("api function saveLocationAndProgram error");

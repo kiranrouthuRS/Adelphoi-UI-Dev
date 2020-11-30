@@ -125,7 +125,7 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
                   <div>
                   <div css={fieldRow}>
                   <div css={twoCol}>
-                <label css={label}>Program{props.client.client_selected_program}</label>
+                <label css={label}>Program</label>
                   </div>
                   <div css={twoCol}>
                     <Dropdown

@@ -227,7 +227,7 @@ const RefSource  = Referral.map(d =>{
         <ExpansionPanelSummary
           css={panelHeader}
           expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
+          aria-controls="panel1a-content" 
         >
           <h1 css={panelHeading}>Demographics</h1>
         </ExpansionPanelSummary>

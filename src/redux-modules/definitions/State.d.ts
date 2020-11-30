@@ -39,7 +39,15 @@ export interface AnalyticsState {
   ReplacementList: Types.Analytics[];
   StayList: Types.Analytics[];
   OccupancyList: Types.Analytics[];
-  
+  AllocationList: Types.Analytics[];
+  Program_Alloc_List: Types.Analytics[]; 
+  Market_Analytics_List: Types.Analytics[];
+  Performance_Analytics_List: Types.Analytics[];
+  Gender_List: Types.Analytics[];
+  Age_List : Types.Analytics[];
+  Tool_List: Types.Analytics[];
+  Demo_List: Types.Analytics[];
+  Calibration_List: Types.Analytics[];
 }
 
 export interface QuestionsState {

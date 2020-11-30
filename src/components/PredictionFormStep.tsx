@@ -88,15 +88,15 @@ const profile = css`
   }
 `;
 const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)'
   }
-}; 
+};
 
 export class PredictionFormStep extends React.Component<
   PredictionFormStepProps,
@@ -122,26 +122,29 @@ export class PredictionFormStep extends React.Component<
       isEdit: this.props.isEdit
     };
   }
- async componentDidMount() { 
+  async componentDidMount() {
     let client_form = [] as any;
     this.props.DynamicQuestions.map
       (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
-        client_form.push({ [ques.question.replace(/ /g,"_")]: ques.answer === 0 ? ques.answer :ques.suggested_answers.length >= 1 ? ques.answer&&ques.suggested_answers.filter((p,i)=>p.value === ques.answer)[0].id : ques.answer?ques.answer:"" });
+        client_form.push({ [ques.question.replace(/ /g, "_")]: ques.answer === 0 ? 
+        ques.answer : ques.suggested_answers.length >= 1 ? ques.answer && 
+        ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id : ques.answer ? ques.answer : "" });
 
       }))
-        // console.log(
-        //   this.props.DynamicQuestions.map
-        //   (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
-        //     client_form.push({ [ques.question.replace(/ /g,"_")]: ques.answer === 0 ? ques.answer :ques.suggested_answers.length   });
-    
-        //   }))
-        // )
+    // console.log(
+    //   this.props.DynamicQuestions.map
+    //   (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
+    //     client_form.push({ [ques.question.replace(/ /g,"_")]: ques.answer === 0 ? ques.answer :ques.suggested_answers.length   });
+
+    //   }))
+    // )
+
     this.setState({
       DynamicQuestions: this.props.DynamicQuestions,
       client_form: Object.assign({}, ...client_form),
       isOpen: this.props.errors ? true : false,
       err_msg: this.props.errors,
-       })
+    })
   }
 
   handleClose = () => {
@@ -150,7 +153,7 @@ export class PredictionFormStep extends React.Component<
     })
   }
 
-  getAge = (date ,fromDate) => {
+  getAge = (date, fromDate) => {
     // const date = value;
     // const fromDate = value;
     if (!date) {
@@ -173,24 +176,23 @@ export class PredictionFormStep extends React.Component<
 
   handleChange = (e) => {
     const { name, value } = e.target;
-    //let data = [...this.state.data]
-    if (name === "Date_of_Birth") { 
-      const age = this.getAge(value,"") || "";
-     this.setState({
+    let DynamicQuestions = this.state.DynamicQuestions;
+    if (name === "Date_of_Birth") {
+      const age = this.getAge(value, "") || "";
+      this.setState({
         client_form: {
           ...this.state.client_form,
-          [name]: value, 
+          [name]: value,
           Age: age
 
         }
       })
     }
     else {
-      const val1: any = e.target.dataset.val1;
-      const val2: any = e.target.dataset.val2;
+      const val1: any = e.target.dataset.val1 ? e.target.dataset.val1 : "";
+      const val2: any = e.target.dataset.val2 ? e.target.dataset.val2 : "";
       const type = e.target.dataset.type;
       const error_msg = e.target.dataset.msg;
-     
       if (type === "select") {
         const length = e.target.dataset.length;
         var optionElement = e.target.childNodes[e.target.selectedIndex]
@@ -200,55 +202,51 @@ export class PredictionFormStep extends React.Component<
         let jumpto = jump && jump.replace(/,/g, '')
         this.setState({
           prevJump: {
-            [name.replace(/ /g,"_")]: jumpto, 
+            [name.replace(/ /g, "_")]: jumpto,
             hasError: false,
           }
 
         })
-        const DynamicQuestions = this.state.DynamicQuestions;
-        DynamicQuestions.map((sec,i) => sec.section === jumpto ? (
+        DynamicQuestions.map((sec, i) => sec.section === jumpto ? (
           DynamicQuestions[i].related = "false"
         )
-        : 
-          sec.section === this.state.prevJump[name.replace(/ /g,"_")] && (
-          DynamicQuestions[i].related = "true"
+          :
+          sec.section === this.state.prevJump[name.replace(/ /g, "_")] && (
+            DynamicQuestions[i].related = "true"
+          )
         )
-        )
+
       } else {
         if (type === "radio") {
           const jump = e.target.dataset.jump.replace(/,/g, '');
           const idx = e.target.dataset.idx;
           this.setState({
             prevJump: {
-              [name.replace(/ /g,"_")]: jump,
+              [name.replace(/ /g, "_")]: jump,
               hasError: false,
             }
-
           })
-          const DynamicQuestions = this.state.DynamicQuestions;
-          DynamicQuestions.map((sec,i) => sec.section === `${jump}` ? (
+          DynamicQuestions.map((sec, i) => sec.section === `${jump}` ? (
             DynamicQuestions[i].related = "false"
           )
-          : 
-            sec.section == this.state.prevJump[name.replace(/ /g,"_")] && (
-            DynamicQuestions[i].related = "true"
+            :
+            sec.section == this.state.prevJump[name.replace(/ /g, "_")] && (
+              DynamicQuestions[i].related = "true"
+            )
           )
-          )
-          }
+        }
       }
       if (val1 === "") {
         this.setState({
           client_form: {
-            ...this.state.client_form,
             [name]: value
           },
           hasError: false,
-
         })
       }
       else {
         if (type === "number") {
-          const err = parseInt(value) < parseInt(val1) 
+          const err = parseInt(value) < parseInt(val1)
           const err1 = parseInt(value) > parseInt(val2)
           this.setState({
             client_form: {
@@ -281,34 +279,35 @@ export class PredictionFormStep extends React.Component<
     }
 
   }
-  handleSubmit = async(e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
     const client_form = this.state.client_form;
     this.setState({
       isSubmitted: true
     })
-//  const ageAtEpisodeStart = await this.getAge( new Date(client_form.Date_of_Birth), new Date(client_form.Date_of_Referral))
-   let data = [] as any;
-   let isValid_Data = true as any;
-  Object.keys(client_form).map((ele,i)=> 
-  client_form[ele] ?
-     (data.push( {[ele.replace(/_/g, ' ')]: client_form[ele]})):(isValid_Data = false)
-     )
-  const formData = Object.assign({}, ...data)
-  if(isValid_Data){
-    if (this.state.isEdit === "true" ||!this.state.hasError) {
-      await this.props.onFormSubmit(formData);
-      this.setState({ 
-       isSubmitted: false,
-       err_msg: this.props.errors,
-       isOpen: this.props.errors ? true : false
-     })
-     } else {
-     
-     }
-  }
-  
+    //  const ageAtEpisodeStart = await this.getAge( new Date(client_form.Date_of_Birth), new Date(client_form.Date_of_Referral))
+    console.log(client_form)
+    let data = [] as any;
+    let isValid_Data = true as any;
+    Object.keys(client_form).map((ele, i) =>
+      client_form[ele] || client_form[ele] === 0 ?
+        (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] })) : (isValid_Data = false)
+    )
+    const formData = Object.assign({}, ...data)
+    console.log(data)
+    console.log(isValid_Data, this.state.hasError, formData)
+    if (isValid_Data) {
+      if (this.state.isEdit === "true" || !this.state.hasError) {
+        await this.props.onFormSubmit(formData);
+        this.setState({
+          isSubmitted: false,
+          err_msg: this.props.errors,
+          isOpen: this.props.errors ? true : false
+        })
+      } else {
 
+      }
+    }
   }
 
   uploadCSV = async (e) => {
@@ -367,35 +366,36 @@ export class PredictionFormStep extends React.Component<
   render() {
     const { DynamicQuestions } = this.state;
     const { errors } = this.props;
-   return (
+    console.log(this.state)
+    return (
       <div css={wrap}>
 
         <div css={mainContent}>
-          {DynamicQuestions&&
-          <div css={fieldRow} style={{ justifyContent: "center" }}>
-            <Button
-              type="submit"
-              size="small"
-              variant="contained"
-              color="primary"
-              style={{ marginRight: 10 }}
-              css={logout}
-              onClick={this.downloadCSV}
-            >
-              Download CSV template
-            </Button>
-            <div css={profile}>
-              <input name="uploadfile" type="file" onChange={this.uploadCSV} />
+          {DynamicQuestions &&
+            <div css={fieldRow} style={{ justifyContent: "center" }}>
               <Button
                 type="submit"
                 size="small"
                 variant="contained"
                 color="primary"
-                onClick={this.uploadFile}
-                style={{ marginRight: 10 }}>Upload</Button>
+                style={{ marginRight: 10 }}
+                css={logout}
+                onClick={this.downloadCSV}
+              >
+                Download CSV template
+            </Button>
+              <div css={profile}>
+                <input name="uploadfile" type="file" onChange={this.uploadCSV} />
+                <Button
+                  type="submit"
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  onClick={this.uploadFile}
+                  style={{ marginRight: 10 }}>Upload</Button>
+              </div>
             </div>
-          </div>
-  }
+          }
           <Modal
             isOpen={this.state.isOpen}
             ariaHideApp={false}
@@ -405,8 +405,8 @@ export class PredictionFormStep extends React.Component<
           >
             <div>
               <h1 css={subHeading}>Please correct the following errors and try again.</h1>
-    {this.state.err_msg&&this.state.err_msg.map((e,i)=> <div style={{ color: "red" }}>{this.state.err_msg[i]}</div>)}
-              
+              {this.state.err_msg && this.state.err_msg.map((e, i) => <div style={{ color: "red" }}>{this.state.err_msg[i]}</div>)}
+
             </div>
 
           </Modal>
@@ -420,16 +420,16 @@ export class PredictionFormStep extends React.Component<
                   {this.display(index).map((item, ind) => {
                     return <div css={fieldRow}>{item.map((ques, index_1) =>
                       ques.flag === "0" &&
-                      ( <div css={twoCol}>
-                       <label css={label1} >{ques.question}</label> 
-                       {ques.description && 
-                       <label style={{fontSize:"16px"}}> ({ques.description})</label>
-                       } <br/>
-                        
+                      (<div css={twoCol}>
+                        <label css={label1} >{ques.question}</label>
+                        {ques.description &&
+                          <label style={{ fontSize: "16px" }}> ({ques.description})</label>
+                        } <br />
+
                         {ques.answer_type === "SELECT" ?
                           <select
                             css={selectField}
-                            name={ques.question.replace(/ /g,"_")}
+                            name={ques.question.replace(/ /g, "_")}
                             data-type={ques.answer_type.toLowerCase()}
                             data-length={ques.suggested_jump.length}
 
@@ -441,8 +441,8 @@ export class PredictionFormStep extends React.Component<
                                 value={ans.id}
                                 data-idx={index}
                                 data-idy={ind}
-                                data-jump={ques.suggested_jump.map(sj=> ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "":"")}
-                                selected={this.state.client_form[ques.question.replace(/ /g,"_")] === ans.id}>{ans.value}</option>
+                                data-jump={ques.suggested_jump.map(sj => ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
+                                selected={this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id}>{ans.value}</option>
                             )}
                           </select>
                           :
@@ -456,15 +456,15 @@ export class PredictionFormStep extends React.Component<
                                   <React.Fragment>
                                     <input
                                       type="radio"
-                                      data-jump={ques.suggested_jump.map(sj=> ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "":"")} 
+                                      data-jump={ques.suggested_jump.map(sj => ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
                                       data-idx={index}
                                       data-idy={ind}
-                                      name={ques.question.replace(/ /g,"_")} value={ans.id} 
-                                      checked={this.state.client_form[ques.question.replace(/ /g,"_")] === ans.id.toString() ? true :
-                                      this.state.client_form[ques.question.replace(/ /g,"_")] === ans.id } 
-                                      data-type={ques.answer_type.toLowerCase()} 
+                                      name={ques.question.replace(/ /g, "_")} value={ans.id}
+                                      checked={this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id.toString() ? true :
+                                        this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id}
+                                      data-type={ques.answer_type.toLowerCase()}
                                     />{" "}
-                                    <label htmlFor={i}>{ans.value}</label> 
+                                    <label htmlFor={i}>{ans.value}</label>
                                   </React.Fragment>
 
                                 </div>
@@ -482,13 +482,13 @@ export class PredictionFormStep extends React.Component<
                                   <React.Fragment>
                                     <input
                                       type="checkbox"
-                                      name={ques.question.replace(/ /g,"_")}
+                                      name={ques.question.replace(/ /g, "_")}
                                       value={this.state.client_form[ques.question]}
                                       required={ques.required === "yes" ? true : false}
                                       data-type={ques.answer_type.toLowerCase()}
                                       data-idx={index}
                                       data-idy={ind}
-                                      checked={this.state.client_form[ques.question.replace(/ /g,"_")] === ans.id.toString()}
+                                      checked={this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id.toString()}
                                     />{" "}
                                     <label htmlFor={ans}>{ans.value}</label>
                                   </React.Fragment>
@@ -505,16 +505,16 @@ export class PredictionFormStep extends React.Component<
                                     data-msg={ques.error_msg}
                                     data-idx={index}
                                     data-idy={ind}
-                                    name={ques.question.replace(/ /g,"_")}
-                                    value={this.state.client_form[ques.question.replace(/ /g,"_")]}
+                                    name={ques.question.replace(/ /g, "_")}
+                                    value={this.state.client_form[ques.question.replace(/ /g, "_")]}
                                     type={ques.answer_type.toLowerCase()}
                                   //  min={ques.validation1}
                                   //  max={ques.validation2}
                                   //  required = {ques.required === "yes" ? true: false}
                                   />
-                                 
+
                                 </Fragment>
-                               
+
                                 :
                                 <Fragment>
                                   <input
@@ -525,18 +525,18 @@ export class PredictionFormStep extends React.Component<
                                     data-msg={ques.error_msg}
                                     data-idx={index}
                                     data-idy={ind}
-                                    name={ques.question.replace(/ /g,"_")}
-                                    value={this.state.client_form[ques.question.replace(/ /g,"_")]}
+                                    name={ques.question.replace(/ /g, "_")}
+                                    value={this.state.client_form[ques.question.replace(/ /g, "_")]}
                                     type={ques.answer_type.toLowerCase()}
                                   />
-                                     
+
                                 </Fragment>
                         }
-                        {this.state.isSubmitted === true ? this.state.error[ques.question.replace(/ /g,"_")] ?
-                          <div style={{ color: "red" }}>{this.state.error[ques.question.replace(/ /g,"_")]}</div> : this.state.client_form[ques.question.replace(/ /g,"_")] ? "" :
-                        ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : "" : ""}
+                        {this.state.isSubmitted === true ? this.state.error[ques.question.replace(/ /g, "_")] ?
+                          <div style={{ color: "red" }}>{this.state.error[ques.question.replace(/ /g, "_")]}</div> : this.state.client_form[ques.question.replace(/ /g, "_")] ? "" :
+                            ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : "" : ""}
                       </div>
-                    ))}</div>
+                      ))}</div>
 
                   })
                   }

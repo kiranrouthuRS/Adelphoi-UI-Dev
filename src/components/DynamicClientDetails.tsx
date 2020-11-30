@@ -5,9 +5,9 @@ import { useParams, useHistory } from "react-router-dom";
 import { format } from "date-fns";
 import { Formik, ErrorMessage, FormikErrors } from "formik";
 import Button from "@material-ui/core/Button";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -146,6 +146,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     return <h1 css={subHeading}>No client found</h1>;
   }
   const { client, Referral, searchData } = props;
+  console.log(props.client.SuggestedPrograms,predicted_program) 
   const programOptions = props.client.SuggestedPrograms
     ? props.client.SuggestedPrograms.map(p => {
       return {
@@ -313,15 +314,15 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
       )}
       {
         SelectedVersion && SelectedVersion[0].sections.map((ques, id) =>
-          <ExpansionPanel defaultExpanded={id === 0 ? true : false}>
-            <ExpansionPanelSummary
+          <Accordion defaultExpanded={id === 0 ? true : false}>
+            <AccordionSummary
               css={panelHeader}
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
             >
               <h1 css={panelHeading}>{ques.section}</h1>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails css={panel}>
+            </AccordionSummary>
+            <AccordionDetails css={panel}>
               {display(id, SelectedVersion).map((item, index) => {
                 return <div css={fieldRow}>{item.map((item_1, index_1) => {
                   return <div css={twoCol}>
@@ -335,8 +336,8 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
               })
               }
 
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+            </AccordionDetails>
+          </Accordion>
 
 
         )
@@ -433,7 +434,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                     options={programOptions}
                     onChange={(p: any) => onProgramChange(p, values)}
                     defaultValue={programOptions.find(
-                      p => p.value === predicted_program
+                      p => p === predicted_program
                     )}
                     value={values.Program || null}
                   />

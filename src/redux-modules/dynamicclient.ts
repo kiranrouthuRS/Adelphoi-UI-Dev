@@ -275,9 +275,11 @@ export const actions = {
         client_selected_locations: selected_location
       };
       dispatch(update({ client: cl }));
+      console.log(client)
+      console.log(selected_location,selected_program)
       let programParam: string;
       if (!selected_program && client.client_selected_program && client.client_selected_program[0]) {
-        programParam = client.client_selected_program && client.client_selected_program[0];
+        programParam = client.client_selected_program && client.client_selected_program;
       } else if (selected_program) {
         programParam = selected_program;
       } else {
@@ -360,32 +362,38 @@ export const actions = {
               model_program:  response.data.response.model_program && response.data.response.model_program || null,
               SuggestedPrograms: response.data.response.list_program_types && response.data.response.list_program_types || null 
             };
+            console.log(response) 
+            console.log(response.data.status)
             dispatch(update({ client: cl }));
-           
+           console.log(updateDClient);
             if(is_prediction_available){ 
-              if(Dclient["Exclusionary Criteria Exists/Referral Rejected"] !== "0"){
-                let data = [] as any;
-              updatedDClient = cl; 
-              const res = await fetchLocations(
-                updatedDClient["Client Code"],
-                updatedDClient.program_type,
-                is_accessToken
-              );
-              if (res && res["result"] && res["result"] !== "") {
-                 throw new Error(res["result"]);
-              }
-              if (res && res["Suggested Locations"]) {
-                locations = res["Suggested Locations"];
-              }
-              if (locations.length > 0) {
-                const cl: Types.DynamicClient = {
-                  ...updatedDClient,
-                  SuggestedLocations: [...locations],
-                  client_selected_program: updatedDClient.program_type
+              if(response.data.status !== "failed"){
+                if(Dclient["Exclusionary Criteria Exists/Referral Rejected"] !== "0"){
+                  let data = [] as any;
+                updatedDClient = cl; 
+                const res = await fetchLocations(
+                  updatedDClient["Client Code"],
+                  updatedDClient.program_type,
+                  is_accessToken
+                );
+                console.log(res)
+                if (res && res["result"] && res["result"] !== "") {
+                   throw new Error(res["result"]);
                 }
-                dispatch(update({ client: cl }));
+                if (res && res["Suggested Locations"]) {
+                  locations = res["Suggested Locations"];
+                }
+                if (locations.length > 0) {
+                  const cl: Types.DynamicClient = {
+                    ...updatedDClient,
+                    SuggestedLocations: [...locations],
+                    client_selected_program: updatedDClient.program_type
+                  }
+                  dispatch(update({ client: cl }));
+                }
               }
-            }
+              }
+              
               }
               
             

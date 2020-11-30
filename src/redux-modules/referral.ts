@@ -9,7 +9,8 @@ import {
   createReferral,
   updateReferral,
   deleteReferral,
-  fetchAvailableReferral
+  fetchAvailableReferral,
+  fetchDReferral
 } from "../api/api";
 
 const initialState: ReferralState = {
@@ -29,6 +30,16 @@ export const actions = {
   getReferral(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const response = await fetchReferral();
+      if (!response) {
+        throw Error("something went wrong getting list of referral");
+      }
+      dispatch(update({ referralList: response }));
+    };
+  },
+
+  getDReferral(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+    return async (dispatch, getState) => {
+      const response = await fetchDReferral();
       if (!response) {
         throw Error("something went wrong getting list of referral");
       }
