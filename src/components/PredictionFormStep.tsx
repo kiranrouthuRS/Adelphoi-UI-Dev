@@ -239,10 +239,12 @@ export class PredictionFormStep extends React.Component<
       if (val1 === "") {
         this.setState({
           client_form: {
+            ...this.state.client_form,
             [name]: value
           },
           hasError: false,
         })
+        
       }
       else {
         if (type === "number") {
