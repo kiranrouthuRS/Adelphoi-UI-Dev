@@ -60,9 +60,7 @@ const Market_Analytics: React.FC<Market_AnalyticsProps> = props => {
     // const history = useHistory();
     const classes = useStyles();
     let PerformanceDate = props.PerformanceList.map((program,key) => program.date)
-    console.log(PerformanceDate)
     let PerformanceCount = props.PerformanceList.map((program,key) => program.count)
-    console.log(PerformanceCount)
     const Performance = {
         labels: PerformanceDate,
         datasets: [
@@ -93,7 +91,6 @@ const Market_Analytics: React.FC<Market_AnalyticsProps> = props => {
     useEffect(() => {
         props.referralChange(referral_source)
     }, [referral_source]);
-    console.log(props)
     return (
         <div
         // style={{ border: "solid #5B6DCD 1px", padding: "10px", marginBottom: "10px" }}
@@ -169,8 +166,18 @@ const Market_Analytics: React.FC<Market_AnalyticsProps> = props => {
             </Grid>
             <Grid container spacing={1} >
                                 <Grid item xs={6}>
-            <h4>Performance Graph</h4>
-            <Line data={Performance} />
+            <Line data={Performance}
+                  options={{
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                     },
+                     title: {
+                        display: true,
+                        text: 'Performance Graph'
+                    }
+                }}
+                 />
             </Grid>
             </Grid>
         </div>

@@ -146,7 +146,6 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     return <h1 css={subHeading}>No client found</h1>;
   }
   const { client, Referral, searchData } = props;
-  console.log(props.client.SuggestedPrograms,predicted_program) 
   const programOptions = props.client.SuggestedPrograms
     ? props.client.SuggestedPrograms.map(p => {
       return {
@@ -425,6 +424,62 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
             >
               <div css={fieldRow}>
                 <div css={twoCol}>
+                  <label css={label} htmlFor="program_significantly_modified">
+                    Referral Status
+                </label>
+                </div>
+                <div css={twoCol}>
+                  <div css={fieldBox}>
+                    <input
+                      type="radio"
+                      onChange={handleChange}
+                      name="referral_status"
+                      value="placed"
+                      checked={
+                        values.referral_status !== null
+                          ? values.referral_status === "placed"
+                          : false
+                      }
+                    />
+                    <label >Placed</label>
+                  </div>
+                  <div css={fieldBox}>
+                    <input
+                      type="radio"
+                      onChange={handleChange}
+                      name="referral_status"
+                      value="not_placed"
+                      checked={
+                        values.referral_status !== null
+                          ? values.referral_status === "not_placed"
+                          : false
+                      }
+                    />
+                    <label >Not Placed</label>
+                  </div>
+                  <div css={fieldBox}>
+                    <input
+                      type="radio"
+                      onChange={handleChange}
+                      name="referral_status"
+                      value="rejected"
+                      checked={
+                        values.referral_status !== null
+                          ? values.referral_status === "rejected"
+                          : false
+                      }
+                    />
+                    <label >Rejected</label>
+                  </div>
+                  <ErrorMessage
+                    component="span"
+                    name="referral_status"
+                  />
+                </div>
+                
+              </div>
+              <div css={fieldRow}>
+                <div css={twoCol}>
                   <label css={label}>Program</label>
                 </div>
                 <div css={twoCol}>
@@ -455,25 +510,9 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                     )}
                     value={values.Location || null}
                   />
-
-                  {/* <select
-                  css={selectField}
-                  name="Location"
-                  disabled={values.Program_Completion !== ""}
-                  value={values.Location}
-                  onChange={handleChange}
-                >
-                  <option value="">Select</option>
-                  {props.client.SuggestedLocations &&
-                    props.client.SuggestedLocations.map(loc => (
-                      <option key={loc} value={loc}>
-                        {loc}
-                      </option>
-                    ))}
-                </select> 
-                <ErrorMessage component="span" name="Location" />*/}
-                </div>
+                     </div>
               </div>
+              {values.referral_status === "placed" && 
               <div css={fieldRow}>
                 <div css={twoCol}>
                   <label css={label}>Start Date</label>
@@ -492,6 +531,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
 
                 </div>
               </div>
+               }
               <div css={fieldRow}>
                 <div css={twoCol}>
                   <label css={label}>Program Completion Likelihood</label>
@@ -601,62 +641,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                   />
                 </div>
               </div>
-              <div css={fieldRow}>
-                <div css={twoCol}>
-                  <label css={label} htmlFor="program_significantly_modified">
-                    Referral Status
-                </label>
-                </div>
-                <div css={twoCol}>
-                  <div css={fieldBox}>
-                    <input
-                      type="radio"
-                      onChange={handleChange}
-                      name="referral_status"
-                      value="placed"
-                      checked={
-                        values.referral_status !== null
-                          ? values.referral_status === "placed"
-                          : false
-                      }
-                    />
-                    <label >Placed</label>
-                  </div>
-                  <div css={fieldBox}>
-                    <input
-                      type="radio"
-                      onChange={handleChange}
-                      name="referral_status"
-                      value="not_placed"
-                      checked={
-                        values.referral_status !== null
-                          ? values.referral_status === "not_placed"
-                          : false
-                      }
-                    />
-                    <label >Not Placed</label>
-                  </div>
-                  <div css={fieldBox}>
-                    <input
-                      type="radio"
-                      onChange={handleChange}
-                      name="referral_status"
-                      value="rejected"
-                      checked={
-                        values.referral_status !== null
-                          ? values.referral_status === "rejected"
-                          : false
-                      }
-                    />
-                    <label >Rejected</label>
-                  </div>
-                  <ErrorMessage
-                    component="span"
-                    name="referral_status"
-                  />
-                </div>
-                
-              </div>
+              
               <div css={fieldRow}>
                 <div css={twoCol}>
                   <label css={label}>Remained out of care</label>

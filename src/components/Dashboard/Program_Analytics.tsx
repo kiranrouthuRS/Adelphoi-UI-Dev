@@ -46,19 +46,19 @@ interface Program_AnalyticsProps {
     PCRList: any;
     Location: any;
     Referral: any;
-    onSelectChange: (src:any) => void;
+    onSelectChange: (src: any) => void;
 }
 
 const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
     // const history = useHistory();
     const classes = useStyles();
-    const program =  {
+    const program = {
         labels: [
             'Program completed',
             'Remained out of care'
-        ], 
+        ],
         datasets: [{
-            data: [props.PCRList.pcr? props.PCRList.pcr.percentage.replace(/%/g, "") : 0, props.ROCList.roc? props.ROCList.roc.percentage.replace(/%/g, "") : 0],
+            data: [props.PCRList.pcr ? props.PCRList.pcr.percentage.replace(/%/g, "") : 0, props.ROCList.roc ? props.ROCList.roc.percentage.replace(/%/g, "") : 0],
             backgroundColor: [
                 '#FF6384',
                 '#36A2EB'
@@ -69,145 +69,146 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
             ]
         }],
 
-    } ;
-    const [filters, setfilters] = useState({referral_source:"",location:""});
-    
+    };
+    const [filters, setfilters] = useState({ referral_source: "", location: "" });
+
     useEffect(() => {
         props.onSelectChange(filters)
-      }, [filters]);
+    }, [filters]);
     return (
-        <div  
+        <div
         //style={{ boxSizing: "content-box", width: "100%", border: "solid #5B6DCD 1px", padding: "10px", marginBottom: "10px" }}
         >
-                            {/* <h1 css={subHeading} >Program Analytics  – of referrals who are accepted and placed.​</h1> */}
-                            <Grid container spacing={3} >
-                                <Grid item xs={6} sm={3}>
-                                    <label css={txtLabel}
-                                    //style={{ marginTop: 16 }}
-                                    >
-                                        Referral sources:
+            {/* <h1 css={subHeading} >Program Analytics  – of referrals who are accepted and placed.​</h1> */}
+            <Grid container spacing={3} >
+                <Grid item xs={6} sm={3}>
+                    <label css={txtLabel}
+                    //style={{ marginTop: 16 }}
+                    >
+                        Referral sources:
                   </label>
 
-                                    <select
-                                        css={selectField}
-                                        name="referral_source"
-                                        value={filters.referral_source || ""}
-                                        onChange={(e)=>setfilters(prevState => {
-                                            return { ...prevState, referral_source: e.target.value }
-                                        })}
-                                    >
-                                        <option value="">Select</option>
-                                        {props.Referral.map(r => (
-                                            <option key={r.id} value={r.id}>
-                                                {r.value}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </Grid>
-                                <Grid item xs={6} sm={3}>
-                                    <label css={txtLabel}
-                                    //style={{ marginTop: 16 }}
-                                    >
-                                        Locations:
+                    <select
+                        css={selectField}
+                        name="referral_source"
+                        value={filters.referral_source || ""}
+                        onChange={(e) => setfilters(prevState => {
+                            return { ...prevState, referral_source: e.target.value }
+                        })}
+                    >
+                        <option value="">Select</option>
+                        {props.Referral.map(r => (
+                            <option key={r.id} value={r.id}>
+                                {r.value}
+                            </option>
+                        ))}
+                    </select>
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                    <label css={txtLabel}
+                    //style={{ marginTop: 16 }}
+                    >
+                        Locations:
                   </label>
 
-                                    <select
-                                        css={selectField}
-                                        name="location"
-                                        value={filters.location || ""}
-                                        onChange={(e)=>setfilters(prevState => {
-                                            return { ...prevState, location: e.target.value }
-                                        })}
-                                    >
-                                        <option value="">Select</option>
-                                        {props.Location.map(l => (
-                                            <option key={l.location} value={l.location}>
-                                                {l.location_names}
-                                            </option>
-                                        ))}
+                    <select
+                        css={selectField}
+                        name="location"
+                        value={filters.location || ""}
+                        onChange={(e) => setfilters(prevState => {
+                            return { ...prevState, location: e.target.value }
+                        })}
+                    >
+                        <option value="">Select</option>
+                        {props.Location.map(l => (
+                            <option key={l.location} value={l.location}>
+                                {l.location_names}
+                            </option>
+                        ))}
 
-                                    </select>
+                    </select>
 
-                                </Grid>
-                            </Grid>
-                            <div css={fieldRow} style={{ justifyContent: "center", marginTop: "10px" }}>
-                                <div css={twoCol}>
+                </Grid>
+            </Grid>
+            <div css={fieldRow} style={{ justifyContent: "center", marginTop: "10px" }}>
+                <div css={twoCol}>
 
-                                    <div style={{
-                                        background: "#36A2EB",
-                                        width: "150px",
-                                        height: "150px",
-                                        borderRadius: "50%",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        color: "#ffffff",
-                                        //padding: "20px",
-                                        //marginBottom: "10px"
+                    <div style={{
+                        background: "#36A2EB",
+                        width: "150px",
+                        height: "150px",
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#ffffff",
+                        //padding: "20px",
+                        //marginBottom: "10px"
 
-                                    }} >
-                                        <strong> {props.PCRList.pcr ? props.PCRList.pcr.count : 0}</strong>
+                    }} >
+                        <strong> {props.PCRList.pcr ? props.PCRList.pcr.count : 0}</strong>
 
-                                    </div>
+                    </div>
                                         Program completion rate
 
                                 </div>
-                                <div css={twoCol}>
+                <div css={twoCol}>
 
-                                    <div style={{
-                                        background: "#36A2EB",
-                                        width: "150px",
-                                        height: "150px",
-                                        borderRadius: "50%",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        color: "#ffffff",
-                                        //padding: "20px",
-                                        //marginBottom: "10px"
+                    <div style={{
+                        background: "#36A2EB",
+                        width: "150px",
+                        height: "150px",
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#ffffff",
+                        //padding: "20px",
+                        //marginBottom: "10px"
 
-                                    }} >
-                                        <strong> {props.ROCList.roc ? props.ROCList.roc.count : 0}</strong>
+                    }} >
+                        <strong> {props.ROCList.roc ? props.ROCList.roc.count : 0}</strong>
 
-                                    </div>
+                    </div>
     Remain out of care
 
 </div>
-<div css={twoCol}>
+                <div css={twoCol}>
 
-                                    <Pie data={program}
-                                        options={{
-                                            legend: {
-                                                display: true,
-                                                position: 'bottom',
-                                                labels: {
-                                                    fontColor: 'black',
-                                                    boxWidth: 15,
-                                                }
+                    <Pie data={program}
+                        options={{
+                            responsive: true,
+                            legend: {
+                                display: true,
+                                position: 'right',
+                                labels: {
+                                    fontColor: 'black',
+                                    boxWidth: 15,
+                                }
 
-                                            },
+                            },
 
-                                            plugins: {
-                                                datalabels: {
-                                                    formatter: (data) => {
+                            plugins: {
+                                datalabels: {
+                                    formatter: (data) => {
 
-                                                        return data;
-
-
-                                                    },
-                                                    color: 'black',
-                                                }
-                                            }
-                                        }}
-                                    />
+                                        return data;
 
 
-                                </div>
+                                    },
+                                    color: 'black',
+                                }
+                            }
+                        }}
+                    />
 
-                            </div>
 
-                        </div>
- );
+                </div>
+
+            </div>
+
+        </div>
+    );
 };
 
 export default ProgramAnalytics;

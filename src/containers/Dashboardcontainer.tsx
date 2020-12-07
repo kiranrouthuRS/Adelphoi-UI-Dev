@@ -120,7 +120,7 @@ export class DashboardContainer extends React.Component<
       days_count: analytics.days_count,
       referral_source: "0"
     }
-    console.log(analytics)
+    
     await this.props.getPerformance_Analytics(data)
   };
 
@@ -129,7 +129,7 @@ export class DashboardContainer extends React.Component<
   };
 
   getProgramAnalytics = async (filter: any) => {
-    console.log(filter)
+    
 
     await this.props.getPCRAnalytics(filter);
     await this.props.getROCAnalytics(filter);
@@ -140,15 +140,15 @@ export class DashboardContainer extends React.Component<
     await this.props.getStayAnalytics(filter);
   };
   getPerformance = async (filter: any) => {
-    console.log(filter)
+    
     await this.props.getPerformance_Analytics(filter)
   };
   getDemo = async (filter: any) => {
-    console.log(filter)
+    
     await this.props.get_Demo_Analytics(filter)
   };
   getCalibration = async (filter: any) => {
-    console.log(filter)
+    
     await this.props.get_Calibration_Analytics(filter)
   };
   render() {

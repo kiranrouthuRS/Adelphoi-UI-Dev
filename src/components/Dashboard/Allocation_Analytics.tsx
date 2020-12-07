@@ -57,8 +57,7 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
     // const history = useHistory();
     const classes = useStyles();
     const [filters, setfilters] = useState({referral_source:"",location:""});
-    console.log(props.Allocation_List,props.Program_Alloc_List)
-    const allocation =  {
+     const allocation =  {
         labels: [
             'Tool',
             'Chosen'
@@ -78,7 +77,6 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
         }],
   
     };
-    console.log(typeof props.Program_Alloc_List)
     let allocatedPrograms = Array.isArray(props.Program_Alloc_List) && props.Program_Alloc_List.map(program => program.program)
     let allocatedProgramsPer = Array.isArray(props.Program_Alloc_List) &&  props.Program_Alloc_List.map(program => program.total.percentage.replace(/%/g, ""))
     const allocated = {
@@ -96,10 +94,14 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
         >
                             {/* <h1 css={subHeading} >Program Selection & Allocation Statistics​</h1> */}
                             <Grid container spacing={1} >
-                                <Grid item xs={6}>
-                                <h4>Allocation of Program: Tool | Chosen</h4>
+                                <Grid item xs={12}>
+                                {/* <h4>Allocation of Program: Tool | Chosen</h4> */}
                                     <Pie data={allocation}
                                         options={{
+                                            title: {
+                                                display: true,
+                                                text: 'Allocation of Program: Tool | Chosen'
+                                            },
                                             legend: {
                                                 display: true,
                                                 position: 'right',
@@ -110,17 +112,17 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
 
                                             },
 
-                                            plugins: {
-                                                datalabels: {
-                                                    formatter: (data) => {
+                                            // plugins: {
+                                            //     datalabels: {
+                                            //         formatter: (data) => {
 
-                                                        return data;
+                                            //             return data;
 
 
-                                                    },
-                                                    color: 'black',
-                                                }
-                                            }
+                                            //         },
+                                            //         color: 'black',
+                                            //     }
+                                            // }
                                         }}
                                     />
 
@@ -128,31 +130,37 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={1} >
-                                <Grid item xs={9}>
-                                <h4>Percentage of each program being allocated</h4>
+                                <Grid item xs={12}>
+                                {/* <h4>Percentage of each program being allocated</h4> */}
                                     <Pie data={allocated}
                                         options={{
+                                            responsive: true,
+                                            title: {
+                                                display: true,
+                                                text: 'Percentage of each program being allocated'
+                                            },
                                             legend: {
                                                 display: true,
                                                 position: 'right',
                                                 labels: {
                                                     fontColor: 'black',
                                                     boxWidth: 15,
-                                                }
-
+                                                },
+                                                
+                                                
                                             },
 
-                                            plugins: {
-                                                datalabels: {
-                                                    formatter: (data) => {
+                                            // plugins: {
+                                            //     datalabels: {
+                                            //         formatter: (data) => {
 
-                                                        return data;
+                                            //             return data;
 
 
-                                                    },
-                                                    color: 'black',
-                                                }
-                                            }
+                                            //         },
+                                            //         color: 'black',
+                                            //     }
+                                            // }
                                         }}
                                     />
 

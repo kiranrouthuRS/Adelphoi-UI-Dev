@@ -54,14 +54,10 @@ interface Tool_AnalyticsProps {
 const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
     // const history = useHistory();
     const classes = useStyles();
-    console.log(props)
-    // let PerformanceDate = props.CalibrationList.map(program => program.date)
-    // console.log(PerformanceDate)
     let PCR_Chosen = props.CalibrationList.pcr_chosen&&props.CalibrationList.pcr_chosen.map(program => program.count)
     let PCR_Tool = props.CalibrationList.pcr_chosen&&props.CalibrationList.pcr_tool.map(program => program.count)
     let ROC_Chosen = props.CalibrationList.pcr_chosen&&props.CalibrationList.roc_chosen.map(program => program.count)
     let ROC_Tool = props.CalibrationList.pcr_chosen&&props.CalibrationList.roc_tool.map(program => program.count)
-    console.log(PCR_Chosen)
     const Performance = {
         labels: ["10","20","30","40","50","60","70","80","90","100"],
         datasets: [
@@ -155,7 +151,6 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
     useEffect(() => {
         props.onSelectChange(filters)
     }, [filters]);
-    console.log(props)
     return (
         <div
         // style={{ border: "solid #5B6DCD 1px", padding: "10px", marginBottom: "10px" }}

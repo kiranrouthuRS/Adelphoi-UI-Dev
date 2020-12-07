@@ -152,6 +152,7 @@ export const actions = {
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const response = await fetchAllocated_ProgramAnalytics(filter);
+      
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -162,7 +163,7 @@ export const actions = {
     analytics: Types.Analytics
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      console.log(analytics)
+      
       const response = await fetchDateAnalytics(analytics);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
@@ -208,7 +209,7 @@ export const actions = {
     filter: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      console.log(filter)
+      
       const response = await fetch_Calibration_Analytics(filter);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
@@ -220,7 +221,7 @@ export const actions = {
     filter: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      console.log(filter)
+      
       const response = await fetch_Demo_Analytics(filter);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");

@@ -275,11 +275,9 @@ export const actions = {
         client_selected_locations: selected_location
       };
       dispatch(update({ client: cl }));
-      console.log(client)
-      console.log(selected_location,selected_program)
       let programParam: string;
       if (!selected_program && client.client_selected_program && client.client_selected_program[0]) {
-        programParam = client.client_selected_program && client.client_selected_program;
+        programParam = Array.isArray(client.client_selected_program) ? client.client_selected_program[0] : client.client_selected_program;
       } else if (selected_program) {
         programParam = selected_program;
       } else {
@@ -362,11 +360,9 @@ export const actions = {
               model_program:  response.data.response.model_program && response.data.response.model_program || null,
               SuggestedPrograms: response.data.response.list_program_types && response.data.response.list_program_types || null 
             };
-            console.log(response) 
-            console.log(response.data.status)
+             
             dispatch(update({ client: cl }));
-           console.log(updateDClient);
-            if(is_prediction_available){ 
+           if(is_prediction_available){ 
               if(response.data.status !== "failed"){
                 if(Dclient["Exclusionary Criteria Exists/Referral Rejected"] !== "0"){
                   let data = [] as any;
@@ -376,7 +372,6 @@ export const actions = {
                   updatedDClient.program_type,
                   is_accessToken
                 );
-                console.log(res)
                 if (res && res["result"] && res["result"] !== "") {
                    throw new Error(res["result"]);
                 }

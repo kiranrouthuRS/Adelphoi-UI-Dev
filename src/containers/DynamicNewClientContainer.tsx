@@ -95,7 +95,6 @@ export class DynamicNewClientContainer extends React.Component<
     const is_role_type: any = this.props.user && this.props.user.user.role_type 
     const is_prediction_available: any = this.props.user && this.props.user.user.is_prediction_available 
      const res: any = await this.props.insertDClient(client, is_accessToken);
-     console.log(res)
      this.setState({ isLoading: false });
     if (res !== null && res.data.message === "client registered") {
       this.props.enqueueSnackbar(index ? "Client details updated Successfully." : "New Client Created Successfully.");
@@ -105,7 +104,6 @@ export class DynamicNewClientContainer extends React.Component<
     }
     }
     else {
-      console.log(res)
       this.setState({
         error:  res.response
       })
@@ -209,7 +207,6 @@ export class DynamicNewClientContainer extends React.Component<
     currentClient = clientState ? clientState.client : Types.emptyClient;
     const availableProgramList =
       (programState && programState.availableProgramList) || [];
-      console.log(this.state)
     return (
       <Switch>
         <Route exact path={`/${domainPath}/new-client/program-selection`}>

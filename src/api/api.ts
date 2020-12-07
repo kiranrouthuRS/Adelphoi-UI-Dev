@@ -143,7 +143,6 @@ export const insertClient = async (client: Types.Client) => {
       return (clientErrors[key] = data[key][0]);
     });
     console.error("api function insertClient error");
-    console.log(clientErrors);
     throw clientErrors;
   }
 };
@@ -173,7 +172,6 @@ export const updateClient = async (client: Types.Client) => {
       return (clientErrors[key] = data[key][0]);
     });
     console.error("api function updateClient error");
-    console.log(clientErrors);
     throw clientErrors;
   }
 };
@@ -230,14 +228,13 @@ export const insertDClient = async (client_form, is_accessToken) => {
   var data = new FormData();
   var myJSON = JSON.stringify(client_form);
   data.append('client_form', myJSON);
-  console.log(client_form)
   try {
     const response = await axios.post(`${baseApiUrl}/${domainPath}/clients`, data, {
       headers: {
         'Authorization': `Bearer ${is_accessToken}`
       }
     });
-     console.log(response)
+     
     // if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
     //   throw new Error(response.data["ERROR"]);
     // }
@@ -587,7 +584,7 @@ export const fetchReferral = async () => {
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/referral_list`);
     const data = (response.data as unknown) as Types.Referral[];
-   console.log(response)
+   
     return data;
   } catch (error) {
     console.error("api function fetchReferral error");
@@ -605,7 +602,7 @@ export const fetchDReferral = async () => {
     });
      const data = (response.data.response as unknown) as any;
     
-   console.log(response)
+   
     return data;
   } catch (error) {
     console.error("api function fetchReferral error");
@@ -617,7 +614,7 @@ export const fetchAvailableReferral = async () => {
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/referral_list`);
     const data = (response.data as unknown) as Types.Referral[];
-    console.log(response)
+    
     return data;
   } catch (error) {
     console.error("api function fetchAvailableReferral error");
@@ -849,7 +846,7 @@ export const fetchDateAnalytics = async (
         }
       });
       const data = (response.data.response as unknown) as Types.Analytics[]; 
-  console.log(response)
+  
       return data;
     } catch (error) {
       console.error("api function fetchReferral error");
@@ -865,7 +862,6 @@ export const fetchPCRAnalytics = async (
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
   let length :any = Object.keys(filter).length
-  console.log(filter)
   for (const [key, value] of Object.entries(filter)) {
        
        if(value){
@@ -873,7 +869,7 @@ export const fetchPCRAnalytics = async (
       }
       
     }
-    console.log(queryString)
+    
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/pcr?${queryString}`, { 
       headers: {
@@ -881,7 +877,7 @@ export const fetchPCRAnalytics = async (
       }
     });
     const data = (response.data.response as unknown) as Types.Analytics[]; 
-console.log(response)
+
     return data;
   } catch (error) {
     console.error("api function fetchprogramAnalytics error");
@@ -909,7 +905,7 @@ export const fetchROCAnalytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[]; 
 
     return data;
@@ -940,7 +936,7 @@ export const fetchReplacementAnalytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[]; 
 
     return data;
@@ -970,7 +966,7 @@ export const fetchStayAnalytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[]; 
 
     return data;
@@ -1000,7 +996,7 @@ export const fetchOccupancyAnalytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[];   
 
     return data;
@@ -1031,7 +1027,7 @@ export const fetchAllocationAnalytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[];   
 
     return data;
@@ -1062,7 +1058,7 @@ export const fetchAllocated_ProgramAnalytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[];   
 
     return data;
@@ -1093,7 +1089,7 @@ export const fetch_Market_Analytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[];   
 
     return data;
@@ -1109,7 +1105,7 @@ export const fetch_Performance_Analytics = async (
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
   let length :any = Object.keys(analytics).length
-  console.log(analytics)
+  
   for (const [key, value] of Object.entries(analytics)) {
       
       if(value){
@@ -1124,7 +1120,7 @@ export const fetch_Performance_Analytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[];   
 
     return data;
@@ -1139,7 +1135,7 @@ export const fetch_Tool_Analytics = async (
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
   let length :any = Object.keys(analytics).length
-  console.log(analytics)
+  
   for (const [key, value] of Object.entries(analytics)) {
       
       if(value){
@@ -1154,7 +1150,7 @@ export const fetch_Tool_Analytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[];   
 
     return data;
@@ -1169,7 +1165,7 @@ export const fetch_Calibration_Analytics = async (
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
   let length :any = Object.keys(analytics).length
-  console.log(analytics)
+  
   for (const [key, value] of Object.entries(analytics)) {
       
       if(value){
@@ -1184,7 +1180,7 @@ export const fetch_Calibration_Analytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[];   
 
     return data;
@@ -1199,7 +1195,7 @@ export const fetch_Gender_Analytics = async (
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
   let length :any = Object.keys(analytics).length
-  console.log(analytics)
+  
   for (const [key, value] of Object.entries(analytics)) {
       
       if(value){
@@ -1214,7 +1210,7 @@ export const fetch_Gender_Analytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[];   
 
     return data;
@@ -1229,7 +1225,7 @@ export const fetch_Age_Analytics = async (
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
   let length :any = Object.keys(analytics).length
-  console.log(analytics)
+  
   for (const [key, value] of Object.entries(analytics)) {
       
       if(value){
@@ -1244,7 +1240,7 @@ export const fetch_Age_Analytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[];   
 
     return data;
@@ -1259,7 +1255,7 @@ export const fetch_Demo_Analytics = async (
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
   let length :any = Object.keys(analytics).length
-  console.log(analytics)
+  
   for (const [key, value] of Object.entries(analytics)) {
       
       if(value){
@@ -1274,7 +1270,7 @@ export const fetch_Demo_Analytics = async (
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    console.log(response)
+    
     const data = (response.data.response as unknown) as Types.Analytics[];   
 
     return data;
@@ -1326,8 +1322,6 @@ export const saveLocationAndProgram = async (
       }
     }
     );
-    console.log(selected_program,selected_location)
-    console.log(response)
     return response.data;
   } catch (error) {
     console.error("api function saveLocationAndProgram error");

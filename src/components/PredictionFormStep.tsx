@@ -123,14 +123,11 @@ export class PredictionFormStep extends React.Component<
     };
   }
   async componentDidMount() {
-    let client_form = [] as any;
-    this.props.DynamicQuestions.map
-      (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
-        client_form.push({ [ques.question.replace(/ /g, "_")]: ques.answer === 0 ? 
-        ques.answer : ques.suggested_answers.length >= 1 ? ques.answer && 
-        ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id : ques.answer ? ques.answer : "" });
-
-      }))
+    this.formState();
+    this.setState({
+      isOpen: this.props.errors ? true : false,
+      err_msg: this.props.errors,
+    })
     // console.log(
     //   this.props.DynamicQuestions.map
     //   (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
@@ -138,15 +135,23 @@ export class PredictionFormStep extends React.Component<
 
     //   }))
     // )
-
-    this.setState({
-      DynamicQuestions: this.props.DynamicQuestions,
-      client_form: Object.assign({}, ...client_form),
-      isOpen: this.props.errors ? true : false,
-      err_msg: this.props.errors,
-    })
-  }
-
+ }
+     formState = () => {
+      let client_form = [] as any;
+      this.props.DynamicQuestions.map
+        (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
+          client_form.push({
+            [ques.question.replace(/ /g, "_")]: ques.answer === 0 ?
+              ques.answer : ques.suggested_answers.length >= 1 ? ques.answer &&
+                ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id : ques.answer ? ques.answer : ""
+          });
+  
+        })) 
+        this.setState({
+          DynamicQuestions: this.props.DynamicQuestions,
+          client_form: Object.assign({}, ...client_form),
+        })
+     }
   handleClose = () => {
     this.setState({
       isOpen: false
@@ -193,15 +198,17 @@ export class PredictionFormStep extends React.Component<
       const val2: any = e.target.dataset.val2 ? e.target.dataset.val2 : "";
       const type = e.target.dataset.type;
       const error_msg = e.target.dataset.msg;
+      let jump = ""
       if (type === "select") {
         const length = e.target.dataset.length;
         var optionElement = e.target.childNodes[e.target.selectedIndex]
         let idx = optionElement.getAttribute('data-idx');
-        let jump = optionElement.getAttribute('data-jump');
+        jump = optionElement.getAttribute('data-jump');
         let idy = optionElement.getAttribute('data-idy');
         let jumpto = jump && jump.replace(/,/g, '')
         this.setState({
           prevJump: {
+            ...this.state.prevJump,
             [name.replace(/ /g, "_")]: jumpto,
             hasError: false,
           }
@@ -218,10 +225,11 @@ export class PredictionFormStep extends React.Component<
 
       } else {
         if (type === "radio") {
-          const jump = e.target.dataset.jump.replace(/,/g, '');
+          jump = e.target.dataset.jump.replace(/,/g, '');
           const idx = e.target.dataset.idx;
           this.setState({
             prevJump: {
+              ...this.state.prevJump,
               [name.replace(/ /g, "_")]: jump,
               hasError: false,
             }
@@ -236,6 +244,7 @@ export class PredictionFormStep extends React.Component<
           )
         }
       }
+
       if (val1 === "") {
         this.setState({
           client_form: {
@@ -244,7 +253,29 @@ export class PredictionFormStep extends React.Component<
           },
           hasError: false,
         })
-        
+        if (jump) {
+          let client_form1 = [] as any;
+          DynamicQuestions.map
+            (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
+              client_form1.push({
+                [ques.question.replace(/ /g, "_")]: ques.answer === 0 ?
+                  ques.answer : ques.suggested_answers.length >= 1 ? ques.answer ?
+                    ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id : ques.answer ? ques.answer : "" : ""
+              });
+
+            }))
+          let formData = Object.assign({}, ...client_form1)
+          let client_form = this.state.client_form;
+          client_form = {
+            ...formData, ...client_form, [name]: value
+          }
+          this.setState({
+            client_form
+          })
+        } else if(this.state.prevJump[name]){
+              this.formState();
+        }
+
       }
       else {
         if (type === "number") {
@@ -288,7 +319,6 @@ export class PredictionFormStep extends React.Component<
       isSubmitted: true
     })
     //  const ageAtEpisodeStart = await this.getAge( new Date(client_form.Date_of_Birth), new Date(client_form.Date_of_Referral))
-    console.log(client_form)
     let data = [] as any;
     let isValid_Data = true as any;
     Object.keys(client_form).map((ele, i) =>
@@ -296,8 +326,6 @@ export class PredictionFormStep extends React.Component<
         (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] })) : (isValid_Data = false)
     )
     const formData = Object.assign({}, ...data)
-    console.log(data)
-    console.log(isValid_Data, this.state.hasError, formData)
     if (isValid_Data) {
       if (this.state.isEdit === "true" || !this.state.hasError) {
         await this.props.onFormSubmit(formData);
@@ -368,7 +396,6 @@ export class PredictionFormStep extends React.Component<
   render() {
     const { DynamicQuestions } = this.state;
     const { errors } = this.props;
-    console.log(this.state)
     return (
       <div css={wrap}>
 

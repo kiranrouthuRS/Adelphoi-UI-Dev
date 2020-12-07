@@ -69,7 +69,6 @@ const Client_Demographics: React.FC<Client_DemographicsProps> = props => {
     };
     let ages = props.Age_List.map(age => age.value);
     let count = props.Age_List.map(age => age.count);
-    console.log(ages, count)
     const age = {
         labels: ages,
         datasets: [{
@@ -83,14 +82,14 @@ const Client_Demographics: React.FC<Client_DemographicsProps> = props => {
         ],
 
     };
-    console.log(props.Demo_List)
-     let demo1 = props.Demo_List.map(demo => demo.value);
+    let demo1 = props.Demo_List.map(demo => demo.value);
      let demo2 = props.Demo_List.map(demo => demo.count);
     
     const disc = {
         labels: demo1,
         datasets: [{
-            label: filters.q === "lang"? "Primary Language":filters.q === "ls_type"? "Legal Status":"Secondary Involvement",
+            //label: filters.q === "lang"? "Primary Language":filters.q === "ls_type"? "Legal Status":"Secondary Involvement",
+            label: "none", 
             barPercentage: 0.25,
             data: demo2,
             backgroundColor: ['#a3863b', '#3b90a3', '#d21243', '#3700FF', '#ffa600', '#038c25', '#C9DE00', '#00A6B4', '#a1124b', '#48fc12', '#FB13F3', '#cc1fa4','#36A2EB'],
@@ -105,23 +104,41 @@ const Client_Demographics: React.FC<Client_DemographicsProps> = props => {
     useEffect(() => {
         props.onSelectChange(filters)
     }, [filters]);
-    console.log(filters)
+    
     return (
         <div >
             <Grid container spacing={1} >
+            
                 <Grid item xs={6}>
-                    <Bar
+               <Bar
                         data={gender}
                         // width={100}
                         // height={50}
                         options={{
-                            maintainAspectRatio: false
+                            maintainAspectRatio: false,
+                            legend: {
+                                display: false 
+                             },
+                             title: {
+                                display: true,
+                                text: 'Gender'
+                            }
                         }}
                     />
                 </Grid>
                 <Grid item xs={6}>
                     <Bar
                         data={age}
+                        options={{
+                            maintainAspectRatio: false,
+                            legend: {
+                                display: false
+                             },
+                             title: {
+                                display: true,
+                                text: 'Age'
+                            }
+                        }}
                     />
                 </Grid>
             </Grid>
@@ -137,7 +154,7 @@ const Client_Demographics: React.FC<Client_DemographicsProps> = props => {
                     })}
                 >
                     <option value="lang">Primary Language</option>
-                    <option value="ls_type">Legel Status</option>
+                    <option value="ls_type">Legal Status</option>
                     <option value="sec_inv_cyf">Secondary Involvement</option>
 
                 </select>
@@ -151,7 +168,14 @@ const Client_Demographics: React.FC<Client_DemographicsProps> = props => {
                         // width={100}
                         // height={50}
                         options={{
-                            maintainAspectRatio: false
+                            maintainAspectRatio: false,
+                            legend: {
+                                display: false
+                             },
+                             title: {
+                                display: true,
+                                text: filters.q === "lang"? "Primary Language":filters.q === "ls_type"? "Legal Status":"Secondary Involvement",
+                            }
                         }}
                     />
                 </Grid>

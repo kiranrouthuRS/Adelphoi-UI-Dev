@@ -120,7 +120,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                 location: src.location
             }
         });
-        console.log(filters)
+        
         let data = {
             start_date: filter.start_date,
             end_date: filter.end_date,
@@ -129,7 +129,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
             location: src.location,
             days_count: filter.days_count
         }
-        console.log(data)
+        
         await props.totalAnalytics(data);
 
     };
@@ -141,7 +141,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                 pgm_location: src.location
             }
         });
-        console.log(filters)
+        
         let data = {
             start_date: filter.start_date,
             end_date: filter.end_date,
@@ -149,7 +149,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
             location: src.location,
             days_count: filter.days_count
         }
-        console.log(data)
+        
         await props.Program_Analytics(data);
 
     };
@@ -161,7 +161,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                 pgm_location: src.location
             }
         });
-        console.log(filters)
+        
         let data = {
             start_date: filter.start_date,
             end_date: filter.end_date,
@@ -169,20 +169,20 @@ const Dashboard: React.FC<DashboardProps> = props => {
             location: src.location,
             days_count: filter.days_count
         }
-        console.log(data)
+        
         await props.Other_Analytics(data);
 
     };
     const Performance_HandleChange = async (src) => {
-        console.log(src)
-        console.log(filters)
+        
+        
         let filter = filters;
         filter["per_referral_source"] = src
         await setFilters(prevState => {
             return { ...prevState, per_referral_source: src }
         });
 
-        console.log(filter)
+        
         let data = {
             start_date: filter.start_date,
             end_date: filter.end_date,
@@ -193,14 +193,14 @@ const Dashboard: React.FC<DashboardProps> = props => {
 
     };
     const Demo_HandleChange = async (src) => {
-        console.log(src)
-        console.log(filters)
+        
+        
         let filter = filters;
         await setFilters(prevState => {
             return { ...prevState, q: src }
         });
 
-        console.log(filter)
+        
         let data = {
             start_date: filter.start_date,
             end_date: filter.end_date,
@@ -211,14 +211,14 @@ const Dashboard: React.FC<DashboardProps> = props => {
 
     };
     const Calibration_HandleChange = async (src) => {
-        console.log(src)
-        console.log(filters)
+        
+        
         let filter = filters;
         await setFilters(prevState => {
             return { ...prevState, q: src }
         });
 
-        console.log(filter)
+        
         let data = {
             start_date: filter.start_date, 
             end_date: filter.end_date,
@@ -229,7 +229,6 @@ const Dashboard: React.FC<DashboardProps> = props => {
         await props.Calibration_Analytics(data);
 
     };
-    console.log(props)
     return (
         <div className={classes.root}>
 
@@ -314,13 +313,13 @@ const Dashboard: React.FC<DashboardProps> = props => {
                         </Grid>
                         <Grid container item xs={12} spacing={3}>
                             <Grid item xs={4}>
-                                <Link data-name="week" data-id="7" onClick={filterAnalytics}>Last one week </Link>
+                                <Link data-name="week" href="#" data-id="7" onClick={filterAnalytics}>Last one week </Link>
                             </Grid>
                             <Grid item xs={4}>
-                                <Link data-name="month" data-id="30" onClick={filterAnalytics}>Last 30 days </Link>
+                                <Link data-name="month" href="#" data-id="30" onClick={filterAnalytics}>Last 30 days </Link>
                             </Grid>
                             <Grid item xs={4}>
-                                <Link data-name="life_time" data-id="2000" onClick={filterAnalytics}>Life time </Link>
+                                <Link data-name="life_time" href="#" data-id="2000" onClick={filterAnalytics}>Life time </Link>
                             </Grid>
                         </Grid>
 
