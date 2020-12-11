@@ -234,7 +234,7 @@ export const insertDClient = async (client_form, is_accessToken) => {
         'Authorization': `Bearer ${is_accessToken}`
       }
     });
-     
+     console.log(response)
     // if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
     //   throw new Error(response.data["ERROR"]);
     // }
@@ -1398,7 +1398,7 @@ export const searchDClient = async (
       }
     };
     const response = await axios(config)
-    
+    console.log(response)
     return response.data;
   } catch (error) {
     console.error("api function searchClient error");
@@ -1439,7 +1439,29 @@ function throwError(error: any) {
       status: error.response.status || undefined
     };
     throw errorResponse;
-  } else if (error.request) {
+    // if(error.response.status === 403) {
+    //   const { dispatch } = store
+    //   dispatch(
+    //     user.actions.update({
+    //       user: {
+    //         email: "",
+    //         accessToken: "",
+    //         role_type: "",
+    //         user_id: "",
+    //         is_pwd_updated: "",
+    //         logo_path: "",
+    //         is_fully_configured: "",
+    //         is_prediction_available: "", 
+    //       }
+    //     }))
+    // }else {
+    //   const errorResponse = {
+    //     data: error.response.data || undefined,
+    //     status: error.response.status || undefined
+    //   };
+    //   throw errorResponse;
+    //}
+    } else if (error.request) {
     // The request was made but no response was received
     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
     // http.ClientRequest in node.js

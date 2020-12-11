@@ -58,6 +58,7 @@ export interface PredictionFormStepState {
   hasError: boolean;
   isSubmitted: boolean;
   client_form: any;
+  Required_List: any;
   DynamicQuestions: any;
   prevJump: any;
   csvfile: any;
@@ -115,6 +116,7 @@ export class PredictionFormStep extends React.Component<
       error: [],
       errors: "",
       client_form: [],
+      Required_List: [],
       prevJump: [],
       csvfile: "",
       err_msg: [],
@@ -138,18 +140,21 @@ export class PredictionFormStep extends React.Component<
  }
      formState = () => {
       let client_form = [] as any;
+      let Required_List = [] as any;
       this.props.DynamicQuestions.map
         (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
           client_form.push({
             [ques.question.replace(/ /g, "_")]: ques.answer === 0 ?
-              ques.answer : ques.suggested_answers.length >= 1 ? ques.answer &&
-                ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id : ques.answer ? ques.answer : ""
+              ques.answer.toString() : ques.suggested_answers.length >= 1 ? ques.answer &&
+                ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id.toString() : ques.answer ? ques.answer.toString() : ""
           });
-  
+          Required_List.push({
+            [ques.question.replace(/ /g, "_")]: ques.required});
         })) 
         this.setState({
           DynamicQuestions: this.props.DynamicQuestions,
           client_form: Object.assign({}, ...client_form),
+          Required_List: Object.assign({}, ...Required_List), 
         })
      }
   handleClose = () => {
@@ -255,6 +260,7 @@ export class PredictionFormStep extends React.Component<
         })
         if (jump) {
           let client_form1 = [] as any;
+          let Required_List1 = [] as any;
           DynamicQuestions.map
             (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
               client_form1.push({
@@ -262,15 +268,22 @@ export class PredictionFormStep extends React.Component<
                   ques.answer : ques.suggested_answers.length >= 1 ? ques.answer ?
                     ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id : ques.answer ? ques.answer : "" : ""
               });
-
+              Required_List1.push({
+                [ques.question.replace(/ /g, "_")]: ques.required});
             }))
           let formData = Object.assign({}, ...client_form1)
+          let ReqData = Object.assign({}, ...Required_List1)
           let client_form = this.state.client_form;
+          let Required_List = this.state.Required_List;
           client_form = {
             ...formData, ...client_form, [name]: value
           }
+          Required_List = {
+            ...ReqData, ...Required_List
+          }
           this.setState({
-            client_form
+            client_form,
+            Required_List
           })
         } else if(this.state.prevJump[name]){
               this.formState();
@@ -315,6 +328,7 @@ export class PredictionFormStep extends React.Component<
   handleSubmit = async (e) => {
     e.preventDefault();
     const client_form = this.state.client_form;
+    const Required_List = this.state.Required_List;
     this.setState({
       isSubmitted: true
     })
@@ -322,8 +336,8 @@ export class PredictionFormStep extends React.Component<
     let data = [] as any;
     let isValid_Data = true as any;
     Object.keys(client_form).map((ele, i) =>
-      client_form[ele] || client_form[ele] === 0 ?
-        (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] })) : (isValid_Data = false)
+      client_form[ele] ?
+        (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] })) :  isValid_Data = Required_List[ele] === "yes" ? false : true
     )
     const formData = Object.assign({}, ...data)
     if (isValid_Data) {
@@ -396,6 +410,7 @@ export class PredictionFormStep extends React.Component<
   render() {
     const { DynamicQuestions } = this.state;
     const { errors } = this.props;
+    console.log(this.state)
     return (
       <div css={wrap}>
 
@@ -471,7 +486,7 @@ export class PredictionFormStep extends React.Component<
                                 data-idx={index}
                                 data-idy={ind}
                                 data-jump={ques.suggested_jump.map(sj => ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
-                                selected={this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id}>{ans.value}</option>
+                                selected={this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id.toString()}>{ans.value}</option>
                             )}
                           </select>
                           :
