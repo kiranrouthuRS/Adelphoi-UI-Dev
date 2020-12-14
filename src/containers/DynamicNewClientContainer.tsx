@@ -104,8 +104,9 @@ export class DynamicNewClientContainer extends React.Component<
     }
     }
     else {
+      console.log(res)
       this.setState({
-        error:  res.response
+        error:  res.data.response
       })
     }
     

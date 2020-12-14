@@ -126,6 +126,7 @@ export class PredictionFormStep extends React.Component<
   }
   async componentDidMount() {
     this.formState();
+    console.log(this.props)
     this.setState({
       isOpen: this.props.errors ? true : false,
       err_msg: this.props.errors,
@@ -138,7 +139,7 @@ export class PredictionFormStep extends React.Component<
     //   }))
     // )
  }
-     formState = () => {
+  formState = () => {
       let client_form = [] as any;
       let Required_List = [] as any;
       this.props.DynamicQuestions.map
@@ -328,7 +329,7 @@ export class PredictionFormStep extends React.Component<
   handleSubmit = async (e) => {
     e.preventDefault();
     const client_form = this.state.client_form;
-    const Required_List = this.state.Required_List;
+    let Required_List = this.state.Required_List;
     this.setState({
       isSubmitted: true
     })
@@ -336,13 +337,19 @@ export class PredictionFormStep extends React.Component<
     let data = [] as any;
     let isValid_Data = true as any;
     Object.keys(client_form).map((ele, i) =>
-      client_form[ele] ?
-        (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] })) :  isValid_Data = Required_List[ele] === "yes" ? false : true
+        (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] }),
+        console.log(ele,Required_List[ele]),
+        isValid_Data = !client_form[ele] && Required_List[ele] === "yes" ? false : true
+        ),
+        
     )
     const formData = Object.assign({}, ...data)
+      console.log(formData)
+      console.log(isValid_Data,this.state.isEdit,this.state.hasError)
     if (isValid_Data) {
       if (this.state.isEdit === "true" || !this.state.hasError) {
         await this.props.onFormSubmit(formData);
+        console.log(this.props)
         this.setState({
           isSubmitted: false,
           err_msg: this.props.errors,

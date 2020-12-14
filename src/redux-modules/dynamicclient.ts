@@ -58,10 +58,10 @@ export const actions = {
   > {
     return async (dispatch, getState) => {
       const response = await fetchConfiguredQuestions(is_accessToken);
-      if (!response) {
-        throw Error("something went wrong getting list of available referral");
-      }
-      dispatch(update({ configuredQuestionsList: response.response }));
+      // if (!response) {
+      //   throw Error("something went wrong getting list of available referral");
+      // }
+      dispatch(update({ configuredQuestionsList: response&&response.response }));
     };
   },
 
