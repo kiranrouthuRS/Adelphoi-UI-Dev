@@ -1433,33 +1433,14 @@ function throwError(error: any) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
     console.log(error.response.data);
-    console.log("code", error.response.status);
+    console.log("code",error.response.status);
     console.log(error.response.headers);
-    if(error.response.status === 403) {
-      const { dispatch } = store
-      console.log("code", error.response.status);
-      dispatch(
-        user.actions.update({
-          user: {
-            email: "",
-            accessToken: "",
-            role_type: "",
-            user_id: "",
-            is_pwd_updated: "",
-            logo_path: "",
-            is_fully_configured: "",
-            is_prediction_available: "", 
-          },
-         
-        }))
-    }else {
-      const errorResponse = {
-        data: error.response.data || undefined,
-        status: error.response.status || undefined
-      };
-      throw errorResponse;
-    }
-    } else if (error.request) {
+    const errorResponse = {
+      data: error.response.data || undefined,
+      status: error.response.status || undefined
+    };
+    throw errorResponse;
+  } else if (error.request) {
     // The request was made but no response was received
     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
     // http.ClientRequest in node.js
