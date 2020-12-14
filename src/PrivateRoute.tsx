@@ -14,11 +14,12 @@ export interface PrivateRouteProps extends RouteProps {
 
   
 const PRoute: React.FC<PrivateRouteProps> = (props) => {
-  const { appState, ...routeProps } = props;
+  console.log(props)
+  const { appState, ...routeProps   } = props;  
   const { user } = appState;
-  const accessToken = store.getState().user.user.accessToken; 
-  console.log(accessToken,user)
-   if (!user || !user.user.accessToken || !accessToken) {
+  const accessToken = appState.user&&appState.user.user.accessToken; 
+  console.log(user&&user.user.accessToken,store.getState()) 
+   if (!user || !accessToken || !store.getState().user.user.accessToken) {
     return (
       <React.Fragment>
         

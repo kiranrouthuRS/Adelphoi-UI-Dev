@@ -13,6 +13,7 @@ import { domainPath } from "./App"
 import { loginApiUrl } from "./api/api"
 import MenuIcon from '@material-ui/icons/Menu';
 import { store } from "./index"; 
+import IdleTimerContainer from './containers/IdleTimerContainer'
 import {
   ConfigIcon,
   NewClientIcon,
@@ -147,7 +148,7 @@ const logopath = children&&children[1].props.user.user.logo_path;
  
  return ( 
     <Paper css={App} elevation={3}>
-      
+      <IdleTimerContainer/>
       <div css={logo}>
         <img
           css={firstMatchLogo}

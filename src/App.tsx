@@ -26,6 +26,7 @@ import Welcomepage from './components/welcomepage'
 import ChangePasswordContainer from './containers/ChangePasswordContainer'
 import BillingDetailsContainer from './containers/BillingDetailsContainer'
 import DashboardContainer from './containers/Dashboardcontainer'
+import IdleTimerContainer from './containers/IdleTimerContainer'
 export const { store } = configureStore(createHistory());
 const url = typeof window !== 'undefined' ? window.location.pathname : '';
   let str1 = url.split('/');

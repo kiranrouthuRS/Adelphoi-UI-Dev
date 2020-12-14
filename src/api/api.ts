@@ -61,6 +61,7 @@ export const login = async (email: string, password: string, domain: string) => 
       username: email,
       password: password
     });
+    console.log(response)
     localStorage.setItem("refreshToken", response.data.refresh_token);
     return response;
   } catch (error) {
@@ -1436,6 +1437,7 @@ function throwError(error: any) {
     console.log(error.response.headers);
     if(error.response.status === 403) {
       const { dispatch } = store
+      console.log("code", error.response.status);
       dispatch(
         user.actions.update({
           user: {
