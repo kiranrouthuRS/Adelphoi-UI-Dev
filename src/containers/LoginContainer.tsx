@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import * as Types from "../api/definitions";
 import { ContainerProps } from "./Container";
 import LoginPage from "../components/Login";
-import { withSnackbar, WithSnackbarProps } from "notistack";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
 import { store } from "../index";
@@ -14,9 +13,7 @@ export interface LoginContainerState {
  
 }
 
-export interface LoginContainerProp extends ContainerProps {
-  login: (data: any) => Promise<void>;
-}
+export interface LoginContainerProp extends ContainerProps {}
 
 export class LoginContainer extends React.Component<
   LoginContainerProp,
@@ -52,13 +49,13 @@ export class LoginContainer extends React.Component<
       password: password,
       domain: domainPath
       
-    }; 
+    };
     try {
-      await this.props.login(credentials); 
-      const accessToken = store.getState().user.user.accessToken; 
-      console.log(store.getState())
-      const is_configured:any = store.getState().user.user.is_fully_configured;
-      const pwd_updated = store.getState().user.user.is_pwd_updated
+      const r = await this.props.dispatch(user.actions.login(credentials));
+      console.log(r,"login")
+      const accessToken = store.getState().user.user.accessToken;
+      const pwd_updated = this.props.user && this.props.user.user && this.props.user.user.is_pwd_updated
+      const is_configured:any = this.props.user && this.props.user.user && this.props.user.user.is_fully_configured;
       if(pwd_updated){
         history.push(is_configured !== true ? (`/${domainPath}/welcomepage`) :
         domainPath == "adelphoiDDD" ? (`/${domainPath}/new-client`):(`/${domainPath}/new-client`));;
@@ -78,22 +75,14 @@ export class LoginContainer extends React.Component<
       return;
     }
   };
- 
+
   render()
    
   {
     return <LoginPage onLogin={this.onLogin} {...this.state} />;
   }
 }
-const mapDispatchToProps = {
-  login: user.actions.login,
 
-};
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(LoginContainer);
-// export default connect(/* istanbul ignore next */ state => state)(
-//   LoginContainer
-// );
+export default connect(/* istanbul ignore next */ state => state)(
+  LoginContainer
+);

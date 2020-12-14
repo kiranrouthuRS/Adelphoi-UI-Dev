@@ -19,7 +19,7 @@ const PRoute: React.FC<PrivateRouteProps> = (props) => {
   const { user } = appState;
   const accessToken = appState.user&&appState.user.user.accessToken; 
   console.log(user&&user.user.accessToken,store.getState()) 
-   if (!user || !accessToken || !store.getState().user.user.accessToken) {
+   if (!user || !user.user.accessToken) {
     return (
       <React.Fragment>
         
