@@ -10,16 +10,16 @@ import { domainPath } from "./App"
 import { store } from "./index";
 export interface PrivateRouteProps extends RouteProps {
   appState: AppState;
+   user : any;
 }
 
   
 const PRoute: React.FC<PrivateRouteProps> = (props) => {
-  console.log(props)
-  const { appState, ...routeProps   } = props;  
-  const { user } = appState;
-  const accessToken = appState.user&&appState.user.user.accessToken; 
-  console.log(user&&user.user.accessToken,store.getState()) 
-   if (!user || !user.user.accessToken) {
+  const { user, ...routeProps   } = props;  
+  //const { user } = appState;
+  const accessToken = store.getState().user.user.accessToken; 
+  let allowLogin = store.getState().user.user.accessToken == user&&user.user.accessToken
+  if (!user || user.user.accessToken === "") {
     return (
       <React.Fragment>
         

@@ -367,7 +367,6 @@ export const actions = {
                 if(Dclient["Exclusionary Criteria Exists/Referral Rejected"] !== "0"){
                   let data = [] as any;
                 updatedDClient = cl; 
-                console.log(updatedDClient) 
                 const res = await fetchLocations(
                   updatedDClient["Client Code"],
                   updatedDClient.program_type,

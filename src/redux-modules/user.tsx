@@ -65,8 +65,9 @@ export const actions = {
   },
   
   logout(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
-    return async (dispatch,getState) => {
-      dispatch(update({ user: emptyUser }));
+   return async (dispatch,getState) => {
+   await dispatch(update({ user: emptyUser }));
+  
      };
   }
 };

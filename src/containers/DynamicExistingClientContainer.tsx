@@ -8,6 +8,7 @@ import * as referral from "../redux-modules/referral";
 import { ContainerProps } from "./Container";
 import * as dynamicclient from "../redux-modules/dynamicclient";
 import ClientSearch from "../components/ClientSearch";
+import Logout from "../components/Logout"
 import DynamicClientDetailsContainer from "./DynamicClientDetailsContainer";
 import EditClientContainer from "./EditClientContainer" ;
 import DynamicNewClientContainer from "./DynamicNewClientContainer" ;
@@ -61,10 +62,19 @@ DynamicExistingClientContainerState
 
   searchDClient = async (client_code: string, client_name: string) => {
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
-    await this.props.searchDClient(client_code, client_name,is_accessToken);
+    try {
+      await this.props.searchDClient(client_code, client_name,is_accessToken);
     this.setState({
       is_Searched: true
     })
+    } catch (error) {
+      console.log(error)
+      const { history } = this.props;
+      if (error.status === 403) {
+        history.push(`/${domainPath}/logout/`)
+      } 
+    }
+    
   };
 
   render() {

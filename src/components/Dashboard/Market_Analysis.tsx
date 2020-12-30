@@ -164,11 +164,10 @@ const Market_Analytics: React.FC<Market_AnalyticsProps> = props => {
                     ))}
                 </select>
             </Grid>
-            <Grid container spacing={1} >
-                                <Grid item xs={6}>
+            {/* <Grid container spacing={1} >
+                                <Grid item xs={6}> */}
             <Line data={Performance}
                   options={{
-                    maintainAspectRatio: false,
                     legend: {
                         display: false
                      },
@@ -178,8 +177,8 @@ const Market_Analytics: React.FC<Market_AnalyticsProps> = props => {
                     }
                 }}
                  />
-            </Grid>
-            </Grid>
+            {/* </Grid> */}
+            {/* </Grid> */}
         </div>
     );
 };

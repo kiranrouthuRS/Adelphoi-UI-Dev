@@ -17,6 +17,7 @@ import * as programLocation from "../redux-modules/location";
 import ProgramList from "../components/ProgramList";
 import UsersList from "../components/UsersList";
 import ReferralList from "../components/ReferralList";
+import Logout from "../components/Logout"
 import LocationList from "../components/LocationList";
 import ConfigurationForm from "../components/ConfigurationForm";
 import { updateConfiguration } from "../api/api";
@@ -78,14 +79,23 @@ export class ConfigurationContainer extends React.Component<
     }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     this.props.closeSnackbar();
-    this.props.getUsers();
-    this.props.getRoles(is_accessToken);
-    this.props.getReferral();
-    this.props.getPrograms();
-    this.props.getLocations(); 
+    
+    try {
+      await this.props.getRoles(is_accessToken);
+    } catch (error) {
+      console.log(error)
+      const { history } = this.props;
+      if (error.status === 403) {
+        history.push(`/${domainPath}/logout/`)
+      } 
+    }
+    await this.props.getUsers();
+    await  this.props.getReferral();
+    await this.props.getPrograms();
+    await this.props.getLocations(); 
     
   }
 

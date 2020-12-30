@@ -8,11 +8,10 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
+import { Switch, Route, RouteComponentProps } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { connect } from "react-redux"
-import { AppState } from "../redux-modules/root";
+import { AppState } from "../redux-modules/root"; 
 import DateFnsUtils from "@date-io/date-fns";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -57,7 +56,10 @@ export interface BillingDetailsState {
     record_ID: string;
 
 }
-
+interface MatchParams {
+    index: string;
+  }
+interface MatchProps extends RouteComponentProps<MatchParams> {}
 export interface BillingDetailsProps {
 
 
@@ -96,7 +98,6 @@ class BillingDetails extends React.Component<
 
     async componentDidMount() {
         const response = await fetchBillingStatus()
-        
         if (response.status === "failed") { 
             this.setState({
                 error: response.message

@@ -23,9 +23,10 @@ const Logout: React.FC<LogoutProps> = props => {
    useEffect(() => {
     const fetchDataAsync = async () => {
        await logout();
+       history.push(`/${domainPath}/`);
      }   
     fetchDataAsync()
-    history.push(`/${domainPath}/login`);
+  
    }, []);
 return (
     <div>

@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 import { persistStore, persistReducer, Persistor } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
  import { AppState } from "./root";
-import { rootReducer } from "./root";
+import { rootReducer } from "./root"; 
 
 const persistConfig = {
   key: "firstMatch",
@@ -12,7 +12,7 @@ const persistConfig = {
 };
 
 const reducer = rootReducer;
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer) 
 
 export default (history: History): { store: Store<any, any>; persistor: Persistor } => {
   // store: Store<any, any>; persistor: Persistor

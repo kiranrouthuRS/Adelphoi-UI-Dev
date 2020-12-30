@@ -126,7 +126,6 @@ export class PredictionFormStep extends React.Component<
   }
   async componentDidMount() {
     this.formState();
-    console.log(this.props)
     this.setState({
       isOpen: this.props.errors ? true : false,
       err_msg: this.props.errors,
@@ -338,19 +337,15 @@ export class PredictionFormStep extends React.Component<
     let isValid_Data = true as any;
     Object.keys(client_form).map((ele, i) =>
         (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] }),
-        console.log(ele,Required_List[ele]),
         isValid_Data = !client_form[ele] && Required_List[ele] === "yes" ? false : true
         ),
         
     )
     const formData = Object.assign({}, ...data)
-      console.log(formData)
-      console.log(isValid_Data,this.state.isEdit,this.state.hasError)
     if (isValid_Data) {
       if (this.state.isEdit === "true" || !this.state.hasError) {
         await this.props.onFormSubmit(formData);
-        console.log(this.props)
-        this.setState({
+       this.setState({
           isSubmitted: false,
           err_msg: this.props.errors,
           isOpen: this.props.errors ? true : false
@@ -417,7 +412,6 @@ export class PredictionFormStep extends React.Component<
   render() {
     const { DynamicQuestions } = this.state;
     const { errors } = this.props;
-    console.log(this.state)
     return (
       <div css={wrap}>
 

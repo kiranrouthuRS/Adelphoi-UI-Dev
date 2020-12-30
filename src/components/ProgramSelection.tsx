@@ -45,7 +45,6 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
  
   const [clientCode, setClientCode] = useState<string | null>(null);
   const history = useHistory();
-  console.log(props)
   const programOptions = props.client.SuggestedPrograms
     ? props.client.SuggestedPrograms.map(p => {
         return {

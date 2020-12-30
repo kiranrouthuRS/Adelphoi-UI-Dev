@@ -9,6 +9,7 @@ import * as analytics from "../redux-modules/analytics";
 import { ContainerProps } from "./Container";
 import * as Types from "../api/definitions";
 import Dashboard from "../components/Dashboard/Dashboard";
+import Logout from "../components/Logout"
 import { domainPath } from "../App"
 interface MatchParams {
   index: string;
@@ -72,7 +73,16 @@ export class DashboardContainer extends React.Component<
     this.setState({ isLoading: true });
 
     this.setState({ isLoading: false });
-    await this.props.getDReferral();
+    try {
+      await this.props.getDReferral();
+    } catch (error) {
+      console.log(error)
+      const { history } = this.props;
+      if (error.status === 403) {
+        history.push(`/${domainPath}/logout/`)
+      } 
+    }
+    
     await this.props.getDateAnalytics(this.state.filters);
     await this.props.getLocations();
     await this.props.getPCRAnalytics(this.state.filters);

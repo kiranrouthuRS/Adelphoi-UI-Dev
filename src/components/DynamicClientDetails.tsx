@@ -117,7 +117,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     ) {
       setPredictedProgram(searchData[0].model_program);
     }
-  }, [props.client.selected_program]);
+  }, [props.client.selected_program,]);
   useEffect(() => {
     if (
       !predicted_referral ||
@@ -155,7 +155,6 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
       };
     })
     : [];
-
 
   const locationOptions = props.client.SuggestedLocations
     ? props.client.SuggestedLocations.map(l => {
@@ -229,17 +228,16 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     };
 
   };
-  // const getInitialValues = () => {
-  //   const { client, is_role_type } = props;
-  //   let program: any = null;
-  //   let location: any = null;
-  //   let referral: any = null;
-
-  // };
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     const val = searchData.filter((sec, i) => sec.version === value && sec)
     setSelectedVersion(val)
+    setPredictedProgram(val[0].model_program);
+    setPredictedReferral(val[0].selected_referral);
+    setPredictedLocation(val[0].client_selected_locations);
+    
+  
   }
 
   const display = (id, ver) => {
@@ -283,7 +281,9 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                 <option value="">Select Version</option>
                 {searchData.map((data, i) =>
 
-                  <option key={i} value={data.version} selected={data.version === searchData[searchData.length - 1].version}>{data.date_created}</option>
+                  <option key={i} value={data.version} 
+                  selected={data.version === searchData[searchData.length - 1].version}>{data.date_created}
+                  </option>
 
 
                 )}
@@ -497,7 +497,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
               </div>
               <div css={fieldRow}>
                 <div css={twoCol}>
-                  <label css={label}>Location</label>
+                  <label css={label}>Location</label> 
                 </div>
                 <div css={twoCol}>
                   <Dropdown

@@ -12,6 +12,7 @@ import ReferralList from "../components/ReferralList";
 import PredictionFormStep from "../components/PredictionFormStep";
 import PredictionFormStep2 from "../components/PredictionFormStep2";
 import ProgramSelection from "../components/ProgramSelection";
+import Logout from "../components/Logout"
 import { domainPath } from "../App"
 import { store } from "../index";
 interface MatchParams {
@@ -74,13 +75,21 @@ export class DynamicNewClientContainer extends React.Component<
     };
   }
 
-  componentDidMount() {
+ async componentDidMount() {
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     const { index } = this.props.match.params;
     this.props.closeSnackbar();
     this.props.getAvailablePrograms();
-    this.props.getConfiguredQuestions(is_accessToken);
-
+    
+    try {
+      await this.props.getConfiguredQuestions(is_accessToken);
+    } catch (error) {
+      console.log(error)
+      const { history } = this.props;
+      if (error.status === 403) {
+        history.push(`/${domainPath}/logout/`)
+      } 
+    }
     // this.props.getReferral();
 
   }
@@ -266,7 +275,6 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
   saveClient: client.actions.upsertClient,
-
   insertDClient: dynamicclient.actions.insertDClient,
   submitPrediction: dynamicclient.actions.submitPrediction,
   getLocations: dynamicclient.actions.getLocations,

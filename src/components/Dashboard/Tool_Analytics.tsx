@@ -198,12 +198,20 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                                     </select>
                                 </Grid>
                             </Grid>
-            <Grid container spacing={1} >
-                                <Grid item xs={6}>
-            <h4>Performance Graph</h4>
-            <Line data={Performance} />
-            </Grid>
-            </Grid>
+            {/* <Grid container spacing={1} >
+                                <Grid item xs={6}> */}
+            {/* <h4>Performance Graph</h4> */}
+            <Line data={Performance}  options={{
+                    legend: {
+                        display: true
+                     },
+                     title: {
+                        display: true,
+                        text: 'Performance Graph'
+                    }
+                }} />
+            {/* </Grid>
+            </Grid> */}
         </div>
     );
 };

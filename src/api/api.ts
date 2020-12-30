@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as Types from "./definitions";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
+import { useHistory } from "react-router-dom";
 import { store } from "../index";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
@@ -84,20 +85,20 @@ export const Logout = async () => {
     }
     const response = await axios.post(`${baseApiUrl}/${domainPath}/logout`, req)
       .then(response => {
-        store.dispatch(
-          user.actions.update({
-            user: {
-              email: "",
-              accessToken: "",
-              role_type: "",
-              user_id: "",
-              is_pwd_updated: "",
-              logo_path: "",
-              is_fully_configured: "",
-              is_prediction_available: "", 
-            }
-          })
-        );
+        // store.dispatch(
+        //   user.actions.update({
+        //     user: {
+        //       email: "",
+        //       accessToken: "",
+        //       role_type: "",
+        //       user_id: "",
+        //       is_pwd_updated: "",
+        //       logo_path: "",
+        //       is_fully_configured: "",
+        //       is_prediction_available: "", 
+        //     }
+        //   })
+        // );
         return response;
       });
     return response;
@@ -1435,6 +1436,29 @@ function throwError(error: any) {
     console.log(error.response.data);
     console.log("code",error.response.status);
     console.log(error.response.headers);
+    // if(error.response.status === 403){
+    //   console.log("code",error.response.status);
+    //   store.dispatch(
+    //     user.actions.update({
+    //       user: {
+    //         email: "",
+    //         accessToken: "",
+    //         role_type: "",
+    //         user_id: "",
+    //         is_pwd_updated: "",
+    //         logo_path: "",
+    //         is_fully_configured: "",
+    //         is_prediction_available: "", 
+    //       }
+    //     }))
+        
+    // }{
+    //   const errorResponse = {
+    //     data: error.response.data || undefined,
+    //     status: error.response.status || undefined
+    //   };
+    //   throw errorResponse;
+    // }
     const errorResponse = {
       data: error.response.data || undefined,
       status: error.response.status || undefined
