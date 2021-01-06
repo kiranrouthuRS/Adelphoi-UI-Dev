@@ -294,7 +294,7 @@ return (
                   value={data.version} 
 
                   selected={data.version === searchData[searchData.length - 1].version}>
-                    {data.date_created}---{searchData.length - 1}--{i}
+                    {data.date_created}
                   </option>
                 )}
               </select>
