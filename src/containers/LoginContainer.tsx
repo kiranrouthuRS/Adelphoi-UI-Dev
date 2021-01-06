@@ -52,7 +52,6 @@ export class LoginContainer extends React.Component<
     };
     try {
       const r = await this.props.dispatch(user.actions.login(credentials));
-      console.log(r,"login")
       const accessToken = store.getState().user.user.accessToken;
       const pwd_updated = this.props.user && this.props.user.user && this.props.user.user.is_pwd_updated
       const is_configured:any = this.props.user && this.props.user.user && this.props.user.user.is_fully_configured;

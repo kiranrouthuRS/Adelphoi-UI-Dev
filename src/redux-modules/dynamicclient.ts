@@ -217,7 +217,8 @@ export const actions = {
   },
 
   getProgramsForClient(
-    client_code: string
+    client_code: string,
+    version: string
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const currentUser = getState().user?.user.accessToken;
@@ -229,16 +230,16 @@ export const actions = {
       }
       const client = clientList[client_code];
       const sData = sDataList.filter(a => a.client_code === Number(client_code))
-      const latestVersion = sData.length - 1
+      const latestVersion = version ? version : sData.length - 1
       if (response) {
         const cl: Types.Client = {
           ...client,
-          SuggestedPrograms: response.program_model_suggested || null,
-          SuggestedLocations: client.client_selected_locations
-            ? [client.client_selected_locations]
+          SuggestedPrograms: version ? [ sData[latestVersion].client_selected_program ] : response.program_model_suggested || null, 
+          SuggestedLocations: sData[latestVersion].client_selected_locations
+            ? [sData[latestVersion].client_selected_locations]
             : [],
-          selected_program: response.selected_program,
-          selected_location: response.selected_location || null,
+          selected_program: sData[latestVersion].client_selected_program,
+          selected_location: sData[latestVersion].client_selected_locations,
           Program_Completion: sData[latestVersion].Program_Completion,
           Returned_to_Care: sData[latestVersion].Returned_to_Care,
           ageAtEpisodeStart: sData[latestVersion].ageAtEpisodeStart,

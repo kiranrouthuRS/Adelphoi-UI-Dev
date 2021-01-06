@@ -151,8 +151,7 @@ export const insertClient = async (client: Types.Client) => {
 
 export const updateClient = async (client: Types.Client) => {
   try {
-
-    const response = await axios.put(`${baseApiUrl}/${domainPath}/latest_update/${client.client_code}/`, client);
+      const response = await axios.put(`${baseApiUrl}/${domainPath}/latest_update/${client.client_code}/`, client);
     if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
       throw new Error(response.data["ERROR"]);
     }
@@ -1400,7 +1399,6 @@ export const searchDClient = async (
       }
     };
     const response = await axios(config)
-    console.log(response)
     return response.data;
   } catch (error) {
     console.error("api function searchClient error");

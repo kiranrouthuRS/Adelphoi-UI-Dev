@@ -44,6 +44,10 @@ interface DynamicClientDetailsProps {
     selected_program: string,
     values: any
   ) => Promise<void>;
+  onVersionSelect: (
+    client_code: string,
+    version: string
+  ) => Promise<void>;
   onFormSubmit: (
     client_code: string,
     program_completion: number | null,
@@ -100,6 +104,11 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
   const [SelectedVersion, setSelectedVersion] = useState<any | null>(
     null
   );
+
+  const [version_changed, setVersion] = useState<any | null>(
+    null
+  );
+ 
   useEffect(() => {
     if (
       !SelectedVersion ||
@@ -155,8 +164,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
       };
     })
     : [];
-
-  const locationOptions = props.client.SuggestedLocations
+const locationOptions = props.client.SuggestedLocations
     ? props.client.SuggestedLocations.map(l => {
       return {
         label: l,
@@ -231,12 +239,15 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
   
   const handleChange = (e) => {
     const { name, value } = e.target;
+    var optionElement = e.target.childNodes[e.target.selectedIndex]
+    let version_id = optionElement.getAttribute('data-id');
     const val = searchData.filter((sec, i) => sec.version === value && sec)
-    setSelectedVersion(val)
-    setPredictedProgram(val[0].model_program);
+    setSelectedVersion(val);
+    setVersion(!version_id ? false : true); 
+    setPredictedProgram(val[0].client_selected_program);
     setPredictedReferral(val[0].selected_referral);
     setPredictedLocation(val[0].client_selected_locations);
-    
+    props.onVersionSelect(props.searchData[0].client_code,version_id);
   
   }
 
@@ -261,8 +272,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     return tempArray
 
   }
-
-  return (
+return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
         <CircularProgress color="inherit" />
@@ -280,12 +290,12 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
               >
                 <option value="">Select Version</option>
                 {searchData.map((data, i) =>
+                  <option key={i} data-id={searchData.length - 1 === i ? "":i} 
+                  value={data.version} 
 
-                  <option key={i} value={data.version} 
-                  selected={data.version === searchData[searchData.length - 1].version}>{data.date_created}
+                  selected={data.version === searchData[searchData.length - 1].version}>
+                    {data.date_created}---{searchData.length - 1}--{i}
                   </option>
-
-
                 )}
               </select>
             </div>
@@ -435,6 +445,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                       onChange={handleChange}
                       name="referral_status"
                       value="placed"
+                      disabled = {version_changed} 
                       checked={
                         values.referral_status !== null
                           ? values.referral_status === "placed"
@@ -447,6 +458,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                     <input
                       type="radio"
                       onChange={handleChange}
+                      disabled = {version_changed} 
                       name="referral_status"
                       value="not_placed"
                       checked={
@@ -461,6 +473,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                     <input
                       type="radio"
                       onChange={handleChange}
+                      disabled = {version_changed} 
                       name="referral_status"
                       value="rejected"
                       checked={
@@ -485,11 +498,11 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                 <div css={twoCol}>
                   <Dropdown
                     name="Program"
-                    disabled={values.Program_Completion !== ""}
+                    disabled={version_changed ? version_changed : values.Program_Completion !== ""} 
                     options={programOptions}
                     onChange={(p: any) => onProgramChange(p, values)}
                     defaultValue={programOptions.find(
-                      p => p === predicted_program
+                      p => p.value === predicted_program
                     )}
                     value={values.Program || null}
                   />
@@ -497,14 +510,14 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
               </div>
               <div css={fieldRow}>
                 <div css={twoCol}>
-                  <label css={label}>Location</label> 
+                  <label css={label}>Location</label>  
                 </div>
                 <div css={twoCol}>
                   <Dropdown
                     name="Location"
-                    disabled={values.Program_Completion !== ""}
+                    disabled={version_changed ? version_changed :values.Program_Completion !== ""}
                     options={locationOptions}
-                    // onChange={(p: any) => onLocationChange(p, values)}
+                     // onChange={(p: any) => onLocationChange(p, values)}
                     defaultValue={locationOptions.find(
                       l => l.value === predicted_location
                     )}
@@ -521,8 +534,8 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                   <input
                     type="date"
                     name="start_date"
-                    css={inputField}
-                    // disabled={Number(values.Program_Completion) === 0}
+                    disabled = {version_changed}  
+                   css={inputField}
                     placeholder=""
                     value={values.start_date || ""}
                     onChange={handleChange}
@@ -541,6 +554,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                     type="text"
                     name="confidence"
                     readOnly
+                    disabled = {version_changed}
                     css={inputField}
                     // disabled={Number(values.Program_Completion) === 0}
                     placeholder=""
@@ -559,6 +573,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                     type="text"
                     name="roc_confidence"
                     readOnly
+                    disabled = {version_changed}
                     css={inputField}
                     // disabled={Number(values.Program_Completion) === 0}
                     placeholder=""
@@ -576,6 +591,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                   <select
                     css={selectField}
                     onChange={handleChange}
+                    disabled = {version_changed}
                     name="Program_Completion"
                     value={
                       values.Program_Completion !== null
@@ -599,6 +615,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                     <input
                       type="date"
                       name="end_date"
+                      disabled = {version_changed}
                       css={inputField}
                       // disabled={Number(values.Program_Completion) === 0}
                       placeholder=""
@@ -620,7 +637,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                     <input
                       type="checkbox"
                       disabled={
-                        values.Program_Completion !== ""
+                        version_changed ? version_changed : values.Program_Completion !== ""
                           ? values.Program_Completion === "0"
                           : true
                       }
@@ -651,7 +668,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                     css={selectField}
                     onChange={handleChange}
                     disabled={
-                      values.Program_Completion !== ""
+                     version_changed ? version_changed : values.Program_Completion !== ""
                         ? values.Program_Completion === "0"
                         : true
                     }
@@ -677,6 +694,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
                   size="large"
                   variant="contained"
                   color="primary"
+                  disabled = {version_changed}
                 >
                   Submit
               </Button>

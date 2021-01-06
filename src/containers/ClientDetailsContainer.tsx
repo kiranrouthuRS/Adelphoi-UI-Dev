@@ -137,6 +137,7 @@ export class ClientDetailsContainer extends React.Component<
     this.props.updateFormValues(client_code, values);
     this.setState({ isLoading: false });
   };
+ 
 
   submitProgram = async (client: Types.Client) => {
    
@@ -180,6 +181,7 @@ export class ClientDetailsContainer extends React.Component<
             is_role_type={is_role_type}
               client={clientList[index]}
               onProgramSelect={this.getLocationsAndPcr}
+              
               // onLocationSelect={this.saveProgramAndLocation}
               {...this.state}
               Referral={referralList}

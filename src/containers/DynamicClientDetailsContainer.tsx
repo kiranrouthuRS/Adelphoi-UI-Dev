@@ -53,7 +53,7 @@ export interface DynamicClientDetailsContainerProps
   ) => Promise<void>;
   clearErrors: () => void;
   clearClient: () => void;
-  getProgramsForClient: (client_code: string) => Promise<void>;
+  getProgramsForClient: (client_code: string, version: string) => Promise<void>;
   updateFormValues: (client_code: string, values: any) => void; 
   getReferral: () => Promise<void>;
   Referral: Types.Referral[];
@@ -81,12 +81,12 @@ DynamicClientDetailsContainerState
     const clientList = (clientState && clientState.clientList) || {};
     const { index } = this.props.match.params;
     this.setState({ isLoading: true });
-
+ let version = ""
     if (!clientList[index]) {
       await this.searchClient(index, "");
     }
     // fetch program for this client
-    await this.props.getProgramsForClient(index);
+    await this.props.getProgramsForClient(index,version);
     this.setState({ isLoading: false });
     this.props.closeSnackbar();
     this.props.getAvailablePrograms();
@@ -148,7 +148,11 @@ DynamicClientDetailsContainerState
     this.props.updateFormValues(client_code, values);
     this.setState({ isLoading: false });
   };
-
+  getVersionDetails = async (client_code: string, version: string) =>{
+    this.setState({ isLoading: true });
+    await this.props.getProgramsForClient(client_code, version);
+    this.setState({ isLoading: false });
+  };
   submitProgram = async (client: Types.Client) => {
    
     // const { client: clientState } = this.props;
@@ -195,6 +199,7 @@ DynamicClientDetailsContainerState
               index={index} 
               searchData={searchData.filter(s=> s.client_code == index)}
               onProgramSelect={this.getLocationsAndPcr}
+              onVersionSelect={this.getVersionDetails}
               // onLocationSelect={this.saveProgramAndLocation}
               {...this.state}
               Referral={referralList}
