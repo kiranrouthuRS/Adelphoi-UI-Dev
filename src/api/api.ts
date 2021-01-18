@@ -11,7 +11,7 @@ export const baseApiUrl = `http://3.7.135.210:8005/organizations`;
 export const loginApiUrl = "http://3.7.135.210:8005";
 
 
-interface PredictionResponse {
+interface PredictionResponse { 
   referred_program: string;
   model_program: string;
 }
@@ -58,13 +58,13 @@ createAuthRefreshInterceptor(axios as any, refreshAuthLogic);
 // and the request retried with the new token
 export const login = async (email: string, password: string, domain: string) => {
   try {
-    const response = await axios.post(`${loginApiUrl}/organizations/${domain}/login`, {
+    const response: any = await axios.post(`${loginApiUrl}/organizations/${domain}/login`, {
       username: email,
       password: password
     });
     console.log(response)
     localStorage.setItem("refreshToken", response.data.refresh_token);
-    return response;
+    return response.data ;
   } catch (error) {
     console.error("api function login error");
     throwError(error);

@@ -17,8 +17,8 @@ export interface PrivateRouteProps extends RouteProps {
 const PRoute: React.FC<PrivateRouteProps> = (props) => {
   const { user, ...routeProps   } = props;  
   //const { user } = appState;
-  const accessToken = store.getState().user.user.accessToken; 
-  let allowLogin = store.getState().user.user.accessToken == user&&user.user.accessToken
+  //const accessToken = store.getState().user.user.accessToken; 
+  console.log(store.getState())
   if (!user || user.user.accessToken === "") {
     return (
       <React.Fragment>

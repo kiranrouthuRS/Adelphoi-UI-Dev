@@ -272,6 +272,7 @@ const locationOptions = props.client.SuggestedLocations
     return tempArray
 
   }
+  console.log(props)
 return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>

@@ -186,7 +186,8 @@ DynamicClientDetailsContainerState
     const referralList = (referralState && referralState.referralList) || [];
     const clientList = (clientState && clientState.clientList) || {};
     const { index } = this.props.match.params;
-    const{ is_role_type,is_prediction_available}: any = this.props.user && this.props.user.user
+    const{ is_prediction_available}: any = this.props.user && this.props.user.user;
+    const is_role_type: any = this.props.user && this.props.user.user.role_type 
     const searchData :any = this.props&&this.props.client&&this.props.client.searchData&&this.props.client.searchData
     return (
       <div css={wrap}>

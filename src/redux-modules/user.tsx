@@ -40,23 +40,29 @@ export const actions = {
       const password = credential.password;
       const domain = credential.domain;
       let user: Types.User;
-      await login(email,password,domain)
+    return  await login(email,password,domain)
       .then(response => {
-        const { token,role_type,
-          user_id,is_pwd_updated,
-          logo_path,is_fully_configured,
-          is_prediction_available } = response&&response.data.response;
-        user = {
-          email,
-         accessToken: token,
-          role_type: role_type,
-          user_id: user_id,
-          is_pwd_updated: is_pwd_updated,
-          logo_path: logo_path,
-          is_fully_configured: is_fully_configured,
-          is_prediction_available: is_prediction_available 
+        console.log(response)
+        if(response.status === "success"){
+          const { token,role_type,
+            user_id,is_pwd_updated,
+            logo_path,is_fully_configured,
+            is_prediction_available,
+            is_suspended } = response.response;
+          user = {
+            email,
+           accessToken: token,
+            role_type: role_type,
+            user_id: user_id,
+            is_pwd_updated: is_pwd_updated,
+            logo_path: logo_path,
+            is_fully_configured: is_fully_configured,
+            is_prediction_available: is_prediction_available === true ? 
+                                     is_suspended === true ? false : is_prediction_available : is_prediction_available
+          }
+          dispatch(update({ user })); 
         }
-        dispatch(update({ user }));
+        return response;
       })
       
       

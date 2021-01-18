@@ -34,7 +34,8 @@ const url = typeof window !== 'undefined' ? window.location.pathname : '';
   export const domainPath = dom; 
   
 const App: React.FC = (props) => {
-  const is_configured = store.getState().user.user.is_fully_configured
+  console.log(props)
+  let is_configured: any = store.getState().user.user.is_fully_configured; 
   return (
     <React.Fragment>
       
@@ -49,7 +50,7 @@ const App: React.FC = (props) => {
           <Switch>
          
                 <Route exact path={`/${dom}`}>
-                {is_configured === true ? (
+                {is_configured&& is_configured === true ? (
                     <Redirect to={`/${dom}/new-client`} /> 
                   ):(
                     <Redirect to={`/${dom}/welcomepage`} /> 

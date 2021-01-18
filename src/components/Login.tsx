@@ -184,7 +184,7 @@ const Login: React.FC<LoginFormProps> = props => {
         <Toolbar className={classes.toolbar}>
           <div className={classes.toolbarTitle}>
             {/* <RouterLink to="https://firstmatchcom.wpcomstaging.com/" className={classes.brand}> */}
-            <a className={classes.brand} href="https://firstmatchcom.wpcomstaging.com/"> 
+            <a className={classes.brand} href="https://firstmatch.com/"> 
               <img src="/img/logo_stroke.png" alt="" className={classes.logo} />
               </a>
               </div>       
