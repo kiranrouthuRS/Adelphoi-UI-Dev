@@ -50,7 +50,7 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
         return {
           label: p,
           value: p,
-          predicted: p === props.client.program_type
+          predicted: p === props.client.program_type?.toString()
         };
       })
     : [];
@@ -63,7 +63,7 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
       program = {
         label: client.client_selected_program,
         value: client.client_selected_program,
-        predicted: client.client_selected_program === client.program_type
+        predicted: client.client_selected_program === client.program_type?.toString()
       };
     }
     return {
@@ -77,6 +77,7 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
   const onProgramChange = (program: any) => {
     props.onProgramSelect(program.value);
   };
+  
    return (
     <div css={wrap}>
       <div css={mainContent}>

@@ -187,8 +187,10 @@ export class PredictionFormStep extends React.Component<
   handleChange = (e) => {
     const { name, value } = e.target;
     let DynamicQuestions = this.state.DynamicQuestions;
+    
+    let ref_date = this.state.client_form.Date_of_Referral ? this.state.client_form.Date_of_Referral : ""
     if (name === "Date_of_Birth") {
-      const age = this.getAge(value, "") || "";
+      const age = this.getAge(value, ref_date) || "";
       this.setState({
         client_form: {
           ...this.state.client_form,
