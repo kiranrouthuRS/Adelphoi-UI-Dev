@@ -197,7 +197,7 @@ const Login: React.FC<LoginFormProps> = props => {
         </Avatar> */}
         <Typography component="div" variant="h5"
           className={classes.brandTitle}>
-              Login to First Match for {domain}
+              Login to FirstMatch&trade; for {domain}
         </Typography >
               {error && (
                 <Typography
@@ -240,7 +240,8 @@ const Login: React.FC<LoginFormProps> = props => {
                 onSubmit={async (values,{resetForm}) => {
                   if(values.forgotpassword){
                    const response = await axios.get(`${loginApiUrl}/organizations/${domainPath}/forgot-password?email_id=${values.email_id}`);
-                    setMessage("Reset password sent successfully to provided Email ID")
+                   console.log(response)
+                    setMessage(response.data.status === "failed"?response.data.message:"Reset password sent successfully to provided Email ID")
                    resetForm();
                       return response;
                      

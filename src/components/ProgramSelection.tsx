@@ -84,7 +84,7 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
         <Backdrop css={backdrop} open={props.isLoading}>
           <CircularProgress color="inherit" />
         </Backdrop>
-        <h1 css={subHeading}>FirstMatch Prediction</h1>
+        <h1 css={subHeading}>FirstMatch&trade; Prediction</h1>
         <Formik
           initialValues={getInitialValues()}
           validate={values => {

@@ -25,12 +25,12 @@ export class LoginContainer extends React.Component<
 > {
   constructor(props: LoginContainerProp) {
     super(props);
-    const isLoggedIn = props.user && props.user.user;
-    // if (isLoggedIn && isLoggedIn.accessToken !== "") {
-    //   console.log(domainPath,'domainPath')
-    //   this.props.history.push(domainPath !== "adelphoi" ? (`/${domainPath}/welcomepage`) :
-    //   (`/${domainPath}/new-client`));
-    // }
+    const isLoggedIn: any = props.user && props.user.user;
+    console.log(isLoggedIn)
+    if (isLoggedIn.accessToken) {
+      this.props.history.push(domainPath !== "adelphoi" ? (`/${domainPath}/welcomepage`) :
+      (`/${domainPath}/new-client`));
+    }
     this.state = this.getInitialState();
   }
   getInitialState() {
@@ -59,7 +59,7 @@ export class LoginContainer extends React.Component<
       console.log(res)
       console.log(store.getState())
       console.log(this.props)
-      const accessToken = store.getState().user.user.accessToken;
+      //const accessToken = store.getState().user.user.accessToken;
       const pwd_updated = this.props.user && this.props.user.user && this.props.user.user.is_pwd_updated;
       const is_configured:any = this.props.user && this.props.user.user && this.props.user.user.is_fully_configured;
       if(res.status === "success"){

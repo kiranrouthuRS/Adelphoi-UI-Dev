@@ -144,9 +144,11 @@ export class PredictionFormStep extends React.Component<
       this.props.DynamicQuestions.map
         (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
           client_form.push({
-            [ques.question.replace(/ /g, "_")]: ques.answer === 0 ?
-              ques.answer.toString() : ques.suggested_answers.length >= 1 ? ques.answer &&
-                ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id.toString() : ques.answer ? ques.answer.toString() : ""
+            [ques.question.replace(/ /g, "_")]: 
+               ques.answer === 0 ? ques.answer.toString() : 
+                ques.suggested_answers.length >= 1 ? ques.answer &&
+                ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id.toString() 
+                : ques.answer ? ques.answer.toString() : ""
           });
           Required_List.push({
             [ques.question.replace(/ /g, "_")]: ques.required});
@@ -181,7 +183,7 @@ export class PredictionFormStep extends React.Component<
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-    return age;
+    return age.toString();
   }
 
   handleChange = (e) => {
@@ -189,19 +191,7 @@ export class PredictionFormStep extends React.Component<
     let DynamicQuestions = this.state.DynamicQuestions;
     
     let ref_date = this.state.client_form.Date_of_Referral ? this.state.client_form.Date_of_Referral : ""
-    if (name === "Date_of_Birth") {
-      const age = this.getAge(value, ref_date) || "";
-      this.setState({
-        client_form: {
-          ...this.state.client_form,
-          [name]: value,
-          Age: age
-
-        }
-      })
-    }
-    else {
-      const val1: any = e.target.dataset.val1 ? e.target.dataset.val1 : "";
+    const val1: any = e.target.dataset.val1 ? e.target.dataset.val1 : "";
       const val2: any = e.target.dataset.val2 ? e.target.dataset.val2 : "";
       const type = e.target.dataset.type;
       const error_msg = e.target.dataset.msg;
@@ -324,8 +314,6 @@ export class PredictionFormStep extends React.Component<
         }
       }
 
-    }
-
   }
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -402,7 +390,7 @@ export class PredictionFormStep extends React.Component<
         }
       }
       else {
-        tempArray1.push(questions[i]);
+        tempArray1.push(questions[i]); 
         tempArray.push(tempArray1)
       }
 
@@ -412,7 +400,9 @@ export class PredictionFormStep extends React.Component<
   }
 
   render() {
+    console.log(this.state)
     const { DynamicQuestions } = this.state;
+    console.log(DynamicQuestions)
     const { errors } = this.props;
     return (
       <div css={wrap}>
@@ -553,7 +543,10 @@ export class PredictionFormStep extends React.Component<
                                     data-idx={index}
                                     data-idy={ind}
                                     name={ques.question.replace(/ /g, "_")}
-                                    value={this.state.client_form[ques.question.replace(/ /g, "_")]}
+                                    value={ques.question === "Age" ? (
+                                      this.state.client_form[ques.question.replace(/ /g, "_")] = this.getAge(this.state.client_form["Date_of_Birth"],this.state.client_form["Date_of_Referral"])
+                                    )
+                                     :this.state.client_form[ques.question.replace(/ /g, "_")]}
                                     type={ques.answer_type.toLowerCase()}
                                   //  min={ques.validation1}
                                   //  max={ques.validation2}

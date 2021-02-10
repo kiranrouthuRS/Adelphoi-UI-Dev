@@ -152,7 +152,7 @@ const logopath = children&&children[1].props.appState.user.user.logo_path;
       <div css={logo}>
         <img
           css={firstMatchLogo}
-          alt="First Match Logo"
+          alt="FirstMatch Logo"
           src="/img/logo_stroke.png"
         />
         <img

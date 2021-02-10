@@ -254,6 +254,7 @@ const locationOptions = props.client.SuggestedLocations
   const display = (id, ver) => {
     const tempArray = [] as any;
     let questions = SelectedVersion && SelectedVersion[0].sections[id].questions
+    console.log(SelectedVersion[0])
     const length: any = questions && questions.length
     for (let i = 0; i < length; i++) {
       if ((i + 1) % 2 !== 0) {
@@ -272,7 +273,7 @@ const locationOptions = props.client.SuggestedLocations
     return tempArray
 
   }
- 
+ console.log(props.searchData)
 return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -334,11 +335,11 @@ return (
             </AccordionSummary>
             <AccordionDetails css={panel}>
               {display(id, SelectedVersion).map((item, index) => {
-                return <div css={fieldRow}>{item.map((item_1, index_1) => {
+                return <div css={fieldRow}>{item.map((ques, index_1) => {
                   return <div css={twoCol}>
-                    <label css={txtLabel}>{item_1.question}</label>
+                    <label css={txtLabel}>{ques.question}</label> 
                     <div css={txtDetail}>
-                      {item_1.answer}
+                      {ques.question === "Age"?props.searchData[0].ageAtEpisodeStart?props.searchData[0].ageAtEpisodeStart:ques.answer:ques.answer}
                     </div>
                   </div>
                 })}
