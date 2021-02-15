@@ -5,6 +5,7 @@ import { ContainerProps } from "./Container";
 import LoginPage from "../components/Login";
 import { withSnackbar, WithSnackbarProps } from "notistack";
 import * as user from "../redux-modules/user";
+import * as dynamicclient from "../redux-modules/dynamicclient";
 import { AppState } from "../redux-modules/root";
 import { domainPath } from "../App"
 import { store } from "../index";
@@ -17,6 +18,7 @@ export interface LoginContainerState {
 export interface LoginContainerProp extends ContainerProps,
 WithSnackbarProps {
   login: (credential: any) => Promise<void>;
+  getConfiguredQuestions: (is_accessToken: any) => Promise<void>;
 }
 
 export class LoginContainer extends React.Component<
@@ -26,7 +28,6 @@ export class LoginContainer extends React.Component<
   constructor(props: LoginContainerProp) {
     super(props);
     const isLoggedIn: any = props.user && props.user.user;
-    console.log(isLoggedIn)
     if (isLoggedIn.accessToken) {
       this.props.history.push(domainPath !== "adelphoi" ? (`/${domainPath}/welcomepage`) :
       (`/${domainPath}/new-client`));
@@ -56,13 +57,11 @@ export class LoginContainer extends React.Component<
     };
     try {
       const res: any = await this.props.login(credentials);
-      console.log(res)
-      console.log(store.getState())
-      console.log(this.props)
-      //const accessToken = store.getState().user.user.accessToken;
       const pwd_updated = this.props.user && this.props.user.user && this.props.user.user.is_pwd_updated;
       const is_configured:any = this.props.user && this.props.user.user && this.props.user.user.is_fully_configured;
+      const is_accessToken: any = this.props.user && this.props.user.user.accessToken
       if(res.status === "success"){
+        await this.props.getConfiguredQuestions(is_accessToken);
         if(pwd_updated){
           history.push(is_configured !== true ? (`/${domainPath}/welcomepage`) :
           domainPath == "adelphoiDDD" ? (`/${domainPath}/new-client`):(`/${domainPath}/new-client`));;
@@ -105,6 +104,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
   login: user.actions.login,
+  getConfiguredQuestions: dynamicclient.actions.getConfiguredQuestions,
   
 };
 export default connect(

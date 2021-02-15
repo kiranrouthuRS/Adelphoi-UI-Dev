@@ -1,20 +1,10 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
 import React from "react";
+import { connect } from "react-redux";
 import Modal from "react-modal";
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import Button from "@material-ui/core/Button";
-import { withSnackbar, WithSnackbarProps } from "notistack";
-import DateFnsUtils from "@date-io/date-fns";
-import { format } from "date-fns";
-import { AppState } from "../redux-modules/root";
 import FormData from "form-data"
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider
-} from "@material-ui/pickers";
 import {
   wrap,
   subHeading,
@@ -32,6 +22,7 @@ import * as Types from "../api/definitions";
 import ErrorMessage from "./ErrorMessage";
 import { Fragment } from "react";
 import { store } from "../index";
+import { AppState } from "../redux-modules/root";
 import { AnyARecord } from "dns";
 import { uploadcsvfile, downloadcsvfile } from "../api/api"
 
@@ -98,7 +89,6 @@ const customStyles = {
     transform: 'translate(-50%, -50%)'
   }
 };
-
 export class PredictionFormStep extends React.Component<
   PredictionFormStepProps,
   PredictionFormStepState
@@ -322,8 +312,7 @@ export class PredictionFormStep extends React.Component<
     this.setState({
       isSubmitted: true
     })
-    //  const ageAtEpisodeStart = await this.getAge( new Date(client_form.Date_of_Birth), new Date(client_form.Date_of_Referral))
-    let data = [] as any;
+     let data = [] as any;
     let isValid_Data = true as any;
     Object.keys(client_form).map((ele, i) =>
         (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] }),
@@ -400,9 +389,7 @@ export class PredictionFormStep extends React.Component<
   }
 
   render() {
-    console.log(this.state)
     const { DynamicQuestions } = this.state;
-    console.log(DynamicQuestions)
     const { errors } = this.props;
     return (
       <div css={wrap}>
@@ -611,6 +598,11 @@ export class PredictionFormStep extends React.Component<
   }
 };
 
-
-export default PredictionFormStep;
+const mapStateToProps = (state: AppState) => {
+  return {
+    dynamicclient: state.dynamicclient
+  };
+};
+export default connect( mapStateToProps,
+  null)( PredictionFormStep);
 

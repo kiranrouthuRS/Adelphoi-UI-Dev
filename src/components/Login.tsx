@@ -240,8 +240,7 @@ const Login: React.FC<LoginFormProps> = props => {
                 onSubmit={async (values,{resetForm}) => {
                   if(values.forgotpassword){
                    const response = await axios.get(`${loginApiUrl}/organizations/${domainPath}/forgot-password?email_id=${values.email_id}`);
-                   console.log(response)
-                    setMessage(response.data.status === "failed"?response.data.message:"Reset password sent successfully to provided Email ID")
+                   setMessage(response.data.status === "failed"?response.data.message:"Reset password sent successfully to provided Email ID")
                    resetForm();
                       return response;
                      

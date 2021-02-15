@@ -34,7 +34,6 @@ const url = typeof window !== 'undefined' ? window.location.pathname : '';
   export const domainPath = dom; 
   
 const App: React.FC = (props) => {
-  console.log(props)
   let is_configured: any = store.getState().user.user?.is_fully_configured; 
   return (
     <React.Fragment>

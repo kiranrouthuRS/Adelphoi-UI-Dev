@@ -49,20 +49,17 @@ export const dynamicclientReducer = reducer;
 
 export const actions = {
   update,
-
-  getConfiguredQuestions(is_accessToken: any): ThunkAction<
-    Promise<void>,
-    AppState,
-    null,
-    AnyAction
-  > {
+ getConfiguredQuestions(is_accessToken: any): ThunkAction<
+    Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const response = await fetchConfiguredQuestions(is_accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of available referral");
       // }
       dispatch(update({ configuredQuestionsList: response&&response.response }));
+      return response.response;  
     };
+    
   },
 
   updateProgramCompletion(

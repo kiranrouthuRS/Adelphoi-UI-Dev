@@ -254,7 +254,6 @@ const locationOptions = props.client.SuggestedLocations
   const display = (id, ver) => {
     const tempArray = [] as any;
     let questions = SelectedVersion && SelectedVersion[0].sections[id].questions
-    console.log(SelectedVersion[0])
     const length: any = questions && questions.length
     for (let i = 0; i < length; i++) {
       if ((i + 1) % 2 !== 0) {
@@ -273,7 +272,6 @@ const locationOptions = props.client.SuggestedLocations
     return tempArray
 
   }
- console.log(props.searchData)
 return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>

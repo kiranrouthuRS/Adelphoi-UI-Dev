@@ -42,7 +42,6 @@ export const actions = {
       let user: Types.User;
     return  await login(email,password,domain)
       .then(response => {
-        console.log(response)
         if(response.status === "success"){
           const { token,role_type,
             user_id,is_pwd_updated,
@@ -58,7 +57,8 @@ export const actions = {
             logo_path: logo_path,
             is_fully_configured: is_fully_configured,
             is_prediction_available: is_prediction_available === true ? 
-                                     is_suspended === true ? false : is_prediction_available : is_prediction_available
+                                     is_suspended === true ? false : is_prediction_available 
+                                     : is_prediction_available
           }
           dispatch(update({ user })); 
         }

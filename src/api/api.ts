@@ -292,8 +292,7 @@ export const updateDClient = async (client: Types.Client) => {
 };
 
 export const fetchConfiguredQuestions = async (is_accessToken) => {
-  const currentUser = store.getState().user.user.accessToken;
-  try {
+ try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/client-config`, {
       headers: {
         'Authorization': `Bearer ${is_accessToken}`
