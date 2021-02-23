@@ -129,7 +129,6 @@ const Dashboard: React.FC<DashboardProps> = props => {
             location: src.location,
             days_count: filter.days_count
         }
-        
         await props.totalAnalytics(data);
 
     };

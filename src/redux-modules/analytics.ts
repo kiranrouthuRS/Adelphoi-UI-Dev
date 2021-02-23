@@ -163,8 +163,9 @@ export const actions = {
     analytics: Types.Analytics
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      
+      console.log(analytics)
       const response = await fetchDateAnalytics(analytics);
+      console.log(response)
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }

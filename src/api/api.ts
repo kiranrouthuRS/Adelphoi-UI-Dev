@@ -839,12 +839,14 @@ export const fetchDateAnalytics = async (
       }
       
     }
+    console.log(queryString)
     try {
       const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?${queryString}`, {
         headers: {
           'Authorization': `Bearer ${currentUser}` 
         }
       });
+      console.log(response)
       const data = (response.data.response as unknown) as Types.Analytics[]; 
   
       return data;

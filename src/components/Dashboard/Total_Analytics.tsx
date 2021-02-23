@@ -150,7 +150,7 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                     >
                         <option value="">Select</option>
                         {props.Location.map(l => (
-                            <option key={l.location} value={l.location}>
+                            <option key={l.location} value={l.location_names}>
                                 {l.location_names}
                             </option>
                         ))}

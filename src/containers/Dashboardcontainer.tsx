@@ -83,24 +83,24 @@ export class DashboardContainer extends React.Component<
       } 
     }
     
-    await this.props.getDateAnalytics(this.state.filters);
-    await this.props.getLocations();
-    await this.props.getPCRAnalytics(this.state.filters);
-    await this.props.getROCAnalytics(this.state.filters);
-    await this.props.getReplacementAnalytics(this.state.filters);
-    await this.props.getOccupancyAnalytics(this.state.filters);
-    await this.props.getAllocationAnalytics(this.state.filters);
-    await this.props.getProgram_AllocationAnalytics(this.state.filters)
-    await this.props.getStayAnalytics(this.state.filters);
-    await this.props.getMarket_Analytics(this.state.filters);
-    await this.props.get_Tool_Analytics(this.state.filters);
-    await this.props.get_Calibration_Analytics(this.state.filters);
-    await this.props.getGender_Analytics(this.state.filters);
-    await this.props.GetAge_Analytics(this.state.filters);
+     this.props.getDateAnalytics(this.state.filters);
+     this.props.getLocations();
+     this.props.getPCRAnalytics(this.state.filters);
+     this.props.getROCAnalytics(this.state.filters);
+     this.props.getReplacementAnalytics(this.state.filters);
+     this.props.getOccupancyAnalytics(this.state.filters);
+     this.props.getAllocationAnalytics(this.state.filters);
+     this.props.getProgram_AllocationAnalytics(this.state.filters)
+     this.props.getStayAnalytics(this.state.filters);
+     this.props.getMarket_Analytics(this.state.filters);
+     this.props.get_Tool_Analytics(this.state.filters);
+     this.props.get_Calibration_Analytics(this.state.filters);
+     this.props.getGender_Analytics(this.state.filters);
+     this.props.GetAge_Analytics(this.state.filters);
     const demo = { q: "lang", days_count: '30' };
-    await this.props.get_Demo_Analytics(demo) 
+     this.props.get_Demo_Analytics(demo) 
     const data = { referral_source: "0", days_count: '30' };
-    await this.props.getPerformance_Analytics(data);
+     this.props.getPerformance_Analytics(data);
   }
 
   getDateAnalytics = async (analytics: any) => {

@@ -176,7 +176,6 @@ export class UsersList extends React.Component<
       userID = e.currentTarget.dataset.id;
     }
      const response = await this.props.getAvailableUsers(userID) 
-     
     const singleuser = (this.props.availableUsersList && this.props.availableUsersList) || [];
     const singlerole = (this.props.rolesList && this.props.rolesList) || [];
     const roleID: any = singlerole.filter(id => id.name == singleuser[0].role_type)
@@ -209,8 +208,7 @@ export class UsersList extends React.Component<
   }
 
   render() {
-    const { usersList, availableUsersList, rolesList } = this.props;
-    const acctoken = this.props
+    const { usersList, rolesList } = this.props;
     const isEdit = this.state.isEdit
     const arr = Array.isArray(rolesList)
     return (
