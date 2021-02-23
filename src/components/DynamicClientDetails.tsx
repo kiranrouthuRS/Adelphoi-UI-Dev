@@ -363,16 +363,21 @@ return (
           enableReinitialize
           validate={values => {
             const errors: FormikErrors<FormValues> = {};
+            
            if (values.Program !== predicted_program) {
+            console.log(values.Program,predicted_program)
               if (!values.Location) {
                 errors.Location = "Required";
-              }
-              if (!values.start_date) {
-                errors.start_date = "Required";
               }
               if (!values.referral_status) {
                 errors.referral_status = "Required";
               }
+              if (values.referral_status === "placed") {
+                if (!values.start_date) {
+                  errors.start_date = "Required"; 
+                } 
+              }
+              
             }
             if (values.Program_Completion === "1") {
               if (!values.end_date) {
@@ -387,7 +392,7 @@ return (
             if (!searchData[0].client_code) {
               return false;
             }
-            
+            console.log("hiii")
             const Program_Completion =
               values.Program_Completion === ""
                 ? null

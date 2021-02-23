@@ -839,15 +839,13 @@ export const fetchDateAnalytics = async (
       }
       
     }
-    console.log(queryString)
     try {
       const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?${queryString}`, {
         headers: {
           'Authorization': `Bearer ${currentUser}` 
         }
       });
-      console.log(response)
-      const data = (response.data.response as unknown) as Types.Analytics[]; 
+       const data = (response.data.response as unknown) as Types.Analytics[]; 
   
       return data;
     } catch (error) {
@@ -1359,8 +1357,7 @@ export const updateProgramCompletion = async (
       }
     }
     );
-
-    return response.data.data;
+ return response.data.data;
   } catch (error) {
     console.error("api function updateProgramCompletion error");
     throwError(error);
