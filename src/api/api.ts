@@ -235,7 +235,6 @@ export const insertDClient = async (client_form, is_accessToken) => {
         'Authorization': `Bearer ${is_accessToken}`
       }
     });
-     console.log(response)
     // if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
     //   throw new Error(response.data["ERROR"]);
     // }
@@ -416,8 +415,9 @@ export const updateUsers = async (users: Types.Users, is_accessToken: any) => {
 
 export const deleteUsers = async (userID: any, is_accessToken: any) => {
   const currentUser = store.getState().user.user.accessToken;
+  console.log(userID)
   try {
-    const response = await axios.delete(`${loginApiUrl}/organizations/${domainPath}/users/${userID}`, {
+    const response = await axios.delete(`${loginApiUrl}/organizations/${domainPath}/users/${userID}/`, {
       headers: {
         'Authorization': `Bearer ${is_accessToken}`
       }

@@ -183,10 +183,10 @@ export class UsersList extends React.Component<
       id: singleuser[0].id,
       full_name: "",
       first_name: singleuser[0].first_name,
-      last_name: singleuser[0].last_name,
+      last_name: singleuser[0].last_name?singleuser[0].last_name:"", 
       email_id: singleuser[0].email_id,
       mobile: singleuser[0].mobile,
-      gender: singleuser[0].gender.toString(),  
+      gender: singleuser[0].gender?.toString(),  
       role_type: roleID[0].id, 
       role_type_text: singleuser[0].role_type,
       isEdit: true
@@ -224,6 +224,7 @@ export class UsersList extends React.Component<
               placeholder=""
               value={this.state.first_name}
               onChange={this.handleChangeFirst}
+              required
             />
             {/* <ErrorMessage component="span" name="first_name" /> */}
           </div>
@@ -236,6 +237,7 @@ export class UsersList extends React.Component<
               placeholder=""
               value={this.state.last_name}
               onChange={this.handleChangeLast}
+              required
             />
             {/* <ErrorMessage component="span" name="last_name" /> */}
           </div>
@@ -280,6 +282,7 @@ export class UsersList extends React.Component<
                 name="gender"
                 id="female"
                 value="1"
+                required
                 checked={this.state.gender === "1"}
               />{" "}
               <label htmlFor="female">Female</label>
@@ -294,6 +297,7 @@ export class UsersList extends React.Component<
                 name="gender"
                 id="male"
                 value="2"
+                required
                 checked={this.state.gender === "2"}
               />{" "}
               <label htmlFor="male">Male</label>

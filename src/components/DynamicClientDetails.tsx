@@ -365,8 +365,7 @@ return (
             const errors: FormikErrors<FormValues> = {};
             
            if (values.Program !== predicted_program) {
-            console.log(values.Program,predicted_program)
-              if (!values.Location) {
+            if (!values.Location) {
                 errors.Location = "Required";
               }
               if (!values.referral_status) {
@@ -392,7 +391,6 @@ return (
             if (!searchData[0].client_code) {
               return false;
             }
-            console.log("hiii")
             const Program_Completion =
               values.Program_Completion === ""
                 ? null
@@ -404,7 +402,7 @@ return (
             const start_date =
               values.start_date === ""
                 ? null
-                : values.start_date;
+                : values.referral_status !== "placed"?null:values.start_date;
             const end_date =
               values.end_date === ""
                 ? null
@@ -427,7 +425,7 @@ return (
               // values.Referral!.value!,
               //values.roc_confidence!.value!
             );
-            // helpers.resetForm();
+            helpers.resetForm();
           }}
         >
           {({ values, handleSubmit, handleChange }) => (

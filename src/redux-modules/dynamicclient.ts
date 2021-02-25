@@ -79,6 +79,7 @@ export const actions = {
       if (program && location) {
         await saveLocationAndProgram(client_code, program, location, currentUser);
       }
+      console.log(start_date)
       const response = await updateProgramCompletion(
         client_code,
         Program_Completion,
