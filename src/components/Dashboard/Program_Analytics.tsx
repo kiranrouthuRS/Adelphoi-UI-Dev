@@ -46,6 +46,7 @@ interface Program_AnalyticsProps {
     PCRList: any;
     Location: any;
     Referral: any;
+    filter: any;
     onSelectChange: (src: any) => void;
 }
 
@@ -75,6 +76,13 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
     useEffect(() => {
         props.onSelectChange(filters)
     }, [filters]);
+    
+    useEffect(()=>{
+        console.log("hello")
+        setfilters(prevState => {
+            return { ...prevState, referral_status: "", referral_source: "", location: "" } 
+        });
+    },[props.filter.days_count]) 
     return (
         <div
         //style={{ boxSizing: "content-box", width: "100%", border: "solid #5B6DCD 1px", padding: "10px", marginBottom: "10px" }}

@@ -339,6 +339,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                     AnalyticsList={props.Analytics}
                                     Referral={Referral}
                                     Location={Location}
+                                    filter={filters}
                                     onSelectChange={Total_HandleChange}
                                 />
                             </AccordionDetails>
@@ -358,6 +359,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                 <ProgramAnalytics
                                     ROCList={props.ROC_analytics}
                                     PCRList={props.PCR_analytics}
+                                    filter={filters}
                                     Referral={Referral}
                                     Location={Location}
                                     onSelectChange={Program_HandleChange}
@@ -380,6 +382,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                     Replace_analytics={props.Replace_analytics}
                                     Stay_analytics={props.Stay_analytics}
                                     Occupancy_analytics={props.Occupancy_analytics}
+                                    filter={filters}
                                     Referral={Referral}
                                     Location={Location}
                                     onSelectChange={Other_HandleChange}

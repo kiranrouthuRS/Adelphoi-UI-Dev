@@ -45,6 +45,7 @@ interface Total_AnalysisProps {
     AnalyticsList: any;
     Location: any;
     Referral: any;
+    filter: any;
     onSelectChange: (src: any) => void;
 }
 
@@ -81,8 +82,12 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
     useEffect(() => {
         props.onSelectChange(filters)
     }, [filters]);
-    
-    return (
+    useEffect(()=>{
+        setfilters(prevState => {
+            return { ...prevState, referral_status: "", referral_source: "", location: "" } 
+        });
+    },[props.filter.days_count]) 
+     return (
         <div
         //style={{ boxSizing: "content-box", width: "100%", border: "solid #5B6DCD 1px", padding: "10px", marginBottom: "10px", marginTop: "10px" }}
         >
