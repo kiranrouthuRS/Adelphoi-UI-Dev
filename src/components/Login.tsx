@@ -17,7 +17,8 @@ import logo from "../image/logo.png";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { Link as RouterLink, useHistory } from "react-router-dom";
-import { domainPath } from "../App"
+import { domainPath } from "../App";
+import { loginApiUrl } from "../api/api"; 
 import {
   wrap,
   subHeading,
@@ -30,7 +31,7 @@ import {
   selectField,
   datePicker
 } from "./styles";
-export const loginApiUrl = "http://3.7.135.210:8005";
+
 const App = css`
   margin: 80px auto;
   width: 100%;

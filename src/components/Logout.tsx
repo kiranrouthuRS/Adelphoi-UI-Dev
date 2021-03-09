@@ -7,7 +7,8 @@ import { AppState } from "../redux-modules/root";
 // import * as user from "../redux-modules/user";
 import * as user from "../redux-modules/user";
 import { domainPath } from "../App" 
-export const loginApiUrl = "http://3.7.135.210:8005"; 
+import { loginApiUrl } from "../api/api"; 
+
 
 
 export interface LogoutProps {

@@ -60,7 +60,6 @@ const OtherParam_Analytics: React.FC<Other_AnalyticsProps> = props => {
         props.onSelectChange(filters)
       }, [filters]);
       useEffect(()=>{
-        console.log("hello")
         setfilters(prevState => {
             return { ...prevState, referral_status: "", referral_source: "", location: "" } 
         });

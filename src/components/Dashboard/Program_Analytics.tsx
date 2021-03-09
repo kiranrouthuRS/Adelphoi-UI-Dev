@@ -78,7 +78,6 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
     }, [filters]);
     
     useEffect(()=>{
-        console.log("hello")
         setfilters(prevState => {
             return { ...prevState, referral_status: "", referral_source: "", location: "" } 
         });

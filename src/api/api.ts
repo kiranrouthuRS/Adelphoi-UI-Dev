@@ -62,7 +62,6 @@ export const login = async (email: string, password: string, domain: string) => 
       username: email,
       password: password
     });
-    console.log(response)
     localStorage.setItem("refreshToken", response.data.refresh_token);
     return response.data ;
   } catch (error) {
@@ -415,7 +414,6 @@ export const updateUsers = async (users: Types.Users, is_accessToken: any) => {
 
 export const deleteUsers = async (userID: any, is_accessToken: any) => {
   const currentUser = store.getState().user.user.accessToken;
-  console.log(userID)
   try {
     const response = await axios.delete(`${loginApiUrl}/organizations/${domainPath}/users/${userID}/`, {
       headers: {
@@ -845,7 +843,7 @@ export const fetchDateAnalytics = async (
           'Authorization': `Bearer ${currentUser}` 
         }
       });
-       const data = (response.data.response as unknown) as Types.Analytics[]; 
+      const data = (response.data.response as unknown) as Types.Analytics[]; 
   
       return data;
     } catch (error) {

@@ -79,7 +79,6 @@ export const actions = {
       if (program && location) {
         await saveLocationAndProgram(client_code, program, location, currentUser);
       }
-      console.log(start_date)
       const response = await updateProgramCompletion(
         client_code,
         Program_Completion,
@@ -97,10 +96,13 @@ export const actions = {
       const clientState = getState().client;
       const clientList = clientState ? clientState.clientList : {};
       if (Object.keys(clientList).length > 0) {
-        const cl = clientList[client_code];
+        let cl:any = clientList[client_code];
         if (!cl) {
           return (response as unknown) as string;
         }
+         cl.referral_status = referral_status?referral_status:null;
+         cl.start_date = start_date?start_date:null;
+         cl.end_date = end_date?end_date:null
         const updatedCl = {
           ...cl,
           Program_Completion,

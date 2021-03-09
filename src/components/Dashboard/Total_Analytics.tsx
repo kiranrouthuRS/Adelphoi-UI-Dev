@@ -88,10 +88,7 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
         });
     },[props.filter.days_count]) 
      return (
-        <div
-        //style={{ boxSizing: "content-box", width: "100%", border: "solid #5B6DCD 1px", padding: "10px", marginBottom: "10px", marginTop: "10px" }}
-        >
-            {/* <h1 css={subHeading} >Total Referrals</h1> */}
+        <div>
             <Grid container spacing={3} >
                 <Grid item xs={6} sm={3}>
                     <label css={txtLabel}
