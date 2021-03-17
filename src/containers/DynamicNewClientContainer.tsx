@@ -104,7 +104,7 @@ export class DynamicNewClientContainer extends React.Component<
     const is_role_type: any = this.props.user && this.props.user.user.role_type 
     const is_prediction_available: any = this.props.user && this.props.user.user.is_prediction_available 
      const res: any = await this.props.insertDClient(client, is_accessToken);
-     this.setState({ isLoading: false });
+     this.setState({ isLoading: false, error: "" });
     if (res !== null && res.data.message === "client registered") {
       this.props.enqueueSnackbar(index ? "Client details updated Successfully." : "New Client Created Successfully.");
       {is_role_type === "Contributor" || client["Exclusionary Criteria Exists/Referral Rejected"] === "0" || !is_prediction_available ? 

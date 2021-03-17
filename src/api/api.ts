@@ -888,7 +888,6 @@ export const fetchROCAnalytics = async (
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
   let length :any = Object.keys(analytics).length
-  
   for (const [key, value] of Object.entries(analytics)) {
       
       if(value){
@@ -896,14 +895,12 @@ export const fetchROCAnalytics = async (
       }
       
     }
-    
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/roc?${queryString}`, { 
       headers: {
         'Authorization': `Bearer ${currentUser}` 
       }
     });
-    
     const data = (response.data.response as unknown) as Types.Analytics[]; 
 
     return data;

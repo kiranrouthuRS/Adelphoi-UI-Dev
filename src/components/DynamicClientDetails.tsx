@@ -300,6 +300,7 @@ return (
               </select>
             </div>
           </div>
+          {props.is_role_type === "Contributor" || !props.is_prediction_available? "" :
           <div
             css={twoCol}
             style={{
@@ -319,6 +320,7 @@ return (
               <PictureAsPdfIcon /> Download Report
         </a>
           </div>
+}
         </div>
       )}
       {

@@ -75,6 +75,7 @@ export const actions = {
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const response = await fetchROCAnalytics(filter);
+      console.log(response)
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }

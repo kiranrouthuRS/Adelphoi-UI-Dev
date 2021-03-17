@@ -324,11 +324,13 @@ export class PredictionFormStep extends React.Component<
     if (isValid_Data) {
       if (this.state.isEdit === "true" || !this.state.hasError) {
         await this.props.onFormSubmit(formData);
+       await this.formState();
        this.setState({
           isSubmitted: false,
           err_msg: this.props.errors,
-          isOpen: this.props.errors ? true : false
-        })
+          isOpen: this.props.errors ? true : false,
+          
+        }) 
       } else {
 
       }
