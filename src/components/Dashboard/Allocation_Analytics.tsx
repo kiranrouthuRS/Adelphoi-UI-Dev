@@ -14,15 +14,6 @@ import TableRow from "@material-ui/core/TableRow";
 import { ConfigurationSchema } from "../ValidationSchema";
 import { Pie } from 'react-chartjs-2';
 import {
-    wrap,
-    subHeading,
-    selectField,
-    fieldRow,
-    mainContent,
-    twoCol,
-    inputField,
-    fieldBox,
-    txtLabel,
     tableHeader,
     tableRow,
     dataTable,

@@ -37,9 +37,9 @@ export const actions = {
     };
   },
 
-  getDReferral(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+  getDReferral(accessToken:any): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchDReferral();
+      const response = await fetchDReferral(accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of referral");
       // }

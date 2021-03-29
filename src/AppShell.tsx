@@ -12,6 +12,7 @@ import {  Global } from "@emotion/core";
 import { domainPath } from "./App"
 import { loginApiUrl } from "./api/api"
 import MenuIcon from '@material-ui/icons/Menu';
+import Sidemenu from './Sidemenu'
 import { store } from "./index"; 
 import IdleTimerContainer from './containers/IdleTimerContainer'
 import {
@@ -160,23 +161,25 @@ const logopath = children&&children[1].props.appState.user.user.logo_path;
           alt={`${domainPath} Logo`}
           src={`${loginApiUrl}/${logopath}`}
         />
+        <Sidemenu/>
         {/* <a
               href={`/${domainPath}/billing`}
               css={billing}
             >
               Billing
             </a> */}
-         <div css={profile} className="dropdown"> 
+         {/* <div css={profile} className="dropdown"> 
   <button className="dropbtn">
     <MenuIcon style={{fontSize:"18px"}}/>
     <span >Menu</span></button>
   <div className="dropdown-content"> 
+  <Link to="/dashboard">Dashboard</Link>
   <a href={`/${domainPath}/dashboard`}>Dashboard</a>
     <a  href={`/${domainPath}/billing`}>Billing</a>
     <a href={`/${domainPath}/changepassword`}>Profile</a>
     <a href={`/${domainPath}/logout`}>Logout</a>
   </div>
-</div>   
+</div>    */}
         {/* <a
               href={`/${domainPath}/changepassword`}
               css={profile}
@@ -274,27 +277,7 @@ const logopath = children&&children[1].props.appState.user.user.logo_path;
                </div>
      
         <div css={nav}>
-      {/* <Route
-        path={`/${domainPath}/configuration`}
-        // exact={activeOnlyWhenExact}
-        children={({ match, history }) => (
-          <Link
-            onClick={() => {
-              history.push(`/${domainPath}/configuration/users`);
-            }}
-            css={menuButton}
-            style={
-              match
-                ? { backgroundColor: "#8284e5", color: "white" }
-                : { backgroundColor: "#f5f5f5", color: "#9d9d9d" }
-            }
-          >
-           
-          </Link>
-        )}
-      /> */}
-      
-      </div>
+       </div>
       
       {children}
       
@@ -304,5 +287,3 @@ const logopath = children&&children[1].props.appState.user.user.logo_path;
 };
 
 export default withRouter(AppShell);
-
- 

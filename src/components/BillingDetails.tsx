@@ -1,7 +1,9 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import React from "react";
+import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
+import { AppState } from "../redux-modules/root";
 import Grid from "@material-ui/core/Grid";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -9,10 +11,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { Switch, Route, RouteComponentProps } from "react-router-dom";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { connect } from "react-redux"
-import { AppState } from "../redux-modules/root"; 
-import DateFnsUtils from "@date-io/date-fns";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
@@ -61,7 +59,7 @@ interface MatchParams {
   }
 interface MatchProps extends RouteComponentProps<MatchParams> {}
 export interface BillingDetailsProps {
-
+accessToken: any
 
 }
 
@@ -97,7 +95,7 @@ class BillingDetails extends React.Component<
     }
 
     async componentDidMount() {
-        const response = await fetchBillingStatus()
+        const response = await fetchBillingStatus(this.props.accessToken)
         if (response.status === "failed") { 
             this.setState({
                 error: response.message
@@ -135,7 +133,7 @@ class BillingDetails extends React.Component<
     onLoad = async (e: any) => {
         e.preventDefault();
         const { sDate, eDate } = this.state;
-        const response = await fetchAllRecords(sDate, eDate);
+        const response = await fetchAllRecords(sDate, eDate, this.props.accessToken);
         this.setState({
             allRecords: response.response,
             onRangeRecord: true,
@@ -146,7 +144,7 @@ class BillingDetails extends React.Component<
     singleRecord = async (e: any) => {
         e.preventDefault();
         const id = e.currentTarget.dataset.id
-        const response = await getRecord(id);
+        const response = await getRecord(id,this.props.accessToken);
         const data = response.response
         this.setState({
             singlerecord: data.order_reports,
@@ -161,20 +159,20 @@ class BillingDetails extends React.Component<
     }
          
     downloadAllRecords=async(e)=>{
-        const res = await downloadRecords(); 
+        const res = await downloadRecords(this.props.accessToken); 
         const path = res.response
         
     }
 
     downloadOrder=async(e)=>{
         const { sDate, eDate } = this.state;
-       const res = await getOrderDownload(sDate, eDate);
+       const res = await getOrderDownload(sDate, eDate, this.props.accessToken);
        
     }
 
     downloadReport=async(e)=>{
         const id = e.currentTarget.dataset.id
-       const res = await downloadReportCSV(id ); 
+       const res = await downloadReportCSV(id, this.props.accessToken ); 
        const path = res.response
        
        
@@ -375,5 +373,13 @@ class BillingDetails extends React.Component<
     
     }
 }
-
-export default BillingDetails;
+const mapStateToProps = (state: AppState) => { 
+    return {
+      user: state.user,
+      
+    };
+  };
+export default connect(
+    mapStateToProps,
+    null
+  )(BillingDetails);

@@ -70,13 +70,27 @@ export const actions = {
     
   },
   
-  logout(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
-   return async (dispatch,getState) => {
-   await dispatch(update({ user: emptyUser }));
+  logout(accessToken:any): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+    return async (dispatch, getState) => {
+      return  await Logout(accessToken)
+      .then(response => {
+          dispatch(update({ user: emptyUser })); 
+        }
+       
+      )
+      
+      
+    };
+    
+  },
+//   logout(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+//    return async (dispatch,getState) => {
+//     return  await Logout()
+//     dispatch(update({ user: emptyUser }));
   
-     };
-  }
-};
+//      };
+//   }
+ };
 
 export const selectors = {
   //

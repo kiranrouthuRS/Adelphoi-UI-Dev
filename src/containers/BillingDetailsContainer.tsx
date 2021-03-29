@@ -1,75 +1,53 @@
 import * as React from 'react';
+import { connect } from "react-redux";
+import { AppState } from "../redux-modules/root";
+import { ContainerProps } from "./Container";
+import { withSnackbar, WithSnackbarProps } from "notistack";
 import { RouteComponentProps } from 'react-router-dom';
 import { Card, CardHeader, CardContent } from '@material-ui/core';
 import BillingDetails from '../components/BillingDetails';
 import * as Types from "../api/definitions";
-
-
-interface Props extends RouteComponentProps<any> {
+interface MatchParams {
+  index: string;
+}
+export interface BillingDeatilsContainerState {
+  
+}
+export interface BillingDeatilsContainerProps
+  extends ContainerProps<MatchParams>,
+  WithSnackbarProps {
+  
 }
 
-interface State {
-  loginInfo: Types.Billing;
-  showLoginFailedMsg: boolean;
-}
-
-export class BillingDeatilsContainer extends React.Component<Props, State> {
-
-  constructor(props: Props) {
+export class BillingDeatilsContainer extends React.Component<
+  BillingDeatilsContainerProps,
+  BillingDeatilsContainerState
+  > {
+  constructor(props: BillingDeatilsContainerProps) {
     super(props);
-
     this.state = {
       loginInfo: Types.emptyBilling, 
       showLoginFailedMsg: false,
     };
   }
-
-  private onLogin = () => {
-    // if (isValidLogin(this.state.loginInfo)) {
-    //   this.props.history.push('/about');
-    // } else {
-    //   this.setState({
-    //     ...this.state,
-    //     showLoginFailedMsg: true,
-    //   });
-    // }
-  }
-
-  private onUpdateLoginField = (name, value) => {
-    // this.setState({
-    //   loginInfo: {
-    //     ...this.state.loginInfo,
-    //     [name]: value,
-    //   },
-    // });
-  }
-
-  public render() {
+ public render() {
+  const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     return (
-    //   <CenteredView>
-    //     <NotificationComponent
-    //       message="Invalid login or password, please type again"
-    //       show={this.state.showLoginFailedMsg}
-    //       onClose={() => this.setState({ showLoginFailedMsg: false })}
-    //     />
-        // <Card>
-        //   <CardHeader title="Billing Status" />
-        //   <CardContent>  
-        //     <BillingDetails
-        //     //   onLogin={this.onLogin}
-        //     //   onUpdateLoginField={this.onUpdateLoginField}
-        //     //   loginInfo={this.state.loginInfo}
-        //     />
-        //   </CardContent>
-        // </Card>
-    //   </CenteredView>
+    
     <BillingDetails
-            //   onLogin={this.onLogin}
-            //   onUpdateLoginField={this.onUpdateLoginField}
-            //   loginInfo={this.state.loginInfo}
+            accessToken={is_accessToken}
             />
     );
   }
 }
 
-export default BillingDeatilsContainer;
+const mapStateToProps = (state: AppState) => { 
+  return {
+    user: state.user,
+    
+  };
+};
+export default connect(
+  mapStateToProps,
+  null
+)(BillingDeatilsContainer);

@@ -337,9 +337,9 @@ return (
               {display(id, SelectedVersion).map((item, index) => {
                 return <div css={fieldRow}>{item.map((ques, index_1) => {
                   return <div css={twoCol}>
-                    <label css={txtLabel}>{ques.question}</label> 
+                    <label css={txtLabel}>{ques.question}</label>  
                     <div css={txtDetail}>
-                      {ques.question === "Age"?props.searchData[0].ageAtEpisodeStart?props.searchData[0].ageAtEpisodeStart:ques.answer:ques.answer}
+                      {Array.isArray(ques.answer)? ques.answer.toString(): ques.question === "Age"?props.searchData[0].ageAtEpisodeStart?props.searchData[0].ageAtEpisodeStart:ques.answer:ques.answer}
                     </div>
                   </div>
                 })}

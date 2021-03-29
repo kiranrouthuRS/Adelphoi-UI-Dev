@@ -1,10 +1,11 @@
 /** @jsx jsx */
-import React from "react";
+import React, {useEffect} from "react";
 import { SnackbarProvider } from "notistack";
 import createHistory from "history/createBrowserHistory";
 import { Provider } from "react-redux";
 //import { PersistGate } from "redux-persist/integration/react";
 import configureStore from "./redux-modules/configureStore";
+
 import { css, jsx, Global } from "@emotion/core";
 import {
   Switch,
@@ -21,12 +22,13 @@ import DynamicExistingClientContainer from "./containers/DynamicExistingClientCo
 import ConfigurationContainer from "./containers/ConfigurationContainer";
 import LoginContainer from "./containers/LoginContainer";
 import Logout from "./components/Logout"; 
+import axios from "axios";
 import PrivateRoute from './PrivateRoute';
 import Welcomepage from './components/welcomepage'
 import ChangePasswordContainer from './containers/ChangePasswordContainer'
 import BillingDetailsContainer from './containers/BillingDetailsContainer'
 import DashboardContainer from './containers/Dashboardcontainer'
-import IdleTimerContainer from './containers/IdleTimerContainer'
+import { baseApiUrl } from "./api/api"; 
 export const { store } = configureStore(createHistory());
 const url = typeof window !== 'undefined' ? window.location.pathname : '';
   let str1 = url.split('/');
@@ -35,7 +37,29 @@ const url = typeof window !== 'undefined' ? window.location.pathname : '';
   
 const App: React.FC = (props) => {
   let is_configured: any = store.getState().user.user?.is_fully_configured; 
-  return (
+  let accessToken: any = store.getState().user.user?.accessToken; 
+//   useEffect(() => {
+//           window.addEventListener('beforeunload', alertUser)
+//           window.addEventListener('unload', handleTabClosing)
+//       return () => {
+//           window.removeEventListener('beforeunload', alertUser)
+//           window.removeEventListener('unload', handleTabClosing)
+          
+//     }
+    
+// })
+
+// const handleTabClosing = async(e) => {
+//   await localStorage.clear();
+    
+//   }
+
+// const alertUser = (event:any) => {
+//     event.preventDefault()
+//     event.returnValue = ''
+  
+// }
+return (
     <React.Fragment>
       
       
@@ -47,8 +71,7 @@ const App: React.FC = (props) => {
         <Router>
           
           <Switch>
-         
-                <Route exact path={`/${dom}`}>
+             <Route exact path={`/${dom}`}>
                 {is_configured&& is_configured === true ? (
                     <Redirect to={`/${dom}/new-client`} /> 
                   ):(

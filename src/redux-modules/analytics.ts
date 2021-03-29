@@ -22,7 +22,7 @@ import {
   fetch_Demo_Analytics,
   fetch_Calibration_Analytics
 } from "../api/api";
-
+import { store } from "../index";
 const initialState: AnalyticsState = {
   analyticsList: [],
   PCRAnalyticsList:[],
@@ -50,9 +50,9 @@ export const analyticsReducer = reducer;
 export const actions = {
   update,
 
-  getAnalytics(): ThunkAction<Promise<void>, AppState, null, AnyAction> {
+  getAnalytics(accessToken: any): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchAnalytics();
+      const response = await fetchAnalytics(accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -60,10 +60,11 @@ export const actions = {
     };
   },
   getPCRAnalytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchPCRAnalytics(filter);
+      const response = await fetchPCRAnalytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -71,22 +72,23 @@ export const actions = {
     };
   },
   getROCAnalytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchROCAnalytics(filter);
-      console.log(response)
-      // if (!response) {
+      const response = await fetchROCAnalytics(filter,accessToken);
+     // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
       dispatch(update({ ROCAnalyticsList: response })); 
     };
   },
   getReplacementAnalytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchReplacementAnalytics(filter);
+      const response = await fetchReplacementAnalytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -94,10 +96,11 @@ export const actions = {
     };
   },
   getStayAnalytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchStayAnalytics(filter);
+      const response = await fetchStayAnalytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -105,10 +108,11 @@ export const actions = {
     };
   },
   getOccupancyAnalytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchOccupancyAnalytics(filter);
+      const response = await fetchOccupancyAnalytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -116,10 +120,11 @@ export const actions = {
     };
   },
   getAllocationAnalytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchAllocationAnalytics(filter);
+      const response = await fetchAllocationAnalytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -127,10 +132,11 @@ export const actions = {
     };
   },
   getMarket_Analytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetch_Market_Analytics(filter);
+      const response = await fetch_Market_Analytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -138,10 +144,11 @@ export const actions = {
     };
   },
   getPerformance_Analytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetch_Performance_Analytics(filter);
+      const response = await fetch_Performance_Analytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -149,10 +156,11 @@ export const actions = {
     };
   },
   getProgram_AllocationAnalytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchAllocated_ProgramAnalytics(filter);
+      const response = await fetchAllocated_ProgramAnalytics(filter,accessToken);
       
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
@@ -161,10 +169,11 @@ export const actions = {
     };
   },
   getDateAnalytics(
-    analytics: Types.Analytics
+    analytics: Types.Analytics,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetchDateAnalytics(analytics);
+      const response = await fetchDateAnalytics(analytics,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -173,10 +182,11 @@ export const actions = {
     };
   },
   get_Tool_Analytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetch_Tool_Analytics(filter);
+      const response = await fetch_Tool_Analytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -184,10 +194,11 @@ export const actions = {
     };
   },
   getGender_Analytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetch_Gender_Analytics(filter);
+      const response = await fetch_Gender_Analytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -195,10 +206,11 @@ export const actions = {
     };
   },
   GetAge_Analytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetch_Age_Analytics(filter);
+      const response = await fetch_Age_Analytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -206,11 +218,12 @@ export const actions = {
     };
   },
   get_Calibration_Analytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       
-      const response = await fetch_Calibration_Analytics(filter);
+      const response = await fetch_Calibration_Analytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -218,11 +231,12 @@ export const actions = {
     };
   },
   get_Demo_Analytics(
-    filter: any
+    filter: any,
+    accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       
-      const response = await fetch_Demo_Analytics(filter);
+      const response = await fetch_Demo_Analytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }

@@ -20,30 +20,30 @@ export interface DashboardContainerState {
   error: string;
   hasError: boolean;
   filters: any;
-
+  accessToken: any;
 }
 
 export interface DashboardContainerProps
   extends ContainerProps<MatchParams>,
   WithSnackbarProps {
-  getDateAnalytics: (analytics: any) => Promise<void>;
-  getDReferral: () => Promise<void>;
-  getAnalytics: () => Promise<void>;
-  getPCRAnalytics: (analytics: any) => Promise<void>;
-  getROCAnalytics: (analytics: any) => Promise<void>;
-  getReplacementAnalytics: (analytics: any) => Promise<void>;
-  getOccupancyAnalytics: (analytics: any) => Promise<void>;
-  getAllocationAnalytics: (analytics: any) => Promise<void>;
-  getProgram_AllocationAnalytics: (analytics: any) => Promise<void>;
-  getPerformance_Analytics: (analytics: any) => Promise<void>;
-  getStayAnalytics: (analytics: any) => Promise<void>;
-  get_Tool_Analytics: (analytics: any) => Promise<void>;
-  getGender_Analytics: (analytics: any) => Promise<void>;
-  GetAge_Analytics: (analytics: any) => Promise<void>;
-  get_Demo_Analytics: (analytics: any) => Promise<void>;
-  get_Calibration_Analytics: (analytics: any) => Promise<void>;
-  getMarket_Analytics: (analytics: any) => Promise<void>;
-  getLocations: () => Promise<void>;
+  getDateAnalytics: (analytics: any,accessToken: any) => Promise<void>;
+  getDReferral: (accessToken:any) => Promise<void>;
+  getAnalytics: (accessToken: any) => Promise<void>;
+  getPCRAnalytics: (analytics: any,accessToken: any) => Promise<void>;
+  getROCAnalytics: (analytics: any,accessToken: any) => Promise<void>;
+  getReplacementAnalytics: (analytics: any,accessToken: any) => Promise<void>;
+  getOccupancyAnalytics: (analytics: any,accessToken: any) => Promise<void>;
+  getAllocationAnalytics: (analytics: any,accessToken: any) => Promise<void>;
+  getProgram_AllocationAnalytics: (analytics: any,accessToken: any) => Promise<void>;
+  getPerformance_Analytics: (analytics: any,accessToken: any) => Promise<void>;
+  getStayAnalytics: (analytics: any,accessToken: any) => Promise<void>;
+  get_Tool_Analytics: (analytics: any,accessToken: any) => Promise<void>;
+  getGender_Analytics: (analytics: any,accessToken: any) => Promise<void>;
+  GetAge_Analytics: (analytics: any,accessToken: any) => Promise<void>;
+  get_Demo_Analytics: (analytics: any,accessToken: any) => Promise<void>;
+  get_Calibration_Analytics: (analytics: any,accessToken: any) => Promise<void>;
+  getMarket_Analytics: (analytics: any,accessToken: any) => Promise<void>;
+  getLocations: (accessToken: any) => Promise<void>;
   Referral: Types.Referral[];
 }
 
@@ -59,6 +59,7 @@ export class DashboardContainer extends React.Component<
     return {
       isLoading: false,
       hasError: false,
+      accessToken: "",
       error: "",
       filters: {
         days_count: "30",
@@ -68,13 +69,14 @@ export class DashboardContainer extends React.Component<
 
   async componentDidMount() {
     const { client: clientState } = this.props;
+    const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     const clientList = (clientState && clientState.clientList) || {};
     const { index } = this.props.match.params;
     this.setState({ isLoading: true });
 
-    this.setState({ isLoading: false });
+    this.setState({ isLoading: false,accessToken: is_accessToken });
     try {
-      await this.props.getDReferral();
+      await this.props.getDReferral(is_accessToken);
     } catch (error) {
       console.log(error)
       const { history } = this.props;
@@ -82,48 +84,48 @@ export class DashboardContainer extends React.Component<
         history.push(`/${domainPath}/logout/`)
       } 
     }
-    
-     this.props.getDateAnalytics(this.state.filters);
-     this.props.getLocations();
-     this.props.getPCRAnalytics(this.state.filters);
-     this.props.getROCAnalytics(this.state.filters);
-     this.props.getReplacementAnalytics(this.state.filters);
-     this.props.getOccupancyAnalytics(this.state.filters);
-     this.props.getAllocationAnalytics(this.state.filters);
-     this.props.getProgram_AllocationAnalytics(this.state.filters)
-     this.props.getStayAnalytics(this.state.filters);
-     this.props.getMarket_Analytics(this.state.filters);
-     this.props.get_Tool_Analytics(this.state.filters);
-     this.props.get_Calibration_Analytics(this.state.filters);
-     this.props.getGender_Analytics(this.state.filters);
-     this.props.GetAge_Analytics(this.state.filters);
+    this.props.getDateAnalytics(this.state.filters,is_accessToken);
+     this.props.getLocations(is_accessToken);
+     this.props.getPCRAnalytics(this.state.filters,is_accessToken);
+     this.props.getROCAnalytics(this.state.filters,is_accessToken);
+     this.props.getReplacementAnalytics(this.state.filters,is_accessToken);
+     this.props.getOccupancyAnalytics(this.state.filters,is_accessToken);
+     this.props.getAllocationAnalytics(this.state.filters,is_accessToken);
+     this.props.getProgram_AllocationAnalytics(this.state.filters,is_accessToken)
+     this.props.getStayAnalytics(this.state.filters,is_accessToken);
+     this.props.getMarket_Analytics(this.state.filters,is_accessToken);
+     this.props.get_Tool_Analytics(this.state.filters,is_accessToken);
+     this.props.get_Calibration_Analytics(this.state.filters,is_accessToken);
+     this.props.getGender_Analytics(this.state.filters,is_accessToken);
+     this.props.GetAge_Analytics(this.state.filters,is_accessToken);
     const demo = { q: "lang", days_count: '30' };
-     this.props.get_Demo_Analytics(demo) 
+     this.props.get_Demo_Analytics(demo,is_accessToken) 
     const data = { referral_source: "0", days_count: '30' };
-     this.props.getPerformance_Analytics(data);
+     this.props.getPerformance_Analytics(data,is_accessToken);
   }
 
   getDateAnalytics = async (analytics: any) => {
-    await this.props.getDateAnalytics(analytics);
-    await this.props.getPCRAnalytics(analytics);
-    await this.props.getROCAnalytics(analytics);
-    await this.props.getReplacementAnalytics(analytics);
-    await this.props.getOccupancyAnalytics(analytics);
-    await this.props.getStayAnalytics(analytics);
-    await this.props.getAllocationAnalytics(analytics);
-    await this.props.getProgram_AllocationAnalytics(analytics);
-    await this.props.getMarket_Analytics(analytics);
-    await this.props.get_Tool_Analytics(analytics);
-    await this.props.get_Calibration_Analytics(analytics);
-    await this.props.getGender_Analytics(analytics);
-    await this.props.GetAge_Analytics(analytics);
+    const is_accessToken: any = this.state.accessToken
+    await this.props.getDateAnalytics(analytics,is_accessToken);
+    await this.props.getPCRAnalytics(analytics,is_accessToken);
+    await this.props.getROCAnalytics(analytics,is_accessToken);
+    await this.props.getReplacementAnalytics(analytics,is_accessToken);
+    await this.props.getOccupancyAnalytics(analytics,is_accessToken);
+    await this.props.getStayAnalytics(analytics,is_accessToken);
+    await this.props.getAllocationAnalytics(analytics,is_accessToken);
+    await this.props.getProgram_AllocationAnalytics(analytics,is_accessToken);
+    await this.props.getMarket_Analytics(analytics,is_accessToken);
+    await this.props.get_Tool_Analytics(analytics,is_accessToken);
+    await this.props.get_Calibration_Analytics(analytics,is_accessToken);
+    await this.props.getGender_Analytics(analytics,is_accessToken);
+    await this.props.GetAge_Analytics(analytics,is_accessToken);
     const demo = {
       q: "lang",
       start_date: analytics.start_date,
       end_date: analytics.end_date,
       days_count: analytics.days_count,
     };
-    await this.props.get_Demo_Analytics(demo);
+    await this.props.get_Demo_Analytics(demo,is_accessToken);
     let data = {
       start_date: analytics.start_date,
       end_date: analytics.end_date,
@@ -131,35 +133,36 @@ export class DashboardContainer extends React.Component<
       referral_source: "0"
     }
     
-    await this.props.getPerformance_Analytics(data)
+    await this.props.getPerformance_Analytics(data,is_accessToken)
   };
 
   getTotalAnalytics = async (filter: any) => {
-    await this.props.getDateAnalytics(filter);
+    const is_accessToken: any = this.props.user && this.props.user.user.accessToken
+    await this.props.getDateAnalytics(filter,is_accessToken);
   };
 
   getProgramAnalytics = async (filter: any) => {
-    
-
-    await this.props.getPCRAnalytics(filter);
-    await this.props.getROCAnalytics(filter);
+    const is_accessToken: any = this.state.accessToken
+   await this.props.getPCRAnalytics(filter,is_accessToken);
+    await this.props.getROCAnalytics(filter,is_accessToken);
   };
   getOtherAnalytics = async (filter: any) => {
-    await this.props.getReplacementAnalytics(filter);
-    await this.props.getOccupancyAnalytics(filter);
-    await this.props.getStayAnalytics(filter);
+    const is_accessToken: any = this.state.accessToken
+    await this.props.getReplacementAnalytics(filter,is_accessToken);
+    await this.props.getOccupancyAnalytics(filter,is_accessToken);
+    await this.props.getStayAnalytics(filter,is_accessToken);
   };
   getPerformance = async (filter: any) => {
-    
-    await this.props.getPerformance_Analytics(filter)
+    const is_accessToken: any = this.state.accessToken
+    await this.props.getPerformance_Analytics(filter,is_accessToken)
   };
   getDemo = async (filter: any) => {
-    
-    await this.props.get_Demo_Analytics(filter)
+    const is_accessToken: any = this.state.accessToken
+    await this.props.get_Demo_Analytics(filter,is_accessToken)
   };
   getCalibration = async (filter: any) => {
-    
-    await this.props.get_Calibration_Analytics(filter)
+    const is_accessToken: any = this.state.accessToken
+    await this.props.get_Calibration_Analytics(filter,is_accessToken)
   };
   render() {
     const {

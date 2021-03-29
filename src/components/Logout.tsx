@@ -13,18 +13,19 @@ import { loginApiUrl } from "../api/api";
 
 export interface LogoutProps {
   appState: AppState;
-  logout: () => void;
+  logout: (accessToken:any) => void;
   
 }
 
 const Logout: React.FC<LogoutProps> = props => {
   const history = useHistory();
-  const {  logout,appState, } = props;
+  const {  logout, appState } = props;
   const { user } = appState;
+  const accessToken = user?.user.accessToken 
    useEffect(() => {
     const fetchDataAsync = async () => {
-       await logout();
-       history.push(`/${domainPath}/login`);
+      await logout(accessToken);
+      history.push(`/${domainPath}/login`);
      }   
     fetchDataAsync()
   

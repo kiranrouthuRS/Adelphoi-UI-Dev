@@ -70,37 +70,37 @@ export const login = async (email: string, password: string, domain: string) => 
   }
 };
 
-export const Logout = async () => {
+export const Logout = async (accessToken) => {
   const currentUser = store.getState().user.user.accessToken;
   try {
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${currentUser}`);
+    // const myHeaders = new Headers();
+    // myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
-    const formdata = new FormData();
+    // const formdata = new FormData();
 
-    const req = {
-      headers: myHeaders,
-      body: formdata
-    }
-    const response = await axios.post(`${baseApiUrl}/${domainPath}/logout`, req)
-      .then(response => {
-        // store.dispatch(
-        //   user.actions.update({
-        //     user: {
-        //       email: "",
-        //       accessToken: "",
-        //       role_type: "",
-        //       user_id: "",
-        //       is_pwd_updated: "",
-        //       logo_path: "",
-        //       is_fully_configured: "",
-        //       is_prediction_available: "", 
-        //     }
-        //   })
-        // );
-        return response;
-      });
-    return response;
+    // const req = {
+    //   headers: myHeaders,
+    //   body: formdata
+    // }
+    // const response = await axios.post(`${baseApiUrl}/${domainPath}/logout`, {
+    //   headers: {
+    //     'Authorization': `Bearer ${accessToken}`
+    //   }
+    // })
+    let myHeaders = new Headers();
+myHeaders.append("Authorization", `Bearer ${accessToken}`);
+
+let requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  
+};
+
+await fetch(`${baseApiUrl}/${domainPath}/logout`, requestOptions)
+  .then(response => response.text())
+   .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+     
 
   } catch (error) {
     console.error("api function fetchLocationsList error");
@@ -427,13 +427,13 @@ export const deleteUsers = async (userID: any, is_accessToken: any) => {
   }
 };
 
-export const fetchBillingStatus = async () => {
+export const fetchBillingStatus = async (accessToken) => {
   const { dispatch } = store
   const currentUser = store.getState().user.user.accessToken;
   try {
     return await axios.get(`${baseApiUrl}/${domainPath}/billing-status/`, {
       headers: {
-        'Authorization': `Bearer ${currentUser}`
+        'Authorization': `Bearer ${accessToken}`
       }
     })
       .then(response => {
@@ -451,14 +451,14 @@ export const fetchBillingStatus = async () => {
   }
 };
 
-export const fetchAllRecords = async (sDate, EDate) => {
+export const fetchAllRecords = async (sDate, EDate, accessToken) => {
   const { dispatch } = store
   const currentUser = store.getState().user.user.accessToken;
 
   try {
     return await axios.get(`${baseApiUrl}/${domainPath}/orders/?start_date=${sDate}&end_date=${EDate}`, {
       headers: {
-        'Authorization': `Bearer ${currentUser}`
+        'Authorization': `Bearer ${accessToken}`
       }
     })
       .then(response => {
@@ -476,14 +476,14 @@ export const fetchAllRecords = async (sDate, EDate) => {
   }
 };
 
-export const getRecord = async (id) => {
+export const getRecord = async (id,accessToken) => {
   const { dispatch } = store
   const currentUser = store.getState().user.user.accessToken;
 
   try {
     return await axios.get(`${baseApiUrl}/${domainPath}/orders/${id}/`, {
       headers: {
-        'Authorization': `Bearer ${currentUser}`
+        'Authorization': `Bearer ${accessToken}`
       }
     })
       .then(response => {
@@ -502,13 +502,13 @@ export const getRecord = async (id) => {
   }
 };
 
-export const downloadRecords = async () => {
+export const downloadRecords = async (accessToken) => {
   const currentUser = store.getState().user.user.accessToken;
 
   try {
     return await axios.get(`${baseApiUrl}/${domainPath}/download/`, {
       headers: {
-        'Authorization': `Bearer ${currentUser}`
+        'Authorization': `Bearer ${accessToken}`
       }
     })
       .then(response => {
@@ -528,13 +528,13 @@ export const downloadRecords = async () => {
   }
 };
 
-export const getOrderDownload = async (sDate, eDate) => {
+export const getOrderDownload = async (sDate, eDate, accessToken) => {
   const currentUser = store.getState().user.user.accessToken;
 
   try {
     return await axios.get(`${baseApiUrl}/${domainPath}/download/?start_date=${sDate}&end_date=${eDate}`, {
       headers: {
-        'Authorization': `Bearer ${currentUser}`
+        'Authorization': `Bearer ${accessToken}`
       }
     })
       .then(response => {
@@ -553,12 +553,12 @@ export const getOrderDownload = async (sDate, eDate) => {
   }
 };
 
-export const downloadReportCSV = async (id) => {
+export const downloadReportCSV = async (id, accessToken) => {
   const currentUser = store.getState().user.user.accessToken;
   try {
     return await axios.get(`${baseApiUrl}/${domainPath}/download/${id}/`, {
       headers: {
-        'Authorization': `Bearer ${currentUser}`
+        'Authorization': `Bearer ${accessToken}`
       }
     })
       .then(response => {
@@ -590,12 +590,12 @@ export const fetchReferral = async () => {
   }
 };
 
-export const fetchDReferral = async () => {
+export const fetchDReferral = async (accessToken) => {
   const currentUser = store.getState().user.user.accessToken;
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/clients/referralsources`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
      const data = (response.data.response as unknown) as any;
@@ -603,7 +603,7 @@ export const fetchDReferral = async () => {
    
     return data;
   } catch (error) {
-    console.error("api function fetchReferral error");
+    console.error("api function fetchDReferral error");
     throwError(error);
   }
 };
@@ -808,12 +808,12 @@ export const fetchLocations = async (
   }
 };
 
-export const fetchAnalytics = async () => {
+export const fetchAnalytics = async (accessToken:any) => {
   const currentUser = store.getState().user.user.accessToken;
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?days_count=30`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     const data = (response.data.response as unknown) as Types.Analytics[]; 
@@ -826,7 +826,8 @@ export const fetchAnalytics = async () => {
 };
 
 export const fetchDateAnalytics = async (
-  analytics: any
+  analytics: any,
+  accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken; 
   let queryString: any = "";
@@ -840,14 +841,15 @@ export const fetchDateAnalytics = async (
     try {
       const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?${queryString}`, {
         headers: {
-          'Authorization': `Bearer ${currentUser}` 
+          'Authorization': `Bearer ${accessToken}` 
         }
       });
+      
       const data = (response.data.response as unknown) as Types.Analytics[]; 
   
       return data;
     } catch (error) {
-      console.error("api function fetchReferral error");
+      console.error("api function fetchAnalytics error");
       throwError(error);
     }
 
@@ -855,7 +857,8 @@ export const fetchDateAnalytics = async (
 };
 
 export const fetchPCRAnalytics = async (
-  filter: any
+  filter: any,
+  accessToken:any
   ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -871,9 +874,10 @@ export const fetchPCRAnalytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/pcr?${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
+    
     const data = (response.data.response as unknown) as Types.Analytics[]; 
 
     return data;
@@ -883,7 +887,8 @@ export const fetchPCRAnalytics = async (
   }
 };
 export const fetchROCAnalytics = async (
-  analytics: any
+  analytics: any,
+  accessToken:any
   ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -898,9 +903,10 @@ export const fetchROCAnalytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/roc?${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
+    
     const data = (response.data.response as unknown) as Types.Analytics[]; 
 
     return data;
@@ -911,7 +917,7 @@ export const fetchROCAnalytics = async (
 };
 
 export const fetchReplacementAnalytics = async (
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -928,7 +934,7 @@ export const fetchReplacementAnalytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/replacement?${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -941,7 +947,7 @@ export const fetchReplacementAnalytics = async (
   }
 };
 export const fetchStayAnalytics = async (
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -958,7 +964,7 @@ export const fetchStayAnalytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/stay?${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -971,7 +977,7 @@ export const fetchStayAnalytics = async (
   }
 };
 export const fetchOccupancyAnalytics = async (
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -988,7 +994,7 @@ export const fetchOccupancyAnalytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/occupancy?${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -1002,7 +1008,7 @@ export const fetchOccupancyAnalytics = async (
 };
 
 export const fetchAllocationAnalytics = async (
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -1019,7 +1025,7 @@ export const fetchAllocationAnalytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/statistics?${queryString}&q=all`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -1033,7 +1039,7 @@ export const fetchAllocationAnalytics = async (
 };
 
 export const fetchAllocated_ProgramAnalytics = async (
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -1050,7 +1056,7 @@ export const fetchAllocated_ProgramAnalytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/statistics?q=programs&${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -1064,7 +1070,7 @@ export const fetchAllocated_ProgramAnalytics = async (
 };
 
 export const fetch_Market_Analytics = async (
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -1081,7 +1087,7 @@ export const fetch_Market_Analytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/market?${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -1095,7 +1101,7 @@ export const fetch_Market_Analytics = async (
 };
 
 export const fetch_Performance_Analytics = async (
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -1112,7 +1118,7 @@ export const fetch_Performance_Analytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/performance?${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -1125,7 +1131,7 @@ export const fetch_Performance_Analytics = async (
   }
 };
 export const fetch_Tool_Analytics = async (
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -1142,7 +1148,7 @@ export const fetch_Tool_Analytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=table&${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -1155,7 +1161,7 @@ export const fetch_Tool_Analytics = async (
   }
 };
 export const fetch_Calibration_Analytics = async (
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -1172,7 +1178,7 @@ export const fetch_Calibration_Analytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=graph&${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -1185,7 +1191,7 @@ export const fetch_Calibration_Analytics = async (
   }
 };
 export const fetch_Gender_Analytics = async (
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -1202,7 +1208,7 @@ export const fetch_Gender_Analytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?q=sex&${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -1215,7 +1221,7 @@ export const fetch_Gender_Analytics = async (
   }
 };
 export const fetch_Age_Analytics = async (
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -1232,7 +1238,7 @@ export const fetch_Age_Analytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?q=age&${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -1245,7 +1251,7 @@ export const fetch_Age_Analytics = async (
   }
 };
 export const fetch_Demo_Analytics = async ( 
-  analytics: any
+  analytics: any,accessToken:any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
@@ -1262,7 +1268,7 @@ export const fetch_Demo_Analytics = async (
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?${queryString}`, { 
       headers: {
-        'Authorization': `Bearer ${currentUser}` 
+        'Authorization': `Bearer ${accessToken}` 
       }
     });
     
@@ -1427,29 +1433,6 @@ function throwError(error: any) {
     console.log(error.response.data);
     console.log("code",error.response.status);
     console.log(error.response.headers);
-    // if(error.response.status === 403){
-    //   console.log("code",error.response.status);
-    //   store.dispatch(
-    //     user.actions.update({
-    //       user: {
-    //         email: "",
-    //         accessToken: "",
-    //         role_type: "",
-    //         user_id: "",
-    //         is_pwd_updated: "",
-    //         logo_path: "",
-    //         is_fully_configured: "",
-    //         is_prediction_available: "", 
-    //       }
-    //     }))
-        
-    // }{
-    //   const errorResponse = {
-    //     data: error.response.data || undefined,
-    //     status: error.response.status || undefined
-    //   };
-    //   throw errorResponse;
-    // }
     const errorResponse = {
       data: error.response.data || undefined,
       status: error.response.status || undefined
