@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import { useState, useEffect, Fragment } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { format } from "date-fns";
+import { format, getMonth } from "date-fns";
 import { Formik, ErrorMessage, FormikErrors } from "formik";
 import Button from "@material-ui/core/Button";
 import Accordion from "@material-ui/core/Accordion";
@@ -272,6 +272,18 @@ const locationOptions = props.client.SuggestedLocations
     return tempArray
 
   }
+  const is_date = function(date) {
+    let dateObj: any = new Date(date);
+    const regex=new RegExp("([0-9]{4}[-](0[1-9]|1[0-2])[-]([0-2]{1}[0-9]{1}|3[0-1]{1})|([0-2]{1}[0-9]{1}|3[0-1]{1})[-](0[1-9]|1[0-2])[-][0-9]{4})"); 
+   if(regex.test(date)){
+      let year = dateObj.getFullYear();
+        let month = 1 + (dateObj.getMonth())
+        let datee = dateObj.getDate();
+        let date1 = [ month.toString().length>1 ?month:`0${month}`, datee, year].join("-")
+    return date1
+    }
+    return date;   
+      };
 return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -339,7 +351,10 @@ return (
                   return <div css={twoCol}>
                     <label css={txtLabel}>{ques.question}</label>  
                     <div css={txtDetail}>
-                      {Array.isArray(ques.answer)? ques.answer.toString(): ques.question === "Age"?props.searchData[0].ageAtEpisodeStart?props.searchData[0].ageAtEpisodeStart:ques.answer:ques.answer}
+                      {Array.isArray(ques.answer)? ques.answer.toString(): 
+                      ques.answer.toString().includes("-")?is_date(ques.answer) :   
+                      ques.question === "Age"?props.searchData[0].ageAtEpisodeStart?props.searchData[0].ageAtEpisodeStart:
+                      ques.answer:ques.answer} 
                     </div>
                   </div>
                 })}

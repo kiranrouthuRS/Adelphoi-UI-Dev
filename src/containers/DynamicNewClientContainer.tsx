@@ -21,6 +21,7 @@ export interface DynamicNewClientContainerState {
   isLoading: boolean;
   error: any;
   hasError: boolean;
+  isSuccess: boolean;
   }
 
 export interface DynamicClient {
@@ -69,7 +70,7 @@ export class DynamicNewClientContainer extends React.Component<
       isLoading: false,
       hasError: false,
       error: "",
-      
+      isSuccess: false
     };
   }
 
@@ -106,10 +107,12 @@ export class DynamicNewClientContainer extends React.Component<
      const res: any = await this.props.insertDClient(client, is_accessToken);
      this.setState({ isLoading: false, error: "" });
     if (res !== null && res.data.message === "client registered") {
+      this.setState({isSuccess: true})
       this.props.enqueueSnackbar(index ? "Client details updated Successfully." : "New Client Created Successfully.");
       {is_role_type === "Contributor" || client["Exclusionary Criteria Exists/Referral Rejected"] === "0" || !is_prediction_available ? 
       history.push(`/${domainPath}/new-client/`) :
       history.push(`/${domainPath}/new-client/program-selection`)
+      
     }
     }
     else {
@@ -213,7 +216,6 @@ export class DynamicNewClientContainer extends React.Component<
     currentClient = clientState ? clientState.client : Types.emptyClient;
     const availableProgramList =
       (programState && programState.availableProgramList) || [];
-      
       return (
         <Switch>
           <Route exact path={`/${domainPath}/new-client/program-selection`}>

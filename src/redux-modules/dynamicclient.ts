@@ -328,6 +328,7 @@ export const actions = {
     return async (dispatch, getState) => {
       const response = await searchDClient(client_code, client_name, is_accessToken);
       const arr = response.response;
+      console.log(arr)
       let clientList: { [key: string]: any } = {};
       arr && arr.map((c: any) => {
         if (c.client_code) {

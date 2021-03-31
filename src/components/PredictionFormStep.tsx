@@ -34,6 +34,7 @@ interface PredictionFormStepProps {
   client: Types.Client;
   onFormSubmit: (client: Types.Client) => void;
   isLoading: boolean;
+  isSuccess: boolean;
   hasError: boolean;
   error: string;
   isEdit: string;
@@ -48,6 +49,7 @@ export interface PredictionFormStepState {
   errors: any;
   hasError: boolean;
   isSubmitted: boolean;
+  isSuccess: boolean;
   client_form: any;
   Required_List: any;
   DynamicQuestions: any;
@@ -100,6 +102,7 @@ export class PredictionFormStep extends React.Component<
   getInitialState() {
     return {
       isLoading: false,
+      isSuccess: false, 
       hasError: true,
       isSubmitted: false,
       DynamicQuestions: [],
@@ -144,7 +147,7 @@ export class PredictionFormStep extends React.Component<
           });
           Required_List.push({
             [ques.question.replace(/ /g, "_")]: ques.required});
-        }))  
+        })) 
         this.setState({
           DynamicQuestions: this.props.DynamicQuestions,
           client_form: Object.assign({}, ...client_form),
@@ -158,9 +161,7 @@ export class PredictionFormStep extends React.Component<
   }
 
   getAge = (date, fromDate) => {
-    // const date = value;
-    // const fromDate = value;
-    if (!date) {
+   if (!date) {
       return "";
     }
     let today: Date;
@@ -348,13 +349,12 @@ export class PredictionFormStep extends React.Component<
     const formData = Object.assign({}, ...data)
     if (isValid_Data) {
       if (this.state.isEdit === "true" || !this.state.hasError) {
-        await this.props.onFormSubmit(formData);
-       //await this.formState();
-       this.setState({
+         this.props.onFormSubmit(formData);
+        this.setState({
           isSubmitted: false,
           err_msg: this.props.errors,
           isOpen: this.props.errors ? true : false,
-          
+          isSuccess: true
         }) 
       } else {
 
@@ -587,6 +587,7 @@ export class PredictionFormStep extends React.Component<
                                     name={ques.question.replace(/ /g, "_")}
                                     value={this.state.client_form[ques.question.replace(/ /g, "_")]}
                                     type={ques.answer_type.toLowerCase()}
+                                    
                                   />
 
                                 </Fragment>

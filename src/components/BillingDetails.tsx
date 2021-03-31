@@ -116,7 +116,6 @@ class BillingDetails extends React.Component<
         let month = 1 + (event.getMonth())
         let datee = event.getDate();
         let date1 = [year, month, datee].join("-")
-        let date2 = event.toDateString().slice(4);
         this.setState({ startDate: date, sDate: date1 })
     }
 
@@ -126,7 +125,6 @@ class BillingDetails extends React.Component<
         let month = 1 + (event.getMonth())
         let datee = event.getDate();
         let date1 = [year, month, datee].join("-")
-        let date2 = event.toDateString().slice(4);
         this.setState({ endDate: date, eDate: date1 })
     }
 

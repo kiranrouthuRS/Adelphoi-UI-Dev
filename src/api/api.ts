@@ -100,7 +100,7 @@ await fetch(`${baseApiUrl}/${domainPath}/logout`, requestOptions)
   .then(response => response.text())
    .then(result => console.log(result))
   .catch(error => console.log('error', error));
-     
+     localStorage.clear()
 
   } catch (error) {
     console.error("api function fetchLocationsList error");
@@ -228,6 +228,7 @@ export const insertDClient = async (client_form, is_accessToken) => {
   var data = new FormData();
   var myJSON = JSON.stringify(client_form);
   data.append('client_form', myJSON);
+  console.log(client_form)
   try {
     const response = await axios.post(`${baseApiUrl}/${domainPath}/clients`, data, {
       headers: {
@@ -240,6 +241,7 @@ export const insertDClient = async (client_form, is_accessToken) => {
     // if (response.data["Result"] && response.data["Result"].trim() !== "") {
     //   return response.data;
     // }
+    console.log(response)
     const r = {
       ...response,
       program_type: response.data.response.program_type&&response.data.response.program_type[0],
@@ -1374,7 +1376,7 @@ export const searchClient = async (
     const response = await axios.get(
       `${baseApiUrl}/${domainPath}/search/?name=${client_name}&client_code=${client_code}`
     );
-
+    
     return response.data;
   } catch (error) {
     console.error("api function searchClient error");
