@@ -627,12 +627,16 @@ return (
                     }
                   >
                     <option value="">Select</option>
-                    <option value="1" selected={values.Program_Completion !== null
-                        ? values.Program_Completion && values.Program_Completion.toString() === "1"
-                        : ""} >Yes</option> 
-                    <option value="0" selected={values.Program_Completion !== null
-                        ? values.Program_Completion && values.Program_Completion.toString() === "0"
-                        : ""} >No</option>
+                    <option value="1" 
+                    // selected={values.Program_Completion !== null 
+                    //     ? values.Program_Completion && values.Program_Completion.toString() === "1"
+                    //     : ""} 
+                        >Yes</option> 
+                    <option value="0" 
+                    // selected={values.Program_Completion !== null
+                    //     ? values.Program_Completion && values.Program_Completion.toString() === "0"
+                    //     : ""} 
+                        >No</option>
                   </select>
                   <ErrorMessage component="span" name="Program_Completion" />
                 </div>
@@ -710,16 +714,19 @@ return (
                         : ""
                     }
                   >
-                    <option value="">Select</option>
+                    <option value="">Select</option> 
                     <option value="1" 
-                      selected = {values.Remained_Out_of_Care !== null
-                        ? values.Remained_Out_of_Care && values.Remained_Out_of_Care.toString() === "1"
-                        : ""
-                    }>Yes</option>
-                    <option value="0" selected = {values.Remained_Out_of_Care !== null
-                        ? values.Remained_Out_of_Care && values.Remained_Out_of_Care.toString() === "0"
-                        : ""
-                    }>No</option>
+                    //   selected = {values.Remained_Out_of_Care !== null
+                    //     ? values.Remained_Out_of_Care && values.Remained_Out_of_Care.toString() === "1"
+                    //     : ""
+                    // }
+                    >Yes</option>
+                    <option value="0" 
+                    // selected = {values.Remained_Out_of_Care !== null
+                    //     ? values.Remained_Out_of_Care && values.Remained_Out_of_Care.toString() === "0"
+                    //     : ""
+                    // }
+                    >No</option>
                   </select>
                 </div>
 
