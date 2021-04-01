@@ -66,6 +66,7 @@ export const actions = {
     client_code: string,
     Program_Completion: number | null,
     Returned_to_Care: number | null,
+    Remained_Out_of_Care: number | null,
     program_significantly_modified: number,
     program: string | null,
     location: string | null,
@@ -83,6 +84,7 @@ export const actions = {
         client_code,
         Program_Completion,
         Returned_to_Care,
+        Remained_Out_of_Care,
         program_significantly_modified,
         start_date,
         end_date,
@@ -100,13 +102,17 @@ export const actions = {
         if (!cl) {
           return (response as unknown) as string;
         }
-         cl.referral_status = referral_status?referral_status:null;
-         cl.start_date = start_date?start_date:null;
-         cl.end_date = end_date?end_date:null
+         cl.referral_status = referral_status ? referral_status : null;
+         cl.start_date = start_date ? start_date : null;
+         cl.end_date = end_date ? end_date : null;
+         cl.Program_Completion = Program_Completion ? Program_Completion : Program_Completion === 0 ? 0 : null;
+         cl.Remained_Out_of_Care = Remained_Out_of_Care ? Remained_Out_of_Care : Remained_Out_of_Care === 0 ? 0 :null;
+         cl.program_significantly_modified = program_significantly_modified ? program_significantly_modified : null; 
         const updatedCl = {
           ...cl,
           Program_Completion,
           Returned_to_Care,
+          Remained_Out_of_Care,
           program_significantly_modified,
           selected_location: location || cl.selected_location
         };
@@ -208,6 +214,7 @@ export const actions = {
           ...client,
           Program_Completion: values.Program_Completion,
           Returned_to_Care: values.Returned_to_Care,
+          Remained_Out_of_Care: values.Remained_Out_of_Care,
           program_significantly_modified: values.program_significantly_modified
         };
         clientList[client_code] = cl;
@@ -242,6 +249,7 @@ export const actions = {
           selected_location: sData[latestVersion].client_selected_locations,
           Program_Completion: sData[latestVersion].Program_Completion,
           Returned_to_Care: sData[latestVersion].Returned_to_Care,
+          Remained_Out_of_Care: sData[latestVersion]["Remained Out of Care"],
           ageAtEpisodeStart: sData[latestVersion].ageAtEpisodeStart,
           // client_selected_facility: sData[0].client_selected_facility,
           // client_selected_level: sData[0].client_selected_level,
@@ -328,7 +336,6 @@ export const actions = {
     return async (dispatch, getState) => {
       const response = await searchDClient(client_code, client_name, is_accessToken);
       const arr = response.response;
-      console.log(arr)
       let clientList: { [key: string]: any } = {};
       arr && arr.map((c: any) => {
         if (c.client_code) {

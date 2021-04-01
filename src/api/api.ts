@@ -11,7 +11,7 @@ export const baseApiUrl = `http://3.7.135.210:8005/organizations`;
 export const loginApiUrl = "http://3.7.135.210:8005";
 
 
-interface PredictionResponse { 
+interface PredictionResponse {
   referred_program: string;
   model_program: string;
 }
@@ -63,7 +63,7 @@ export const login = async (email: string, password: string, domain: string) => 
       password: password
     });
     localStorage.setItem("refreshToken", response.data.refresh_token);
-    return response.data ;
+    return response.data;
   } catch (error) {
     console.error("api function login error");
     throwError(error);
@@ -88,19 +88,19 @@ export const Logout = async (accessToken) => {
     //   }
     // })
     let myHeaders = new Headers();
-myHeaders.append("Authorization", `Bearer ${accessToken}`);
+    myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
-let requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  
-};
+    let requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
 
-await fetch(`${baseApiUrl}/${domainPath}/logout`, requestOptions)
-  .then(response => response.text())
-   .then(result => console.log(result))
-  .catch(error => console.log('error', error));
-     localStorage.clear()
+    };
+
+    await fetch(`${baseApiUrl}/${domainPath}/logout`, requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+    localStorage.clear()
 
   } catch (error) {
     console.error("api function fetchLocationsList error");
@@ -150,7 +150,7 @@ export const insertClient = async (client: Types.Client) => {
 
 export const updateClient = async (client: Types.Client) => {
   try {
-      const response = await axios.put(`${baseApiUrl}/${domainPath}/latest_update/${client.client_code}/`, client);
+    const response = await axios.put(`${baseApiUrl}/${domainPath}/latest_update/${client.client_code}/`, client);
     if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
       throw new Error(response.data["ERROR"]);
     }
@@ -228,7 +228,6 @@ export const insertDClient = async (client_form, is_accessToken) => {
   var data = new FormData();
   var myJSON = JSON.stringify(client_form);
   data.append('client_form', myJSON);
-  console.log(client_form)
   try {
     const response = await axios.post(`${baseApiUrl}/${domainPath}/clients`, data, {
       headers: {
@@ -241,12 +240,11 @@ export const insertDClient = async (client_form, is_accessToken) => {
     // if (response.data["Result"] && response.data["Result"].trim() !== "") {
     //   return response.data;
     // }
-    console.log(response)
     const r = {
       ...response,
-      program_type: response.data.response.program_type&&response.data.response.program_type[0],
-      referred_program: response.data.response.program_type&&response.data.response.program_type[0],
-      model_program: response.data.response.program_type&&response.data.response.program_type[0]
+      program_type: response.data.response.program_type && response.data.response.program_type[0],
+      referred_program: response.data.response.program_type && response.data.response.program_type[0],
+      model_program: response.data.response.program_type && response.data.response.program_type[0]
     };
 
     return (r as unknown) as Partial<Types.DynamicClient>;
@@ -292,7 +290,7 @@ export const updateDClient = async (client: Types.Client) => {
 };
 
 export const fetchConfiguredQuestions = async (is_accessToken) => {
- try {
+  try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/client-config`, {
       headers: {
         'Authorization': `Bearer ${is_accessToken}`
@@ -478,7 +476,7 @@ export const fetchAllRecords = async (sDate, EDate, accessToken) => {
   }
 };
 
-export const getRecord = async (id,accessToken) => {
+export const getRecord = async (id, accessToken) => {
   const { dispatch } = store
   const currentUser = store.getState().user.user.accessToken;
 
@@ -584,7 +582,7 @@ export const fetchReferral = async () => {
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/referral_list`);
     const data = (response.data as unknown) as Types.Referral[];
-   
+
     return data;
   } catch (error) {
     console.error("api function fetchReferral error");
@@ -595,14 +593,14 @@ export const fetchReferral = async () => {
 export const fetchDReferral = async (accessToken) => {
   const currentUser = store.getState().user.user.accessToken;
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/clients/referralsources`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/clients/referralsources`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-     const data = (response.data.response as unknown) as any;
-    
-   
+    const data = (response.data.response as unknown) as any;
+
+
     return data;
   } catch (error) {
     console.error("api function fetchDReferral error");
@@ -614,7 +612,7 @@ export const fetchAvailableReferral = async () => {
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/referral_list`);
     const data = (response.data as unknown) as Types.Referral[];
-    
+
     return data;
   } catch (error) {
     console.error("api function fetchAvailableReferral error");
@@ -810,15 +808,15 @@ export const fetchLocations = async (
   }
 };
 
-export const fetchAnalytics = async (accessToken:any) => {
+export const fetchAnalytics = async (accessToken: any) => {
   const currentUser = store.getState().user.user.accessToken;
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?days_count=30`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?days_count=30`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    const data = (response.data.response as unknown) as Types.Analytics[]; 
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -831,56 +829,56 @@ export const fetchDateAnalytics = async (
   analytics: any,
   accessToken: any
 ) => {
-  const currentUser = store.getState().user.user.accessToken; 
+  const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
+  let length: any = Object.keys(analytics).length
   for (const [key, value] of Object.entries(analytics)) {
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
-    }
-    try {
-      const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?${queryString}`, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}` 
-        }
-      });
-      
-      const data = (response.data.response as unknown) as Types.Analytics[]; 
-  
-      return data;
-    } catch (error) {
-      console.error("api function fetchAnalytics error");
-      throwError(error);
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
 
-  
+  }
+  try {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/referrals?${queryString}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
+
+    return data;
+  } catch (error) {
+    console.error("api function fetchAnalytics error");
+    throwError(error);
+  }
+
+
 };
 
 export const fetchPCRAnalytics = async (
   filter: any,
-  accessToken:any
-  ) => {
+  accessToken: any
+) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(filter).length
+  let length: any = Object.keys(filter).length
   for (const [key, value] of Object.entries(filter)) {
-       
-       if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/pcr?${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/pcr?${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[]; 
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -890,26 +888,26 @@ export const fetchPCRAnalytics = async (
 };
 export const fetchROCAnalytics = async (
   analytics: any,
-  accessToken:any
-  ) => {
+  accessToken: any
+) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
+  let length: any = Object.keys(analytics).length
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
+
+  }
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/roc?${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/roc?${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[]; 
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -919,28 +917,28 @@ export const fetchROCAnalytics = async (
 };
 
 export const fetchReplacementAnalytics = async (
-  analytics: any,accessToken:any
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/replacement?${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/replacement?${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[]; 
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -949,28 +947,28 @@ export const fetchReplacementAnalytics = async (
   }
 };
 export const fetchStayAnalytics = async (
-  analytics: any,accessToken:any
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/stay?${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/stay?${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[]; 
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -979,28 +977,28 @@ export const fetchStayAnalytics = async (
   }
 };
 export const fetchOccupancyAnalytics = async (
-  analytics: any,accessToken:any
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/occupancy?${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/occupancy?${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1010,28 +1008,28 @@ export const fetchOccupancyAnalytics = async (
 };
 
 export const fetchAllocationAnalytics = async (
-  analytics: any,accessToken:any
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/statistics?${queryString}&q=all`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/statistics?${queryString}&q=all`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1041,28 +1039,28 @@ export const fetchAllocationAnalytics = async (
 };
 
 export const fetchAllocated_ProgramAnalytics = async (
-  analytics: any,accessToken:any
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/statistics?q=programs&${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/statistics?q=programs&${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1072,28 +1070,28 @@ export const fetchAllocated_ProgramAnalytics = async (
 };
 
 export const fetch_Market_Analytics = async (
-  analytics: any,accessToken:any
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/market?${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/market?${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1103,28 +1101,28 @@ export const fetch_Market_Analytics = async (
 };
 
 export const fetch_Performance_Analytics = async (
-  analytics: any,accessToken:any
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/performance?${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/performance?${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1133,28 +1131,28 @@ export const fetch_Performance_Analytics = async (
   }
 };
 export const fetch_Tool_Analytics = async (
-  analytics: any,accessToken:any
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=table&${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=table&${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1163,28 +1161,28 @@ export const fetch_Tool_Analytics = async (
   }
 };
 export const fetch_Calibration_Analytics = async (
-  analytics: any,accessToken:any
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=graph&${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=graph&${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1193,28 +1191,28 @@ export const fetch_Calibration_Analytics = async (
   }
 };
 export const fetch_Gender_Analytics = async (
-  analytics: any,accessToken:any
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?q=sex&${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?q=sex&${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1223,28 +1221,28 @@ export const fetch_Gender_Analytics = async (
   }
 };
 export const fetch_Age_Analytics = async (
-  analytics: any,accessToken:any
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?q=age&${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?q=age&${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1252,29 +1250,29 @@ export const fetch_Age_Analytics = async (
     throwError(error);
   }
 };
-export const fetch_Demo_Analytics = async ( 
-  analytics: any,accessToken:any
+export const fetch_Demo_Analytics = async (
+  analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   let queryString: any = "";
-  let length :any = Object.keys(analytics).length
-  
+  let length: any = Object.keys(analytics).length
+
   for (const [key, value] of Object.entries(analytics)) {
-      
-      if(value){
-        queryString = `${key}=${value}&`+queryString  
-      }
-      
+
+    if (value) {
+      queryString = `${key}=${value}&` + queryString
     }
-    
+
+  }
+
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?${queryString}`, { 
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/demographics?${queryString}`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}` 
+        'Authorization': `Bearer ${accessToken}`
       }
     });
-    
-    const data = (response.data.response as unknown) as Types.Analytics[];   
+
+    const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1338,6 +1336,7 @@ export const updateProgramCompletion = async (
   client_code: string,
   Program_Completion: number | null,
   Returned_to_Care: number | null,
+  Remained_Out_of_Care: number | null,
   program_significantly_modified: number,
   start_date: any,
   end_date: any,
@@ -1345,22 +1344,25 @@ export const updateProgramCompletion = async (
   currentUser: any
 ) => {
   try {
+    const data = {
+      Program_Completion : Program_Completion,
+      Returned_to_Care : Returned_to_Care,
+      ["Remained Out of Care"] : Remained_Out_of_Care,
+      program_significantly_modified : program_significantly_modified,
+      start_date : start_date,
+      end_date : end_date,
+      referral_status : referral_status
+    }
+    console.log(data)
     const response = await axios.put(
       `${baseApiUrl}/${domainPath}/program_complete/${client_code}/`,
-      {
-        Program_Completion,
-        Returned_to_Care,
-        program_significantly_modified,
-         start_date,
-         end_date,
-         referral_status
-      }, {
+      data, {
       headers: {
         'Authorization': `Bearer ${currentUser}`
       }
     }
     );
- return response.data.data;
+    return response.data.data;
   } catch (error) {
     console.error("api function updateProgramCompletion error");
     throwError(error);
@@ -1376,7 +1378,7 @@ export const searchClient = async (
     const response = await axios.get(
       `${baseApiUrl}/${domainPath}/search/?name=${client_name}&client_code=${client_code}`
     );
-    
+
     return response.data;
   } catch (error) {
     console.error("api function searchClient error");
@@ -1433,7 +1435,7 @@ function throwError(error: any) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
     console.log(error.response.data);
-    console.log("code",error.response.status);
+    console.log("code", error.response.status);
     console.log(error.response.headers);
     const errorResponse = {
       data: error.response.data || undefined,

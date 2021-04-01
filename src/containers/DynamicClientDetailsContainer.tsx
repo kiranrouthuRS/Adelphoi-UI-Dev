@@ -31,6 +31,7 @@ export interface DynamicClientDetailsContainerProps
     client_code: string,
     program_completion: number | null,
     returned_to_care: number | null,
+    Remained_Out_of_Care: number | null,
     program_significantly_modified: number,
     program: string | null,
     location: string | null,
@@ -105,6 +106,7 @@ export class DynamicClientDetailsContainer extends React.Component<
     client_code: string,
     program_completion: number | null,
     returned_to_care: number | null,
+    Remained_Out_of_Care: number | null,
     program_significantly_modified: number,
     program: string | null,
     location: string | null,
@@ -114,11 +116,11 @@ export class DynamicClientDetailsContainer extends React.Component<
   ) => {
     try {
       this.setState({ isLoading: true });
-
       const response = await this.props.updateProgramCompletion(
         client_code,
         program_completion,
         returned_to_care,
+        Remained_Out_of_Care,
         program_significantly_modified,
         program,
         location,

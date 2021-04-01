@@ -132,6 +132,7 @@ export interface Client {
   inclusionary_criteria: boolean;
   Program_Completion: number | null;
   Returned_to_Care: number | null;
+  Remained_Out_of_Care: number | null;
   referral: string | null;
   program_significantly_modified: number | null;
   sections: any ;
@@ -288,6 +289,7 @@ export const emptyClient: Client = {
   inclusionary_criteria: false,
   Program_Completion: null,
   Returned_to_Care: null,
+  Remained_Out_of_Care: null,
   program_significantly_modified: null,
   program_model_suggested: null
 };

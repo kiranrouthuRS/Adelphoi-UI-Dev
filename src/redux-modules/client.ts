@@ -45,6 +45,7 @@ export const actions = {
     client_code: string,
     Program_Completion: number | null,
     Returned_to_Care: number | null,
+    Remained_Out_of_Care: number | null,
     program_significantly_modified: number,
     program: string | null,
     location: string | null
@@ -57,6 +58,7 @@ export const actions = {
         client_code,
         Program_Completion,
         Returned_to_Care,
+        Remained_Out_of_Care,
         program_significantly_modified,
         "ddd",
         "hhh",
@@ -78,6 +80,7 @@ export const actions = {
           ...cl,
           Program_Completion,
           Returned_to_Care,
+          Remained_Out_of_Care,
           program_significantly_modified,
           selected_location: location || cl.selected_location
         };
@@ -176,6 +179,7 @@ export const actions = {
           ...client,
           Program_Completion: values.Program_Completion,
           Returned_to_Care: values.Returned_to_Care,
+          Remained_Out_of_Care: values.Remained_Out_of_Care,
           program_significantly_modified: values.program_significantly_modified
         };
         clientList[client_code] = cl;

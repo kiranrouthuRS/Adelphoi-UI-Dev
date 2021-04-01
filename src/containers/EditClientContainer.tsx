@@ -40,6 +40,7 @@ updateClient: (
     client_code: string,
     program_completion: number | null,
     returned_to_care: number | null,
+    Remained_Out_of_Care: number | null,
     program_significantly_modified: number,
     program: string | null,
     location: string | null

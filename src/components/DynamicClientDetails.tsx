@@ -52,6 +52,7 @@ interface DynamicClientDetailsProps {
     client_code: string,
     program_completion: number | null,
     returned_to_care: number | null,
+    Remained_Out_of_Care: number | null,
     //roc_confidence: number | null,
     program_significantly_modified: number,
     Program: string | null,
@@ -74,8 +75,9 @@ interface DynamicClientDetailsProps {
 }
 
 interface FormValues {
-  Program_Completion: string | number | null;
+  Program_Completion: string | number | null; 
   Returned_to_Care: string | number | null;
+  Remained_Out_of_Care: string | number | null;
   program_significantly_modified: number | string | null;
   Program: any;
   start_date: string;
@@ -178,10 +180,6 @@ const locationOptions = props.client.SuggestedLocations
     let program: any = null;
     let location: any = null;
     let referral: any = null;
-    let start_date: any = null;
-    let end_date: any = null;
-    let referral_status: any = null;
-    let role_type: any = is_role_type;
     if (client.selected_referral) {
       referral = {
         label: client.selected_referral,
@@ -208,6 +206,10 @@ const locationOptions = props.client.SuggestedLocations
        client.Program_Completion === null 
           ? ""
           : client.Program_Completion&&client.Program_Completion.toString(),
+      Remained_Out_of_Care:
+          client.Remained_Out_of_Care === null 
+          ? ""
+          : client.Remained_Out_of_Care === 0 ?client.Remained_Out_of_Care.toString():client.Remained_Out_of_Care&&client.Remained_Out_of_Care.toString(),
       Returned_to_Care:
         client.Returned_to_Care === null
           ? ""
@@ -236,8 +238,7 @@ const locationOptions = props.client.SuggestedLocations
     };
 
   };
-  
-  const handleChange = (e) => {
+   const handleChange = (e) => {
     const { name, value } = e.target;
     var optionElement = e.target.childNodes[e.target.selectedIndex]
     let version_id = optionElement.getAttribute('data-id');
@@ -269,7 +270,7 @@ const locationOptions = props.client.SuggestedLocations
       }
 
     }
-    return tempArray
+    return tempArray 
 
   }
   const is_date = function(date) {
@@ -284,6 +285,7 @@ const locationOptions = props.client.SuggestedLocations
     }
     return date;   
       };
+     
 return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -395,7 +397,7 @@ return (
               }
               
             }
-            if (values.Program_Completion === "1") {
+            if (values.Program_Completion === "1" || values.Program_Completion === "2") {
               if (!values.end_date) {
                 errors.end_date = "Required";
               }
@@ -412,6 +414,10 @@ return (
               values.Program_Completion === ""
                 ? null
                 : Number(values.Program_Completion);
+            const Remained_Out_of_Care =
+            values.Remained_Out_of_Care === ""
+              ? null
+              : Number(values.Remained_Out_of_Care);
             const Returned_to_Care =
               values.Returned_to_Care === ""
                 ? null
@@ -432,6 +438,7 @@ return (
               searchData[0].client_code,
               Program_Completion,
               Returned_to_Care,
+              Remained_Out_of_Care,
               Number(values.program_significantly_modified),
               values.Program!.value!,
               values.Location!.value!,
@@ -620,13 +627,17 @@ return (
                     }
                   >
                     <option value="">Select</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
+                    <option value="1" selected={values.Program_Completion !== null
+                        ? values.Program_Completion && values.Program_Completion === 1
+                        : ""} >Yes</option> 
+                    <option value="0" selected={values.Program_Completion !== null
+                        ? values.Program_Completion && values.Program_Completion === 0
+                        : ""} >No</option>
                   </select>
                   <ErrorMessage component="span" name="Program_Completion" />
                 </div>
               </div>
-              {values.Program_Completion === "1" &&
+              {values.Program_Completion !== "" &&
                 <div css={fieldRow}>
                   <div css={twoCol}>
                     <label css={label}>End Date</label>
@@ -658,7 +669,7 @@ return (
                       type="checkbox"
                       disabled={
                         version_changed ? version_changed : values.Program_Completion !== ""
-                          ? values.Program_Completion === "0"
+                          ? values.Program_Completion === "0" || values.Program_Completion === 0 
                           : true
                       }
                       onChange={handleChange}
@@ -689,23 +700,30 @@ return (
                     onChange={handleChange}
                     disabled={
                      version_changed ? version_changed : values.Program_Completion !== ""
-                        ? values.Program_Completion === "0"
+                        ? values.Program_Completion === "0" || values.Program_Completion === 0 
                         : true
                     }
-                    name="Returned_to_Care"
+                    name="Remained_Out_of_Care"
                     value={
-                      values.Returned_to_Care !== null
-                        ? values.Returned_to_Care && values.Returned_to_Care.toString()
+                      values.Remained_Out_of_Care !== null
+                        ? values.Remained_Out_of_Care && values.Remained_Out_of_Care.toString()
                         : ""
                     }
                   >
                     <option value="">Select</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
+                    <option value="1" 
+                      selected = {values.Remained_Out_of_Care !== null
+                        ? values.Remained_Out_of_Care && values.Remained_Out_of_Care.toString() === "1"
+                        : ""
+                    }>Yes</option>
+                    <option value="0" selected = {values.Remained_Out_of_Care !== null
+                        ? values.Remained_Out_of_Care && values.Remained_Out_of_Care.toString() === "0"
+                        : ""
+                    }>No</option>
                   </select>
                 </div>
 
-                <ErrorMessage component="span" name="Returned_to_Care" />
+                <ErrorMessage component="span" name="Remained_Out_of_Care" />
               </div>
 
               <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
