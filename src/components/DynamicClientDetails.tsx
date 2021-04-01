@@ -628,10 +628,10 @@ return (
                   >
                     <option value="">Select</option>
                     <option value="1" selected={values.Program_Completion !== null
-                        ? values.Program_Completion && values.Program_Completion === 1 ||values.Program_Completion.toString() === "1"
+                        ? values.Program_Completion && values.Program_Completion.toString() === "1"
                         : ""} >Yes</option> 
                     <option value="0" selected={values.Program_Completion !== null
-                        ? values.Program_Completion && values.Program_Completion === 0 ||values.Program_Completion.toString() === "0"
+                        ? values.Program_Completion && values.Program_Completion.toString() === "0"
                         : ""} >No</option>
                   </select>
                   <ErrorMessage component="span" name="Program_Completion" />
