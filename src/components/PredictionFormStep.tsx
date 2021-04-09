@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import Button from "@material-ui/core/Button";
 import FormData from "form-data"
+import { searchDClient } from "../api/api";
 import {
   wrap,
   subHeading,
@@ -34,7 +35,6 @@ interface PredictionFormStepProps {
   client: Types.Client;
   onFormSubmit: (client: Types.Client) => void;
   isLoading: boolean;
-  isSuccess: boolean;
   hasError: boolean;
   error: string;
   isEdit: string;
@@ -49,7 +49,7 @@ export interface PredictionFormStepState {
   errors: any;
   hasError: boolean;
   isSubmitted: boolean;
-  isSuccess: boolean;
+  //isSuccess: boolean;
   client_form: any;
   Required_List: any;
   DynamicQuestions: any;
@@ -102,7 +102,7 @@ export class PredictionFormStep extends React.Component<
   getInitialState() {
     return {
       isLoading: false,
-      isSuccess: false,
+      // isSuccess: false,
       hasError: true,
       isSubmitted: false,
       DynamicQuestions: [],
@@ -179,8 +179,17 @@ export class PredictionFormStep extends React.Component<
     }
     return age.toString();
   }
-
-  handleChange = (e) => {
+  keyUp = async(e) => {
+    let {name,value} = e.target
+    if(name === "Client_Code"){
+      const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
+      let response = await searchDClient(value,"",is_accessToken);
+      response.response &&
+         response.response.length > 0 &&
+             (alert("Client Code already exists. Do you wants to continue?"))
+    }
+  }
+  handleChange = async(e) => {
     const { name, value } = e.target;
     let DynamicQuestions = this.state.DynamicQuestions;
     let val1: any = e.target.dataset.val1 ? e.target.dataset.val1 : "";
@@ -302,6 +311,7 @@ export class PredictionFormStep extends React.Component<
       if (type === "number") {
         const err = parseInt(value) < parseInt(val1)
         const err1 = parseInt(value) > parseInt(val2)
+         
         this.setState({
           client_form: {
             ...this.state.client_form,
@@ -356,7 +366,7 @@ export class PredictionFormStep extends React.Component<
             isSubmitted: false,
             err_msg: this.props.errors,
             isOpen: this.props.errors ? true : false,
-            isSuccess: true
+            // isSuccess: true
           })
         } else {
 
@@ -511,7 +521,7 @@ export class PredictionFormStep extends React.Component<
                                     <React.Fragment>
                                       <input
                                         type="radio"
-                                        data-jump={ques.suggested_jump.map(sj => ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
+                                        data-jump={ques.suggested_jump.length > 0 ?ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : ""):""}
                                         data-idx={index}
                                         data-idy={ind}
                                         name={ques.question.replace(/ /g, "_")} value={ans.id}
@@ -569,9 +579,7 @@ export class PredictionFormStep extends React.Component<
                                       )
                                         : this.state.client_form[ques.question.replace(/ /g, "_")]}
                                       type={ques.answer_type.toLowerCase()}
-                                    //  min={ques.validation1}
-                                    //  max={ques.validation2}
-                                    //  required = {ques.required === "yes" ? true: false}
+                                        onKeyUp={this.keyUp}
                                     />
 
                                   </Fragment>
@@ -594,9 +602,13 @@ export class PredictionFormStep extends React.Component<
 
                                   </Fragment>
                           }
-                          {this.state.isSubmitted === true ? this.state.error[ques.question.replace(/ /g, "_")] ?
+                          {
+                          this.state.isSubmitted === true ? 
+                          this.state.error[ques.question.replace(/ /g, "_")] ?
                             <div style={{ color: "red" }}>{this.state.error[ques.question.replace(/ /g, "_")]}</div> : this.state.client_form[ques.question.replace(/ /g, "_")] ? "" :
-                              ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : "" : ""}
+                              ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : "" 
+                              : ""
+                              }
                         </div>
                         ))}</div>
 
@@ -604,16 +616,6 @@ export class PredictionFormStep extends React.Component<
                   }
                 </React.Fragment>
             )}
-            {/* <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  style={{ marginRight: 10 }}
-                >
-                  {values.Exclusionary_Criteria ? "Submit" : "Next"}
-                </Button>
-              </div> */}
             <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
               <Button
                 type="submit"
