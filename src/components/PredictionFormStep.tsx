@@ -186,7 +186,7 @@ export class PredictionFormStep extends React.Component<
       let response = await searchDClient(value,"",is_accessToken);
       response.response &&
          response.response.length > 0 &&
-             (alert("Client Code already exists. Do you wants to continue?"))
+             (alert("Client Code already exists. Do you want to continue?"))
     }
   }
   handleChange = async(e) => {
@@ -241,14 +241,7 @@ export class PredictionFormStep extends React.Component<
           )
         )
       }
-      else {
-        if (type === "checkbox") {
-          const idx = e.target.dataset.idx;
-          let idy = e.target.dataset.idy;
-          const idz = e.target.dataset.idz;
-          let checkedValue = value == false ? true : false
-        }
-      }
+      
     }
 
     if (val1 === "") {
@@ -603,11 +596,14 @@ export class PredictionFormStep extends React.Component<
                                   </Fragment>
                           }
                           {
-                          this.state.isSubmitted === true ? 
-                          this.state.error[ques.question.replace(/ /g, "_")] ?
-                            <div style={{ color: "red" }}>{this.state.error[ques.question.replace(/ /g, "_")]}</div> : this.state.client_form[ques.question.replace(/ /g, "_")] ? "" :
+                           this.state.error[ques.question.replace(/ /g, "_")] && 
+                           <div style={{ color: "red" }}>{this.state.error[ques.question.replace(/ /g, "_")]}</div> 
+                           }
+                           {
+                             this.state.isSubmitted ?
+                           this.state.client_form[ques.question.replace(/ /g, "_")] ? "" :
                               ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : "" 
-                              : ""
+                            :""
                               }
                         </div>
                         ))}</div>
