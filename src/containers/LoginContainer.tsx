@@ -29,8 +29,8 @@ export class LoginContainer extends React.Component<
     super(props);
     const isLoggedIn: any = props.user && props.user.user;
     if (isLoggedIn.accessToken) {
-      this.props.history.push(domainPath !== "adelphoi" ? (`/${domainPath}/welcomepage`) :
-      (`/${domainPath}/new-client`));
+      this.props.history.push(`/${domainPath}/new-client`)
+      
     }
     this.state = this.getInitialState();
   }

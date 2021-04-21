@@ -138,10 +138,10 @@ export class PredictionFormStep extends React.Component<
       (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
         client_form.push({
           [ques.question.replace(/ /g, "_")]:
-            Array.isArray(ques.answer) ? ques.suggested_answers.map((q, j) => ques.answer.includes(q.value) && q.id.toString()).filter(item => item !== false) :
+            Array.isArray(ques.answer) ? ques.suggested_answers.map((q, j) => ques.answer.includes(q.value) && 
+            q.id.toString()).filter(item => item !== false) :
               ques.answer === 0 ? ques.answer.toString() :
                 ques.suggested_answers.length >= 1 ? ques.answer &&
-
                   ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id.toString()
                   : ques.answer ? ques.answer.toString() : ""
         });
@@ -248,11 +248,13 @@ export class PredictionFormStep extends React.Component<
       if (type === "checkbox") {
         const checked = e.target.checked;
         const idy = e.target.dataset.idy;
+        console.log(this.state.client_form[name]&&this.state.client_form[name].concat([value]))
         this.setState({
           client_form: {
             ...this.state.client_form,
             [name]: this.state.client_form[name] ?
-              checked ? this.state.client_form[name].concat([value]) : this.state.client_form[name].filter(idy => idy !== value) : [value]
+              checked ? this.state.client_form[name].concat([value]) : 
+              this.state.client_form[name].filter(idy => idy !== value) : [value]
           },
           hasError: false,
         })
@@ -423,6 +425,7 @@ export class PredictionFormStep extends React.Component<
   render() {
     const { DynamicQuestions } = this.state;
     const { errors } = this.props;
+    console.log(this.state)
     return (
       <div css={wrap}>
 
@@ -572,7 +575,7 @@ export class PredictionFormStep extends React.Component<
                                       )
                                         : this.state.client_form[ques.question.replace(/ /g, "_")]}
                                       type={ques.answer_type.toLowerCase()}
-                                        onKeyUp={this.keyUp}
+                                      onBlur ={this.keyUp} 
                                     />
 
                                   </Fragment>
