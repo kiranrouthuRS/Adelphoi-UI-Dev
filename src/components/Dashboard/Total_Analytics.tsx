@@ -1,30 +1,16 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import React, { useState, useEffect } from "react";
-// import { useHistory } from "react-router-dom";
-import { Formik, ErrorMessage } from "formik";
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
-import { ConfigurationSchema } from "../ValidationSchema";
 import { Pie } from 'react-chartjs-2';
 import {
-    wrap,
-    subHeading,
     selectField,
     fieldRow,
-    mainContent,
     twoCol,
-    inputField,
-    fieldBox,
     txtLabel,
     label
 } from "../styles";
-import * as Types from "../../api/definitions";
-import { borderRadius } from "react-select/src/theme";
-
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -50,7 +36,6 @@ interface Total_AnalysisProps {
 }
 
 const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
-    // const history = useHistory();
     const classes = useStyles();
     const data = {
         labels: [
@@ -81,7 +66,7 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
 
     useEffect(() => {
         props.onSelectChange(filters)
-    }, [filters]);
+    }, [filters.referral_status||filters.referral_source||filters.location]);
     useEffect(()=>{
         setfilters(prevState => {
             return { ...prevState, referral_status: "", referral_source: "", location: "" } 

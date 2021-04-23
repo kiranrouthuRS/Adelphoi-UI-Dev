@@ -1,10 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import React, { useState, useEffect } from "react";
-// import { useHistory } from "react-router-dom";
-import { Formik, ErrorMessage } from "formik";
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -15,11 +12,8 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import { ConfigurationSchema } from "../ValidationSchema";
 import { Line } from 'react-chartjs-2';
 import {
-    wrap,
-    subHeading,
     selectField,
     panel,
     panelHeading,
@@ -28,10 +22,8 @@ import {
     tableHeader,
     tableRow,
     dataTable,
-    label
+    
 } from "../styles";
-import * as Types from "../../api/definitions";
-import { borderRadius } from "react-select/src/theme";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -92,10 +84,7 @@ const Market_Analytics: React.FC<Market_AnalyticsProps> = props => {
         props.referralChange(referral_source)
     }, [referral_source]);
     return (
-        <div
-        // style={{ border: "solid #5B6DCD 1px", padding: "10px", marginBottom: "10px" }}
-        >
-            {/* <h1 css={subHeading} >Market Analysis - Customer Trends – Referral Source Analysis​</h1> */}
+        <div>
             <Accordion>
                 <AccordionSummary
                     css={panelHeader}
@@ -164,8 +153,6 @@ const Market_Analytics: React.FC<Market_AnalyticsProps> = props => {
                     ))}
                 </select>
             </Grid>
-            {/* <Grid container spacing={1} >
-                                <Grid item xs={6}> */}
             <Line data={Performance}
                   options={{
                     legend: {
@@ -177,8 +164,7 @@ const Market_Analytics: React.FC<Market_AnalyticsProps> = props => {
                     }
                 }}
                  />
-            {/* </Grid> */}
-            {/* </Grid> */}
+            
         </div>
     );
 };

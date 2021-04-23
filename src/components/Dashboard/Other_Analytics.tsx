@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import React, { useState, useEffect } from "react";
-// import { useHistory } from "react-router-dom";
 import { Formik, ErrorMessage } from "formik";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -48,145 +47,141 @@ interface Other_AnalyticsProps {
     Location: any;
     Referral: any;
     filter: any;
-    onSelectChange: (src:any) => void;
+    onSelectChange: (src: any) => void;
 }
 
 const OtherParam_Analytics: React.FC<Other_AnalyticsProps> = props => {
-    // const history = useHistory();
     const classes = useStyles();
-    const [filters, setfilters] = useState({referral_source:"",location:""});
-    
+    const [filters, setfilters] = useState({ referral_source: "", location: "" });
+
     useEffect(() => {
         props.onSelectChange(filters)
-      }, [filters]);
-      useEffect(()=>{
+    }, [filters.referral_source || filters.location]);
+    useEffect(() => {
         setfilters(prevState => {
-            return { ...prevState, referral_status: "", referral_source: "", location: "" } 
+            return { ...prevState, referral_status: "", referral_source: "", location: "" }
         });
-    },[props.filter.days_count]) 
+    }, [props.filter.days_count])
     return (
-        <div 
-        // style={{ boxSizing: "content-box", width: "100%", border: "solid #5B6DCD 1px", padding: "10px", marginBottom: "10px" }}
-        >
-                            {/* <h1 css={subHeading} >Other Parameters – of referrals who are accepted and placed.​</h1> */}
-                            <Grid container spacing={3} >
-                                <Grid item xs={6} sm={3}>
-                                    <label css={txtLabel}
-                                    //style={{ marginTop: 16 }}
-                                    >
-                                        Referral sources:
+        <div >
+            <Grid container spacing={3} >
+                <Grid item xs={6} sm={3}>
+                    <label css={txtLabel}
+                    //style={{ marginTop: 16 }}
+                    >
+                        Referral sources:
                   </label>
 
-                                    <select
-                                        css={selectField}
-                                        name="referral_source"
-                                        value={filters.referral_source || ""}
-                                        onChange={(e)=>setfilters(prevState => {
-                                            return { ...prevState, referral_source: e.target.value }
-                                        })}
-                                    >
-                                        <option value="">Select</option>
-                                        {props.Referral.map(r => (
-                                            <option key={r.id} value={r.id}>
-                                                {r.value}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </Grid>
-                                <Grid item xs={6} sm={4}>
-                                    <label css={txtLabel}
-                                    //style={{ marginTop: 16 }}
-                                    >
-                                        Locations:
+                    <select
+                        css={selectField}
+                        name="referral_source"
+                        value={filters.referral_source || ""}
+                        onChange={(e) => setfilters(prevState => {
+                            return { ...prevState, referral_source: e.target.value }
+                        })}
+                    >
+                        <option value="">Select</option>
+                        {props.Referral.map(r => (
+                            <option key={r.id} value={r.id}>
+                                {r.value}
+                            </option>
+                        ))}
+                    </select>
+                </Grid>
+                <Grid item xs={6} sm={4}>
+                    <label css={txtLabel}
+                    //style={{ marginTop: 16 }}
+                    >
+                        Locations:
                   </label>
 
-                                    <select
-                                        css={selectField}
-                                        name="location"
-                                        value={filters.location || ""}
-                                        onChange={(e)=>setfilters(prevState => {
-                                            return { ...prevState, location: e.target.value }
-                                        })}
-                                    >
-                                        <option value="">Select</option>
-                                        {props.Location.map(l => (
-                                            <option key={l.location} value={l.location_names}>
-                                                {l.location_names}
-                                            </option>
-                                        ))}
+                    <select
+                        css={selectField}
+                        name="location"
+                        value={filters.location || ""}
+                        onChange={(e) => setfilters(prevState => {
+                            return { ...prevState, location: e.target.value }
+                        })}
+                    >
+                        <option value="">Select</option>
+                        {props.Location.map(l => (
+                            <option key={l.location} value={l.location_names}>
+                                {l.location_names}
+                            </option>
+                        ))}
 
-                                    </select>
-                                </Grid>
-                            </Grid>
+                    </select>
+                </Grid>
+            </Grid>
 
-                            <div css={fieldRow} style={{ justifyContent: "center", marginTop: "10px" }}>
-                                <div css={twoCol}>
+            <div css={fieldRow} style={{ justifyContent: "center", marginTop: "10px" }}>
+                <div css={twoCol}>
 
-                                    <div style={{
-                                        background: "#36A2EB",
-                                        width: "150px",
-                                        height: "150px",
-                                        borderRadius: "50%",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        color: "#ffffff",
-                                        // padding: "20px",
-                                        // marginBottom: "10px"
+                    <div style={{
+                        background: "#36A2EB",
+                        width: "150px",
+                        height: "150px",
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#ffffff",
+                        // padding: "20px",
+                        // marginBottom: "10px"
 
-                                    }} >
-                                        <strong> {props.Replace_analytics.replacement_rate ? props.Replace_analytics.replacement_rate : 0}</strong>
-                                    </div>
+                    }} >
+                        <strong> {props.Replace_analytics.replacement_rate ? props.Replace_analytics.replacement_rate : 0}</strong>
+                    </div>
 Replacement rate
 
                                 </div>
-                                <div css={twoCol}>
+                <div css={twoCol}>
 
-                                    <div style={{
-                                        background: "#36A2EB",
-                                        width: "150px",
-                                        height: "150px",
-                                        borderRadius: "50%",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        color: "#ffffff",
-                                        //padding: "20px",
-                                        //marginBottom: "10px"
+                    <div style={{
+                        background: "#36A2EB",
+                        width: "150px",
+                        height: "150px",
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#ffffff",
+                        //padding: "20px",
+                        //marginBottom: "10px"
 
-                                    }} >
-                                        <strong> {props.Stay_analytics.avg_length_of_stay ? props.Stay_analytics.avg_length_of_stay : 0}</strong>
-                                    </div>
+                    }} >
+                        <strong> {props.Stay_analytics.avg_length_of_stay ? props.Stay_analytics.avg_length_of_stay : 0}</strong>
+                    </div>
                                         Average Length of stay
 
                                 </div>
-                                <div css={twoCol}>
+                <div css={twoCol}>
 
-                                    <div style={{
-                                        background: "#36A2EB",
-                                        width: "150px",
-                                        height: "150px",
-                                        borderRadius: "50%",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        color: "#ffffff",
-                                        // padding: "20px",
-                                        // marginBottom: "10px"
+                    <div style={{
+                        background: "#36A2EB",
+                        width: "150px",
+                        height: "150px",
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#ffffff",
+                        // padding: "20px",
+                        // marginBottom: "10px"
 
-                                    }} >
-                                        <strong>
-                                            {props.Occupancy_analytics.occupancy_rate ? props.Occupancy_analytics.occupancy_rate : 0}
-                                        </strong>
-                                    </div>
+                    }} >
+                        <strong>
+                            {props.Occupancy_analytics.occupancy_rate ? props.Occupancy_analytics.occupancy_rate : 0}
+                        </strong>
+                    </div>
 Occupancy rate
 
                                 </div>
 
-                            </div>
+            </div>
 
-                        </div>
- );
+        </div>
+    );
 };
 
 export default OtherParam_Analytics;

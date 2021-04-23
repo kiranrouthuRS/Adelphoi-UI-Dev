@@ -18,9 +18,9 @@ import {
   fetch_Performance_Analytics,
   fetch_Gender_Analytics,
   fetch_Age_Analytics,
-  fetch_Tool_Analytics,
+  fetch_ROC_Calibration_Analytics,
   fetch_Demo_Analytics,
-  fetch_Calibration_Analytics
+  fetch_PCR_Calibration_Analytics
 } from "../api/api";
 import { store } from "../index";
 const initialState: AnalyticsState = {
@@ -36,9 +36,9 @@ const initialState: AnalyticsState = {
   Performance_Analytics_List:[],
   Gender_List:[],
   Age_List:[],
-  Tool_List:[],
+  ROC_Calibration_List:[],
   Demo_List:[],
-  Calibration_List:[]
+  PCR_Calibration_List:[]
  };
 
 const { reducer, update } = createReducer<AnalyticsState>(
@@ -125,6 +125,7 @@ export const actions = {
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const response = await fetchAllocationAnalytics(filter,accessToken);
+      console.log(response)
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -173,7 +174,9 @@ export const actions = {
     accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
+      console.log(analytics)
       const response = await fetchDateAnalytics(analytics,accessToken);
+      console.log(response)
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -181,16 +184,16 @@ export const actions = {
       return;
     };
   },
-  get_Tool_Analytics(
+  get_ROC_Calibration_Analytics(
     filter: any,
     accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await fetch_Tool_Analytics(filter,accessToken);
+      const response = await fetch_ROC_Calibration_Analytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
-      dispatch(update({ Tool_List: response }));  
+      dispatch(update({ ROC_Calibration_List: response }));  
     };
   },
   getGender_Analytics(
@@ -217,17 +220,17 @@ export const actions = {
       dispatch(update({ Age_List: response }));  
     };
   },
-  get_Calibration_Analytics(
+  get_PCR_Calibration_Analytics(
     filter: any,
     accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       
-      const response = await fetch_Calibration_Analytics(filter,accessToken);
+      const response = await fetch_PCR_Calibration_Analytics(filter,accessToken);
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
-      dispatch(update({ Calibration_List: response }));  
+      dispatch(update({ PCR_Calibration_List: response }));  
     };
   },
   get_Demo_Analytics(

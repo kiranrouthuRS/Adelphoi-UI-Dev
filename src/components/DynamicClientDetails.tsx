@@ -285,7 +285,7 @@ const locationOptions = props.client.SuggestedLocations
     }
     return date;   
       };
-     
+    
 return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>

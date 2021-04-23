@@ -1,14 +1,11 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import React, { useState, useEffect } from "react";
-// import { useHistory } from "react-router-dom";
 import { Formik, ErrorMessage } from "formik";
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
-import { ConfigurationSchema } from "../ValidationSchema";
 import Market_Analysis from "./Market_Analysis";
 import Total_Analytics from "./Total_Analytics";
 import OtherParam_Analytics from "./Other_Analytics";
@@ -29,7 +26,7 @@ import {
     panelHeader,
 } from "../styles";
 import * as Types from "../../api/definitions";
-import { borderRadius } from "react-select/src/theme";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -65,8 +62,8 @@ interface DashboardProps {
     Gender_List: any;
     Age_List: any;
     Demo_List: any;
-    Tool_List: any;
-    CalibrationList: any;
+    ROCCalibrationList: any;
+    PCRCalibrationList: any;
     Location: Types.Location[];
     onFormSubmit: (analytics: Types.Analytics) => void;
     totalAnalytics: (filter: any) => void;
@@ -113,6 +110,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
     };
     const Total_HandleChange = async (src) => {
         let filter = filters;
+        
         await setFilters(prevState => {
             return {
                 ...prevState, referral_source: src.referral_source,
@@ -132,6 +130,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
         await props.totalAnalytics(data);
 
     };
+    
     const Program_HandleChange = async (src) => {
         let filter = filters;
         await setFilters(prevState => {
@@ -440,8 +439,8 @@ const Dashboard: React.FC<DashboardProps> = props => {
                             </AccordionSummary>
                             <AccordionDetails css={panel}>
                                 <Tool_Analytics
-                                    Tool_List={props.Tool_List}
-                                    CalibrationList={props.CalibrationList}
+                                    ROCCalibrationList={props.ROCCalibrationList}
+                                    PCRCalibrationList={props.PCRCalibrationList}
                                     onSelectChange={Calibration_HandleChange}
                                 />
                             </AccordionDetails>

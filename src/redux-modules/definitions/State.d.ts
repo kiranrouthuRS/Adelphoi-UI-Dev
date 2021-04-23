@@ -45,9 +45,9 @@ export interface AnalyticsState {
   Performance_Analytics_List: Types.Analytics[];
   Gender_List: Types.Analytics[];
   Age_List : Types.Analytics[];
-  Tool_List: Types.Analytics[];
+  ROC_Calibration_List: Types.Analytics[];
   Demo_List: Types.Analytics[];
-  Calibration_List: Types.Analytics[];
+  PCR_Calibration_List: Types.Analytics[];
 }
 
 export interface QuestionsState {

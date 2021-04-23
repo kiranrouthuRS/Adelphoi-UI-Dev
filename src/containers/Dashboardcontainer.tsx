@@ -37,11 +37,11 @@ export interface DashboardContainerProps
   getProgram_AllocationAnalytics: (analytics: any,accessToken: any) => Promise<void>;
   getPerformance_Analytics: (analytics: any,accessToken: any) => Promise<void>;
   getStayAnalytics: (analytics: any,accessToken: any) => Promise<void>;
-  get_Tool_Analytics: (analytics: any,accessToken: any) => Promise<void>;
+  get_ROC_Calibration_Analytics: (analytics: any,accessToken: any) => Promise<void>;
   getGender_Analytics: (analytics: any,accessToken: any) => Promise<void>;
   GetAge_Analytics: (analytics: any,accessToken: any) => Promise<void>;
   get_Demo_Analytics: (analytics: any,accessToken: any) => Promise<void>;
-  get_Calibration_Analytics: (analytics: any,accessToken: any) => Promise<void>;
+  get_PCR_Calibration_Analytics: (analytics: any,accessToken: any) => Promise<void>;
   getMarket_Analytics: (analytics: any,accessToken: any) => Promise<void>;
   getLocations: (accessToken: any) => Promise<void>;
   Referral: Types.Referral[];
@@ -84,24 +84,24 @@ export class DashboardContainer extends React.Component<
         history.push(`/${domainPath}/logout/`)
       } 
     }
-    this.props.getDateAnalytics(this.state.filters,is_accessToken);
-     this.props.getLocations(is_accessToken);
-     this.props.getPCRAnalytics(this.state.filters,is_accessToken);
-     this.props.getROCAnalytics(this.state.filters,is_accessToken);
-     this.props.getReplacementAnalytics(this.state.filters,is_accessToken);
-     this.props.getOccupancyAnalytics(this.state.filters,is_accessToken);
-     this.props.getAllocationAnalytics(this.state.filters,is_accessToken);
-     this.props.getProgram_AllocationAnalytics(this.state.filters,is_accessToken)
-     this.props.getStayAnalytics(this.state.filters,is_accessToken);
-     this.props.getMarket_Analytics(this.state.filters,is_accessToken);
-     this.props.get_Tool_Analytics(this.state.filters,is_accessToken);
-     this.props.get_Calibration_Analytics(this.state.filters,is_accessToken);
-     this.props.getGender_Analytics(this.state.filters,is_accessToken);
-     this.props.GetAge_Analytics(this.state.filters,is_accessToken);
-    const demo = { q: "lang", days_count: '30' };
-     this.props.get_Demo_Analytics(demo,is_accessToken) 
+   // this.props.getDateAnalytics(this.state.filters,is_accessToken);
+      this.props.getLocations(is_accessToken);
+    //  this.props.getPCRAnalytics(this.state.filters,is_accessToken);
+    //  this.props.getROCAnalytics(this.state.filters,is_accessToken);
+    //  this.props.getReplacementAnalytics(this.state.filters,is_accessToken);
+    //  this.props.getOccupancyAnalytics(this.state.filters,is_accessToken);
+      this.props.getAllocationAnalytics(this.state.filters,is_accessToken);
+      this.props.getProgram_AllocationAnalytics(this.state.filters,is_accessToken)
+    //  this.props.getStayAnalytics(this.state.filters,is_accessToken);
+      this.props.getMarket_Analytics(this.state.filters,is_accessToken);
+     this.props.get_ROC_Calibration_Analytics(this.state.filters,is_accessToken);
+     this.props.get_PCR_Calibration_Analytics(this.state.filters,is_accessToken);
+      this.props.getGender_Analytics(this.state.filters,is_accessToken);
+      this.props.GetAge_Analytics(this.state.filters,is_accessToken);
+    //  const demo = { q: "lang", days_count: '30' };
+    //   this.props.get_Demo_Analytics(demo,is_accessToken) 
     const data = { referral_source: "0", days_count: '30' };
-     this.props.getPerformance_Analytics(data,is_accessToken);
+     //this.props.getPerformance_Analytics(data,is_accessToken);
   }
 
   getDateAnalytics = async (analytics: any) => {
@@ -115,8 +115,8 @@ export class DashboardContainer extends React.Component<
     await this.props.getAllocationAnalytics(analytics,is_accessToken);
     await this.props.getProgram_AllocationAnalytics(analytics,is_accessToken);
     await this.props.getMarket_Analytics(analytics,is_accessToken);
-    await this.props.get_Tool_Analytics(analytics,is_accessToken);
-    await this.props.get_Calibration_Analytics(analytics,is_accessToken);
+    await this.props.get_ROC_Calibration_Analytics(analytics,is_accessToken);
+    await this.props.get_PCR_Calibration_Analytics(analytics,is_accessToken);
     await this.props.getGender_Analytics(analytics,is_accessToken);
     await this.props.GetAge_Analytics(analytics,is_accessToken);
     const demo = {
@@ -137,6 +137,7 @@ export class DashboardContainer extends React.Component<
   };
 
   getTotalAnalytics = async (filter: any) => {
+    console.log(filter)
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     await this.props.getDateAnalytics(filter,is_accessToken);
   };
@@ -162,7 +163,7 @@ export class DashboardContainer extends React.Component<
   };
   getCalibration = async (filter: any) => {
     const is_accessToken: any = this.state.accessToken
-    await this.props.get_Calibration_Analytics(filter,is_accessToken)
+    await this.props.get_PCR_Calibration_Analytics(filter,is_accessToken)
   };
   render() {
     const {
@@ -184,8 +185,8 @@ export class DashboardContainer extends React.Component<
     const performance_analytics_List = (analyticsState && analyticsState.Performance_Analytics_List) || [];
     const gender_analytics_List = (analyticsState && analyticsState.Gender_List) || [];
     const age_analytics_List = (analyticsState && analyticsState.Age_List) || [];
-    const tool_analytics_List = (analyticsState && analyticsState.Tool_List) || [];
-    const Cali_analytics_List = (analyticsState && analyticsState.Calibration_List) || [];
+    const tool_analytics_List = (analyticsState && analyticsState.ROC_Calibration_List) || [];
+    const Cali_analytics_List = (analyticsState && analyticsState.PCR_Calibration_List) || [];
     const demo_analytics_List = (analyticsState && analyticsState.Demo_List) || [];
     // const clientList = (clientState && clientState.clientList) || {};
     return (
@@ -204,7 +205,7 @@ export class DashboardContainer extends React.Component<
             Allocation_List={allocationList}
             Market_List={market_analytics_List}
             PerformanceList={performance_analytics_List}
-            CalibrationList={Cali_analytics_List}
+            PCRCalibrationList={Cali_analytics_List}
             Location={locationList}
             onFormSubmit={this.getDateAnalytics}
             totalAnalytics={this.getTotalAnalytics}
@@ -213,7 +214,7 @@ export class DashboardContainer extends React.Component<
             Performance_Analytics={this.getPerformance}
             Demo_Analytics={this.getDemo}
             Calibration_Analytics={this.getCalibration}
-            Tool_List={tool_analytics_List}
+            ROCCalibrationList={tool_analytics_List}
             Gender_List={gender_analytics_List}
             Age_List={age_analytics_List}
             Demo_List={demo_analytics_List}
@@ -251,9 +252,9 @@ const mapDispatchToProps = {
   getPerformance_Analytics: analytics.actions.getPerformance_Analytics,
   getGender_Analytics: analytics.actions.getGender_Analytics,
   GetAge_Analytics: analytics.actions.GetAge_Analytics,
-  get_Tool_Analytics: analytics.actions.get_Tool_Analytics,
+  get_ROC_Calibration_Analytics: analytics.actions.get_ROC_Calibration_Analytics,
   get_Demo_Analytics: analytics.actions.get_Demo_Analytics,
-  get_Calibration_Analytics: analytics.actions.get_Calibration_Analytics
+  get_PCR_Calibration_Analytics: analytics.actions.get_PCR_Calibration_Analytics
 };
 
 export default connect(

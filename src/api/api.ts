@@ -844,7 +844,7 @@ export const fetchDateAnalytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-
+console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
@@ -1059,7 +1059,7 @@ export const fetchAllocated_ProgramAnalytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-
+console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
@@ -1090,7 +1090,8 @@ export const fetch_Market_Analytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-
+    console.log(`${baseApiUrl}/${domainPath}/analytics/market?${queryString}`)
+    console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
@@ -1121,7 +1122,8 @@ export const fetch_Performance_Analytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-
+console.log(`${baseApiUrl}/${domainPath}/analytics/performance?${queryString}`)
+console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
@@ -1130,7 +1132,7 @@ export const fetch_Performance_Analytics = async (
     throwError(error);
   }
 };
-export const fetch_Tool_Analytics = async (
+export const fetch_ROC_Calibration_Analytics = async (
   analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
@@ -1146,12 +1148,12 @@ export const fetch_Tool_Analytics = async (
   }
 
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=table&${queryString}`, {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=graph&${queryString}&q1=roc`, {
       headers: {
         'Authorization': `Bearer ${accessToken}`
       }
     });
-
+    console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
@@ -1160,7 +1162,7 @@ export const fetch_Tool_Analytics = async (
     throwError(error);
   }
 };
-export const fetch_Calibration_Analytics = async (
+export const fetch_PCR_Calibration_Analytics = async (
   analytics: any, accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
@@ -1176,12 +1178,12 @@ export const fetch_Calibration_Analytics = async (
   }
 
   try {
-    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=graph&${queryString}`, {
+    const response = await axios.get(`${baseApiUrl}/${domainPath}/analytics/calibration?q=graph&${queryString}&q1=pcr`, {
       headers: {
         'Authorization': `Bearer ${accessToken}`
       }
     });
-
+   console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;

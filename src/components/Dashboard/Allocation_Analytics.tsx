@@ -46,7 +46,11 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
             'Chosen'
         ],
         datasets: [{
-            data: [Object.keys(props.Allocation_List).length > 0 && props.Allocation_List ? props.Allocation_List.tool && props.Allocation_List.tool.percentage.replace(/%/g, "") : 0, Object.keys(props.Allocation_List).length > 0 && props.Allocation_List ? props.Allocation_List.chosen && props.Allocation_List.chosen.percentage.replace(/%/g, "") : 0],
+            data: [Object.keys(props.Allocation_List).length > 0 
+                && props.Allocation_List ? props.Allocation_List.tool 
+                && props.Allocation_List.tool.percentage.replace(/%/g, "") : 0, 
+                Object.keys(props.Allocation_List).length > 0 && props.Allocation_List ? 
+                props.Allocation_List.chosen && props.Allocation_List.chosen.percentage.replace(/%/g, "") : 0],
             backgroundColor: [
                 '#FF6384',
                 '#36A2EB',

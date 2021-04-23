@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import React, { useState, useEffect } from "react";
-// import { useHistory } from "react-router-dom";
 import { Formik, ErrorMessage } from "formik";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -51,7 +50,6 @@ interface Program_AnalyticsProps {
 }
 
 const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
-    // const history = useHistory();
     const classes = useStyles();
     const program = {
         labels: [
@@ -75,7 +73,7 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
 
     useEffect(() => {
         props.onSelectChange(filters)
-    }, [filters]);
+    }, [filters.referral_source || filters.location]);
     
     useEffect(()=>{
         setfilters(prevState => {
@@ -83,10 +81,7 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
         });
     },[props.filter.days_count]) 
     return (
-        <div
-        //style={{ boxSizing: "content-box", width: "100%", border: "solid #5B6DCD 1px", padding: "10px", marginBottom: "10px" }}
-        >
-            {/* <h1 css={subHeading} >Program Analytics  – of referrals who are accepted and placed.​</h1> */}
+        <div>
             <Grid container spacing={3} >
                 <Grid item xs={6} sm={3}>
                     <label css={txtLabel}
