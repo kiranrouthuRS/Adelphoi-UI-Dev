@@ -34,7 +34,7 @@ export interface ClientDetailsContainerProps
     program: string | null,
     location: string | null
   ) => Promise<string>;
-  getAvailablePrograms: () => Promise<void>;
+  // getAvailablePrograms: () => Promise<void>;
   submitPrediction: (client: Types.Client) => Promise<void>;
   getLocations: (
     client_code: string,
@@ -84,7 +84,7 @@ export class ClientDetailsContainer extends React.Component<
     await this.props.getProgramsForClient(index);
     this.setState({ isLoading: false });
     this.props.closeSnackbar();
-    this.props.getAvailablePrograms();
+    // this.props.getAvailablePrograms();
     this.props.getReferral();
   }
 
@@ -210,7 +210,7 @@ const mapDispatchToProps = {
   getReferral: referral.actions.getReferral,
   searchClient: client.actions.searchClient,
   //updateProgramCompletion: client.actions.updateProgramCompletion,
-  getAvailablePrograms: program.actions.getAvailablePrograms,
+  // getAvailablePrograms: program.actions.getAvailablePrograms,
   submitPrediction: client.actions.submitPrediction,
   getLocations: client.actions.getLocations,
   getPcr: client.actions.getPcr,

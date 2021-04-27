@@ -47,9 +47,9 @@ export interface DynamicNewClientContainerProp
   saveLocationAndProgram: (selected_location: string) => Promise<void>; 
   clearErrors: () => void;
   clearClient: () => void;
-  getAvailablePrograms: () => Promise<void>;
+  // getAvailablePrograms: () => Promise<void>;
   getConfiguredQuestions: (is_accessToken: any) => Promise<void>;
-  getReferral: () => Promise<void>;
+  // getReferral: () => Promise<void>;
   logo: () => Promise<void>;
   Referral: Types.Referral[];
   isEdit: string;
@@ -91,7 +91,7 @@ export class DynamicNewClientContainer extends React.Component<
  async componentDidMount() {
     const { index } = this.props.match.params;
     this.props.closeSnackbar();
-    this.props.getAvailablePrograms();
+    // this.props.getAvailablePrograms();
   const response = await this.GetQuestions();
    }
 
@@ -281,7 +281,7 @@ const mapDispatchToProps = {
   saveLocationAndProgram: dynamicclient.actions.saveLocationAndProgram,
   clearErrors: client.actions.clearErrors,
   clearClient: client.actions.clear,
-  getAvailablePrograms: program.actions.getAvailablePrograms,
+  // getAvailablePrograms: program.actions.getAvailablePrograms,
   getConfiguredQuestions: dynamicclient.actions.getConfiguredQuestions,
 };
 

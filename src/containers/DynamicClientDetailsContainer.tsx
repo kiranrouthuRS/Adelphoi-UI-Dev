@@ -39,7 +39,7 @@ export interface DynamicClientDetailsContainerProps
     end_date: string | null,
     referral_status: string | null
   ) => Promise<string>;
-  getAvailablePrograms: () => Promise<void>;
+  // getAvailablePrograms: () => Promise<void>;
   submitPrediction: (client: Types.Client) => Promise<void>;
   getLocations: (
     client_code: string,
@@ -56,7 +56,7 @@ export interface DynamicClientDetailsContainerProps
   clearClient: () => void;
   getProgramsForClient: (client_code: string, version: string) => Promise<void>;
   updateFormValues: (client_code: string, values: any) => void;
-  getReferral: () => Promise<void>;
+  // getReferral: () => Promise<void>;
   Referral: Types.Referral[];
 }
 
@@ -94,8 +94,8 @@ export class DynamicClientDetailsContainer extends React.Component<
     await this.props.getProgramsForClient(index, version);
     this.setState({ isLoading: false });
     this.props.closeSnackbar();
-    this.props.getAvailablePrograms();
-    this.props.getReferral();
+    // this.props.getAvailablePrograms();
+    // this.props.getReferral();
   }
 
   searchClient = async (client_code: string, client_name: string) => {
@@ -234,10 +234,10 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps = {
-  getReferral: referral.actions.getReferral,
+  // getReferral: referral.actions.getReferral,
   searchClient: client.actions.searchClient,
   updateProgramCompletion: dynamicclient.actions.updateProgramCompletion,
-  getAvailablePrograms: program.actions.getAvailablePrograms,
+  // getAvailablePrograms: program.actions.getAvailablePrograms,
   submitPrediction: client.actions.submitPrediction,
   getLocations: dynamicclient.actions.getLocations,
   getPcr: dynamicclient.actions.getPcr,

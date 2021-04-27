@@ -234,6 +234,7 @@ export const insertDClient = async (client_form, is_accessToken) => {
         'Authorization': `Bearer ${is_accessToken}`
       }
     });
+    console.log(response)
     // if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
     //   throw new Error(response.data["ERROR"]);
     // }
@@ -844,8 +845,7 @@ export const fetchDateAnalytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-console.log(response)
-    const data = (response.data.response as unknown) as Types.Analytics[];
+const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1059,8 +1059,7 @@ export const fetchAllocated_ProgramAnalytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-console.log(response)
-    const data = (response.data.response as unknown) as Types.Analytics[];
+const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1090,8 +1089,6 @@ export const fetch_Market_Analytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-    console.log(`${baseApiUrl}/${domainPath}/analytics/market?${queryString}`)
-    console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
@@ -1122,9 +1119,7 @@ export const fetch_Performance_Analytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-console.log(`${baseApiUrl}/${domainPath}/analytics/performance?${queryString}`)
-console.log(response)
-    const data = (response.data.response as unknown) as Types.Analytics[];
+const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {
@@ -1153,7 +1148,6 @@ export const fetch_ROC_Calibration_Analytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-    console.log(response)
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;

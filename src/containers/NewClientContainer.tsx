@@ -38,7 +38,7 @@ export interface NewClientContainerProp
   saveLocationAndProgram: (selected_location: string) => Promise<void>;
   clearErrors: () => void;
   clearClient: () => void;
-  getAvailablePrograms: () => Promise<void>;
+  // getAvailablePrograms: () => Promise<void>;
   getReferral: () => Promise<void>;
   Referral: Types.Referral[];
   isEdit: string;
@@ -62,7 +62,7 @@ export class NewClientContainer extends React.Component<
 
   componentDidMount() {
     this.props.closeSnackbar();
-    this.props.getAvailablePrograms();
+    // this.props.getAvailablePrograms();
     this.props.getReferral();
     
   }
@@ -267,7 +267,7 @@ const mapDispatchToProps = {
   saveLocationAndProgram: client.actions.saveLocationAndProgram,
   clearErrors: client.actions.clearErrors,
   clearClient: client.actions.clear,
-  getAvailablePrograms: program.actions.getAvailablePrograms,
+  // getAvailablePrograms: program.actions.getAvailablePrograms,
   getReferral: referral.actions.getReferral,
 };
 

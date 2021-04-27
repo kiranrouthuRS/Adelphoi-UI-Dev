@@ -32,8 +32,8 @@ export interface DynamicExistingClientContainerProp
   extends ContainerProps,
     WithSnackbarProps {
   searchDClient: (client_code: string, client_name: string, is_accessToken: any) => void;
-  getAvailablePrograms: () => Promise<void>;
-  getReferral: () => Promise<void>;
+  // getAvailablePrograms: () => Promise<void>;
+  // getReferral: () => Promise<void>;
 }
 
 export class DynamicExistingClientContainer extends React.Component<
@@ -56,8 +56,8 @@ DynamicExistingClientContainerState
 
   componentDidMount() {
     this.props.closeSnackbar();
-    this.props.getAvailablePrograms();
-    this.props.getReferral();
+    // this.props.getAvailablePrograms();
+    // this.props.getReferral();
   }
 
   searchDClient = async (client_code: string, client_name: string) => {
@@ -127,8 +127,8 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
   searchDClient: dynamicclient.actions.searchDClient,
-  getAvailablePrograms: program.actions.getAvailablePrograms,
-  getReferral: referral.actions.getReferral
+  // getAvailablePrograms: program.actions.getAvailablePrograms,
+  // getReferral: referral.actions.getReferral
 };
 
 export default connect(

@@ -137,7 +137,6 @@ export class DashboardContainer extends React.Component<
   };
 
   getTotalAnalytics = async (filter: any) => {
-    console.log(filter)
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     await this.props.getDateAnalytics(filter,is_accessToken);
   };

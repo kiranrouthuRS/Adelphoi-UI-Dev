@@ -93,9 +93,9 @@ export class ConfigurationContainer extends React.Component<
       } 
     }
     await this.props.getUsers();
-    await  this.props.getReferral();
-    await this.props.getPrograms();
-    await this.props.getLocations(); 
+    // await  this.props.getReferral();
+    // await this.props.getPrograms();
+    // await this.props.getLocations();   
     
   }
 

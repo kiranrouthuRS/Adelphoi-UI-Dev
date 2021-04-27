@@ -29,7 +29,7 @@ export interface ExistingClientContainerProp
   extends ContainerProps,
     WithSnackbarProps {
   searchClient: (client_code: string, client_name: string) => void;
-  getAvailablePrograms: () => Promise<void>;
+  // getAvailablePrograms: () => Promise<void>;
   getReferral: () => Promise<void>;
 }
 
@@ -52,7 +52,7 @@ export class ExistingClientContainer extends React.Component<
 
   componentDidMount() {
     this.props.closeSnackbar();
-    this.props.getAvailablePrograms();
+    // this.props.getAvailablePrograms();
     this.props.getReferral();
   }
 
@@ -113,7 +113,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
   searchClient: client.actions.searchClient,
-  getAvailablePrograms: program.actions.getAvailablePrograms,
+  // getAvailablePrograms: program.actions.getAvailablePrograms,
   getReferral: referral.actions.getReferral
 };
 

@@ -125,7 +125,6 @@ export const actions = {
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const response = await fetchAllocationAnalytics(filter,accessToken);
-      console.log(response)
       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
@@ -174,10 +173,8 @@ export const actions = {
     accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      console.log(analytics)
       const response = await fetchDateAnalytics(analytics,accessToken);
-      console.log(response)
-      // if (!response) {
+       // if (!response) {
       //   throw Error("something went wrong getting list of analytics");
       // }
       dispatch(update({ analyticsList: response })); 
