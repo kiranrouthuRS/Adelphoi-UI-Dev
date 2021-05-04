@@ -20,7 +20,7 @@ export interface LogoutProps {
   
 }
 
-const Logout: React.FC<LogoutProps> = props => {
+const LOGOUT: React.FC<LogoutProps> = props => {
   const history = useHistory();
   const {  logout, appState } = props;
   const { user } = appState;
@@ -57,5 +57,5 @@ const mapDispatchToProps = {
   
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Logout);
+export default connect(mapStateToProps, mapDispatchToProps)(LOGOUT);
 

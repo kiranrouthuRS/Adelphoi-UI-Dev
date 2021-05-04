@@ -18,7 +18,7 @@ const PRoute: React.FC<PrivateRouteProps> = (props) => {
   const { user, ...routeProps   } = props;  
   //const { user } = appState;
   //const accessToken = store.getState().user.user.accessToken; 
-  if (!user || user.user.accessToken === "") {
+  if (localStorage.refreshToken === undefined) {
     return (
       <React.Fragment>
         

@@ -28,7 +28,7 @@ export class LoginContainer extends React.Component<
   constructor(props: LoginContainerProp) {
     super(props);
     const isLoggedIn: any = props.user && props.user.user;
-    if (isLoggedIn.accessToken) {
+    if (localStorage.refreshToken) {
       this.props.history.push(`/${domainPath}/new-client`)
       
     }

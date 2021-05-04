@@ -8,7 +8,7 @@ import { ContainerProps } from "./Container";
 import * as client from "../redux-modules/client";
 import * as program from "../redux-modules/program";
 import * as dynamicclient from "../redux-modules/dynamicclient";
-import ReferralList from "../components/ReferralList"; 
+import ReferralList from "../components/ReferralList";
 import PredictionFormStep from "../components/PredictionFormStep";
 import PredictionFormStep2 from "../components/PredictionFormStep2";
 import ProgramSelection from "../components/ProgramSelection";
@@ -22,7 +22,7 @@ export interface DynamicNewClientContainerState {
   error: any;
   hasError: boolean;
   isSuccess: boolean;
-  }
+}
 
 export interface DynamicClient {
   [key: string]: any;
@@ -44,7 +44,7 @@ export interface DynamicNewClientContainerProp
     is_accessToken: any
   ) => Promise<void>;
   getPcr: (client_code: string, selected_program: string) => Promise<void>;
-  saveLocationAndProgram: (selected_location: string) => Promise<void>; 
+  saveLocationAndProgram: (selected_location: string) => Promise<void>;
   clearErrors: () => void;
   clearClient: () => void;
   // getAvailablePrograms: () => Promise<void>;
@@ -61,9 +61,9 @@ export class DynamicNewClientContainer extends React.Component<
   DynamicNewClientContainerState
   > {
   constructor(props: DynamicNewClientContainerProp) {
-      super(props);
-   this.state = this.getInitialState();
-   
+    super(props);
+    this.state = this.getInitialState();
+
   }
   getInitialState() {
     return {
@@ -76,25 +76,23 @@ export class DynamicNewClientContainer extends React.Component<
 
   GetQuestions = async () => {
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
+
     try {
       await this.props.getConfiguredQuestions(is_accessToken);
-      
+
     } catch (error) {
       console.log(error)
       const { history } = this.props;
       if (error.status === 403) {
         history.push(`/${domainPath}/logout/`)
-      } 
+      }
     }
   }
 
- async componentDidMount() {
-    const { index } = this.props.match.params;
+  async componentDidMount() {
     this.props.closeSnackbar();
     // this.props.getAvailablePrograms();
-  const response = await this.GetQuestions();
-   }
-
+    }
   saveClientStep1 = async (client: Types.DynamicClient) => {
     const { history } = this.props;
     const { index } = this.props.match.params;
@@ -102,25 +100,26 @@ export class DynamicNewClientContainer extends React.Component<
     this.setState({ isLoading: true });
     //this.props.saveClient(client, true, true);
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
-    const is_role_type: any = this.props.user && this.props.user.user.role_type 
-    const is_prediction_available: any = this.props.user && this.props.user.user.is_prediction_available 
-     const res: any = await this.props.insertDClient(client, is_accessToken);
-     this.setState({ isLoading: false, error: "" });
+    const is_role_type: any = this.props.user && this.props.user.user.role_type
+    const is_prediction_available: any = this.props.user && this.props.user.user.is_prediction_available
+    const res: any = await this.props.insertDClient(client, is_accessToken);
+    this.setState({ isLoading: false, error: "" });
     if (res !== null && res.data.message === "client registered") {
-      this.setState({isSuccess: true})
+      this.setState({ isSuccess: true })
       this.props.enqueueSnackbar(index ? "Client details updated Successfully." : "New Client Created Successfully.");
-      {is_role_type === "Contributor" || client["Exclusionary Criteria Exists/Referral Rejected"] === "0" || !is_prediction_available ? 
-      history.push(`/${domainPath}/new-client/`) :
-      history.push(`/${domainPath}/new-client/program-selection`)
-      
-    }
+      {
+        is_role_type === "Contributor" || client["Exclusionary Criteria Exists/Referral Rejected"] === "0" || !is_prediction_available ?
+          history.push(`/${domainPath}/new-client/`) :
+          history.push(`/${domainPath}/new-client/program-selection`)
+
+      }
     }
     else {
       this.setState({
-        error:  res.data.response
+        error: res.data.response
       })
     }
-    
+
   };
 
   getLocationsAndPcr = async (selected_program: string) => {
@@ -135,7 +134,7 @@ export class DynamicNewClientContainer extends React.Component<
     await this.props.getLocations(
       clientState.client["Client Code"]!,
       selected_program,
-      is_accessToken 
+      is_accessToken
     );
     this.setState({ isLoading: false });
   };
@@ -173,7 +172,7 @@ export class DynamicNewClientContainer extends React.Component<
       return;
     }
     this.setState({ isLoading: true });
-   await this.props.saveLocationAndProgram(selected_location); 
+    await this.props.saveLocationAndProgram(selected_location);
     this.setState({ isLoading: false });
 
     this.props.enqueueSnackbar("Data saved successfully.");
@@ -194,8 +193,8 @@ export class DynamicNewClientContainer extends React.Component<
       this.props.enqueueSnackbar("New Client Created Successfully.");
       {
         is_role_type === "Contributor" ?
-        history.push(`/${domainPath}/new-client/`) :
-        history.push(`/${domainPath}/new-client/program-selection`)
+          history.push(`/${domainPath}/new-client/`) :
+          history.push(`/${domainPath}/new-client/program-selection`)
       }
 
     } catch (error) {
@@ -216,49 +215,49 @@ export class DynamicNewClientContainer extends React.Component<
     currentClient = clientState ? clientState.client : Types.emptyClient;
     const availableProgramList =
       (programState && programState.availableProgramList) || [];
-      return (
-        <Switch>
-          <Route exact path={`/${domainPath}/new-client/program-selection`}>
-            <ProgramSelection
-              client={currentClient}
-              {...this.state}
-              onProgramSelect={this.getLocationsAndPcr}
-              onLocationSelect={this.saveProgramAndLocation}
-              submitPrediction={this.submitProgram}
-              isLoading={this.state.isLoading}
-              programList={availableProgramList}
-            />
-          </Route>
-          <Route
-            exact
-            path={`/${domainPath}/new-client/2`}
-            render={routeProps => {
-              return (
-                <PredictionFormStep2
-                  {...this.state}
-                  {...routeProps}
-                  client={currentClient}
-                  onFormSubmit={this.saveClientStep2}
-                  errors={(clientState && clientState.errors) || undefined}
-                />
-              );
-            }}
-          ></Route>
-          <Route exact path={index ? `/${domainPath}/existing-client/edit-details/:index&:isEdit` : `/${domainPath}/new-client`}>
-            <PredictionFormStep
-              {...this.state}
-              isEdit={index ? "true" :"false"}
-              Referral={referralList}
-              user={this.props && this.props.user}
-              DynamicQuestions={index? clientList[index].sections : configuredQuestionsList}
-              // DynamicQuestions={index ? Object.keys(clientList[index]).map((key, id) => clientList[index][key] && clientList[index][key].hasOwnProperty("section") ? clientList[index][key] : "") : configuredQuestionsList}
-              client={currentClient.model_program ? Types.emptyClient : currentClient}
-              onFormSubmit={this.saveClientStep1}
-              errors={this.state.error}
-            />
-          </Route>
-        </Switch>
-      );
+    return (
+      <Switch>
+        <Route exact path={`/${domainPath}/new-client/program-selection`}>
+          <ProgramSelection
+            client={currentClient}
+            {...this.state}
+            onProgramSelect={this.getLocationsAndPcr}
+            onLocationSelect={this.saveProgramAndLocation}
+            submitPrediction={this.submitProgram}
+            isLoading={this.state.isLoading}
+            programList={availableProgramList}
+          />
+        </Route>
+        <Route
+          exact
+          path={`/${domainPath}/new-client/2`}
+          render={routeProps => {
+            return (
+              <PredictionFormStep2
+                {...this.state}
+                {...routeProps}
+                client={currentClient}
+                onFormSubmit={this.saveClientStep2}
+                errors={(clientState && clientState.errors) || undefined}
+              />
+            );
+          }}
+        ></Route>
+        <Route exact path={index ? `/${domainPath}/existing-client/edit-details/:index&:isEdit` : `/${domainPath}/new-client`}>
+          <PredictionFormStep
+            {...this.state}
+            isEdit={index ? "true" : "false"}
+            Referral={referralList}
+            user={this.props && this.props.user}
+            DynamicQuestions={index ? clientList[index].sections : configuredQuestionsList}
+            // DynamicQuestions={index ? Object.keys(clientList[index]).map((key, id) => clientList[index][key] && clientList[index][key].hasOwnProperty("section") ? clientList[index][key] : "") : configuredQuestionsList}
+            client={currentClient.model_program ? Types.emptyClient : currentClient}
+            onFormSubmit={this.saveClientStep1}
+            errors={this.state.error}
+          />
+        </Route>
+      </Switch>
+    );
   }
 }
 

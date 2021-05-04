@@ -62,7 +62,7 @@ export const login = async (email: string, password: string, domain: string) => 
       username: email,
       password: password
     });
-    localStorage.setItem("refreshToken", response.data.refresh_token);
+    localStorage.setItem("refreshToken", response.data.response.token);
     return response.data;
   } catch (error) {
     console.error("api function login error");
@@ -71,24 +71,12 @@ export const login = async (email: string, password: string, domain: string) => 
 };
 
 export const Logout = async (accessToken) => {
+  const { dispatch } = store;
   const currentUser = store.getState().user.user.accessToken;
+  
   try {
-    // const myHeaders = new Headers();
-    // myHeaders.append("Authorization", `Bearer ${accessToken}`);
-
-    // const formdata = new FormData();
-
-    // const req = {
-    //   headers: myHeaders,
-    //   body: formdata
-    // }
-    // const response = await axios.post(`${baseApiUrl}/${domainPath}/logout`, {
-    //   headers: {
-    //     'Authorization': `Bearer ${accessToken}`
-    //   }
-    // })
     let myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${accessToken}`);
+    myHeaders.append("Authorization", `Bearer ${accessToken ? accessToken : currentUser}`);
 
     let requestOptions = {
       method: 'POST',
@@ -100,7 +88,8 @@ export const Logout = async (accessToken) => {
       .then(response => response.text())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));
-    localStorage.clear()
+     localStorage.removeItem("refreshToken")
+     
 
   } catch (error) {
     console.error("api function fetchLocationsList error");
@@ -234,7 +223,6 @@ export const insertDClient = async (client_form, is_accessToken) => {
         'Authorization': `Bearer ${is_accessToken}`
       }
     });
-    console.log(response)
     // if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
     //   throw new Error(response.data["ERROR"]);
     // }
@@ -1177,8 +1165,7 @@ export const fetch_PCR_Calibration_Analytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-   console.log(response)
-    const data = (response.data.response as unknown) as Types.Analytics[];
+   const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
   } catch (error) {

@@ -3,15 +3,17 @@ import React, {useEffect} from "react";
 import { SnackbarProvider } from "notistack";
 import createHistory from "history/createBrowserHistory";
 import { Provider } from "react-redux";
+import { connect } from "react-redux";
 //import { PersistGate } from "redux-persist/integration/react";
 import configureStore from "./redux-modules/configureStore";
-
+import { AppState } from "./redux-modules/root";
+import * as user from "./redux-modules/user";
 import { css, jsx, Global } from "@emotion/core";
 import {
   Switch,
   Route,
   BrowserRouter as Router,
-  Redirect
+  Redirect,useHistory
 } from "react-router-dom";
 import AppShell from "./AppShell";
 
@@ -21,7 +23,8 @@ import ExistingClientContainer from "./containers/ExistingClientContainer";
 import DynamicExistingClientContainer from "./containers/DynamicExistingClientContainer";
 import ConfigurationContainer from "./containers/ConfigurationContainer";
 import LoginContainer from "./containers/LoginContainer";
-import Logout from "./components/Logout"; 
+import {Logout} from "./api/api";  
+import LOGOUT from "./components/Logout";
 import axios from "axios";
 import PrivateRoute from './PrivateRoute';
 import Welcomepage from './components/welcomepage'
@@ -29,42 +32,43 @@ import ChangePasswordContainer from './containers/ChangePasswordContainer'
 import BillingDetailsContainer from './containers/BillingDetailsContainer'
 import DashboardContainer from './containers/Dashboardcontainer'
 import { baseApiUrl } from "./api/api"; 
+import { id } from "date-fns/esm/locale";
 export const { store } = configureStore(createHistory());
 const url = typeof window !== 'undefined' ? window.location.pathname : '';
   let str1 = url.split('/');
   let dom = str1[1];
   export const domainPath = dom; 
-  
-const App: React.FC = (props) => {
+  export interface AppProps {
+    appState: AppState;
+    logout: (accessToken:any) => void;
+    
+  }
+const App: React.FC<AppProps> = props => {
+  const {  logout, appState } = props;
+  const { user } = appState;
+  const accessToken = store.getState().user.user?.accessToken 
   let is_configured: any = store.getState().user.user?.is_fully_configured; 
-  let accessToken: any = store.getState().user.user?.accessToken; 
-//   useEffect(() => {
-//           window.addEventListener('beforeunload', alertUser)
-//           window.addEventListener('unload', handleTabClosing)
-//       return () => {
-//           window.removeEventListener('beforeunload', alertUser)
-//           window.removeEventListener('unload', handleTabClosing)
-          
-//     }
+  useEffect(() => { 
+    const entries: any = performance.getEntriesByType("navigation");
+    const action = entries.map( nav => nav.type )
+    if(action[0] !== "reload"){
+      if(localStorage.refreshToken){
+        localStorage.removeItem("refreshToken")
+         //logout(accessToken);
+        //  localStorage.clear()
+        //history.push(`/${domainPath}/new-client`);
+      }
+      
+    }
     
-// })
+},[localStorage.refreshToken])
 
-// const handleTabClosing = async(e) => {
-//   await localStorage.clear();
-    
-//   }
-
-// const alertUser = (event:any) => {
-//     event.preventDefault()
-//     event.returnValue = ''
-  
-// }
 return (
     <React.Fragment>
       
       
       <Provider store={store}> 
-      
+       
         <SnackbarProvider
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
@@ -72,12 +76,7 @@ return (
           
           <Switch>
              <Route exact path={`/${dom}`}>
-                {is_configured&& is_configured === true ? (
-                    <Redirect to={`/${dom}/new-client`} /> 
-                  ):(
-                    <Redirect to={`/${dom}/welcomepage`} /> 
-                    
-                  )}
+             <Redirect to={`/${dom}/new-client`} /> 
                   
                 </Route>
                 <Route
@@ -99,7 +98,7 @@ return (
                 />
                 <PrivateRoute
                   path={`/${dom}/logout`}
-                  component={Logout}
+                  component={LOGOUT}
                 />
                 <PrivateRoute
                   path={`/${dom}/changepassword`}
@@ -125,4 +124,16 @@ return (
   );
 };
 
-export default App;
+const mapStateToProps = (state: AppState) => {
+  return {
+    user: state.user,
+    appState: state
+  };
+};
+
+const mapDispatchToProps = {
+  logout: user.actions.logout,
+  
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
