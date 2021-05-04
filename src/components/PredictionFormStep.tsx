@@ -290,7 +290,7 @@ export class PredictionFormStep extends React.Component<
         this.setState({
           client_form: {
             ...this.state.client_form,
-            [name]: type === "select" ? [value] : value
+            [name]:  value
           },
           hasError: false,
         })
@@ -325,9 +325,10 @@ export class PredictionFormStep extends React.Component<
           client_form,
           Required_List
         })
-      } else if (this.state.prevJump[name]) {
-        this.formState();
       }
+      //  else if (this.state.prevJump[name]) {
+      //   this.formState();
+      // }
 
     }
     else {
@@ -453,6 +454,7 @@ export class PredictionFormStep extends React.Component<
   render() {
     const { DynamicQuestions } = this.state;
     const { errors } = this.props;
+    
     return (
       <div css={wrap}>
 
