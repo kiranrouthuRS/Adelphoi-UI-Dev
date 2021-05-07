@@ -71,7 +71,7 @@ export class LoginContainer extends React.Component<
         } 
       }else{
         this.setState({
-          error: res.message,
+          error: res.data.message,
           hasLoginError: true,
           isLoading: false
         });
@@ -80,7 +80,7 @@ export class LoginContainer extends React.Component<
      
     } catch (e) {
       console.log(e,"error");
-      const error = "Invalid Credentials"; 
+      const error = e.data.message ? e.data.message: "Invalid Credentials"; 
       this.setState({
         error,
         hasLoginError: true,
