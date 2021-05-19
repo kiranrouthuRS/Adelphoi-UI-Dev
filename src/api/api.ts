@@ -1338,7 +1338,7 @@ export const updateProgramCompletion = async (
       ["Remained Out of Care"] : Remained_Out_of_Care,
       program_significantly_modified : program_significantly_modified,
       program: program,
-      location: location,
+      location: location.value,
       start_date : start_date,
       end_date : end_date,
       referral_status : referral_status,
