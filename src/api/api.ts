@@ -8,7 +8,8 @@ import { domainPath } from "../App"
 import { AppState } from "../redux-modules/root";
 import FormData from "form-data"
 export const baseApiUrl = `http://3.7.135.210:8005/organizations`;
-export const loginApiUrl = "http://3.7.135.210:8005";
+export const loginApiUrl = "http://3.7.135.210:8005"; 
+
 
 
 interface PredictionResponse {
@@ -782,7 +783,7 @@ export const fetchLocations = async (
   try {
     const currentUser = store.getState().user.user.accessToken;
     const response = await axios.get(
-      `${baseApiUrl}/${domainPath}/location/${client_code}?referred_program=${referred_program}`, {
+      `${baseApiUrl}/${domainPath}/location/${client_code}/?referred_program=${referred_program}`, {
       headers: {
         'Authorization': `Bearer ${is_accessToken}`
       }
@@ -1321,9 +1322,13 @@ export const updateProgramCompletion = async (
   Returned_to_Care: number | null,
   Remained_Out_of_Care: number | null,
   program_significantly_modified: number,
+  program: any,
+  location: any,
   start_date: any,
   end_date: any,
   referral_status: any,
+  confidence: any,
+  roc_confidence: any, 
   currentUser: any
 ) => {
   try {
@@ -1332,11 +1337,14 @@ export const updateProgramCompletion = async (
       Returned_to_Care : Returned_to_Care,
       ["Remained Out of Care"] : Remained_Out_of_Care,
       program_significantly_modified : program_significantly_modified,
+      program: program,
+      location: location,
       start_date : start_date,
       end_date : end_date,
-      referral_status : referral_status
+      referral_status : referral_status,
+      pcr_score: confidence,
+      roc_score: roc_confidence
     }
-    console.log(data)
     const response = await axios.put(
       `${baseApiUrl}/${domainPath}/program_complete/${client_code}/`,
       data, {

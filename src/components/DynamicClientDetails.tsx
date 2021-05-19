@@ -53,14 +53,14 @@ interface DynamicClientDetailsProps {
     program_completion: number | null,
     returned_to_care: number | null,
     Remained_Out_of_Care: number | null,
-    //roc_confidence: number | null,
-    program_significantly_modified: number,
+   program_significantly_modified: number,
     Program: string | null,
     Location: string | null,
     start_date: any | null,
     end_date: any | null,
     referral_status: any | null,
-
+    roc_confidence: any ,
+    confidence: any ,
     //Referral: string | null
   ) => void;
   isLoading: boolean;
@@ -83,8 +83,8 @@ interface FormValues {
   start_date: string;
   end_date: string;
   referral_status: any;
-  confidence: string;
-  roc_confidence: string;
+  confidence: number;
+  roc_confidence: number;
   Location: any;
   Referral: any;
 
@@ -285,7 +285,7 @@ const locationOptions = props.client.SuggestedLocations
     }
     return date;   
       };
-    
+   
 return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -385,8 +385,10 @@ return (
             
            if (values.Program !== predicted_program) {
             if (!values.Location) {
+              if(values.referral_status === "placed"){
                 errors.Location = "Required";
               }
+               }
               if (!values.referral_status) {
                 errors.referral_status = "Required";
               }
@@ -434,6 +436,7 @@ return (
               values.referral_status === ""
                 ? null
                 : values.referral_status;
+            const location =  values.Location === "" ? null : values.Location
             await props.onFormSubmit(
               searchData[0].client_code,
               Program_Completion,
@@ -441,10 +444,12 @@ return (
               Remained_Out_of_Care,
               Number(values.program_significantly_modified),
               values.Program!.value!,
-              values.Location!.value!,
+              location,
               start_date,
               end_date,
-              referral_status
+              referral_status, 
+              Number(values.confidence),
+              Number(values.roc_confidence)
 
               // values.Referral!.value!,
               //values.roc_confidence!.value!
@@ -466,6 +471,21 @@ return (
                 </label>
                 </div>
                 <div css={twoCol}>
+                <div css={fieldBox}>
+                    <input
+                      type="radio"
+                      onChange={handleChange}
+                      disabled = {version_changed} 
+                      name="referral_status"
+                      value="pending"
+                      checked={
+                        values.referral_status !== null
+                          ? values.referral_status === "pending"
+                          : false
+                      }
+                    />
+                    <label >Pending</label> 
+                  </div>
                   <div css={fieldBox}>
                     <input
                       type="radio"
@@ -618,7 +638,7 @@ return (
                   <select
                     css={selectField}
                     onChange={handleChange}
-                    disabled = {version_changed}
+                    disabled = {version_changed || values.referral_status === "pending"}
                     name="Program_Completion"
                     value={
                       values.Program_Completion !== null
@@ -627,21 +647,14 @@ return (
                     }
                   >
                     <option value="">Select</option>
-                    <option value="1" 
-                    // selected={values.Program_Completion !== null 
-                    //     ? values.Program_Completion && values.Program_Completion.toString() === "1"
-                    //     : ""} 
-                        >Yes</option> 
-                    <option value="0" 
-                    // selected={values.Program_Completion !== null
-                    //     ? values.Program_Completion && values.Program_Completion.toString() === "0"
-                    //     : ""} 
-                        >No</option>
+                    <option value="1">Yes</option> 
+                    <option value="0">No</option>
+                    <option value="2">Not Available</option>
                   </select>
                   <ErrorMessage component="span" name="Program_Completion" />
                 </div>
               </div>
-              {values.Program_Completion !== "" &&
+              {values.Program_Completion !== "" && values.Program_Completion !== "2" &&
                 <div css={fieldRow}>
                   <div css={twoCol}>
                     <label css={label}>End Date</label>
@@ -715,18 +728,9 @@ return (
                     }
                   >
                     <option value="">Select</option> 
-                    <option value="1" 
-                    //   selected = {values.Remained_Out_of_Care !== null
-                    //     ? values.Remained_Out_of_Care && values.Remained_Out_of_Care.toString() === "1"
-                    //     : ""
-                    // }
-                    >Yes</option>
-                    <option value="0" 
-                    // selected = {values.Remained_Out_of_Care !== null
-                    //     ? values.Remained_Out_of_Care && values.Remained_Out_of_Care.toString() === "0"
-                    //     : ""
-                    // }
-                    >No</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                    <option value="2">Not Available</option>
                   </select>
                 </div>
 
@@ -746,7 +750,8 @@ return (
               </div>
             </form>
           )}
-        </Formik>)}
+        </Formik>
+        )} 
       {props.program_completion_response && (
         <div css={subHeading}>{props.program_completion_response}</div>
       )}

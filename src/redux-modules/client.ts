@@ -63,7 +63,11 @@ export const actions = {
         "ddd",
         "hhh",
         "mmm",
-        "kkk"
+        "kkk",
+        "hjk",
+        "sgy",
+        "hjh",
+        "gsy"
       );
       if (!response) {
         throw Error("something went wrong while submitting");

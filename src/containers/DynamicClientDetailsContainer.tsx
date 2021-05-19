@@ -37,7 +37,9 @@ export interface DynamicClientDetailsContainerProps
     location: string | null,
     start_date: string | null,
     end_date: string | null,
-    referral_status: string | null
+    referral_status: string | null,
+    confidence: number, 
+    roc_confidence: number
   ) => Promise<string>;
   // getAvailablePrograms: () => Promise<void>;
   submitPrediction: (client: Types.Client) => Promise<void>;
@@ -112,7 +114,9 @@ export class DynamicClientDetailsContainer extends React.Component<
     location: string | null,
     start_date: string | null,
     end_date: string | null,
-    referral_status: string | null
+    referral_status: string | null,
+    confidence: number ,
+    roc_confidence: number 
   ) => {
     try {
       this.setState({ isLoading: true });
@@ -126,7 +130,9 @@ export class DynamicClientDetailsContainer extends React.Component<
         location,
         start_date,
         end_date,
-        referral_status
+        referral_status,
+        confidence,
+        roc_confidence
       );
       this.setState({
         isLoading: false

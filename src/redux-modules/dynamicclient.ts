@@ -72,23 +72,29 @@ export const actions = {
     location: string | null,
     start_date: string | null,
     end_date: string | null,
-    referral_status: string | null
+    referral_status: string | null,
+    confidence: number,
+    roc_confidence: number
     //is_accessToken: any | null
   ): ThunkAction<Promise<string>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const currentUser = getState().user?.user.accessToken;
-      if (program && location) {
-        await saveLocationAndProgram(client_code, program, location, currentUser);
-      }
+      // if (program && location) {
+      //   await saveLocationAndProgram(client_code, program, location, currentUser);
+      // }
       const response = await updateProgramCompletion(
         client_code,
         Program_Completion,
         Returned_to_Care,
         Remained_Out_of_Care,
         program_significantly_modified,
+        program,
+        location,
         start_date,
         end_date,
         referral_status,
+        confidence,
+        roc_confidence,
         currentUser
       );
       if (!response) {
