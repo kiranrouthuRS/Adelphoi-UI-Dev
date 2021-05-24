@@ -98,7 +98,9 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
   const [predicted_referral, setPredictedReferral] = useState<string | null>(
     null
   );
-
+  const [referralStatus, setReferralStatus] = useState<string | null>(
+    null
+  ); 
   const [predicted_location, setPredictedLocation] = useState<string | null>(
     null
   );
@@ -127,6 +129,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
       predicted_program === props.client.selected_program
     ) {
       setPredictedProgram(searchData[0].model_program);
+      
     }
   }, [props.client.selected_program,]);
   useEffect(() => {
@@ -149,6 +152,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
   }, [props.client.selected_location]);
 
   const onProgramChange = (program: any, values: any) => {
+     setReferralStatus(values.referral_status)
     props.onProgramSelect(props.searchData[0].client_code!, program.value, values);
   };
 
@@ -234,9 +238,9 @@ const locationOptions = props.client.SuggestedLocations
         client.end_date !== null ? client.end_date : "",
 
       referral_status:
-        client.referral_status !== null ? client.referral_status : ""
+        client.referral_status !== null ? referralStatus ? referralStatus: client.referral_status : ""
     };
-
+ 
   };
    const handleChange = (e) => {
     const { name, value } = e.target;
@@ -285,8 +289,7 @@ const locationOptions = props.client.SuggestedLocations
     }
     return date;   
       };
-   
-return (
+ return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
         <CircularProgress color="inherit" />
@@ -389,7 +392,7 @@ return (
                 errors.Location = "Required";
               }
                }
-              if (!values.referral_status) {
+               if (!values.referral_status) {
                 errors.referral_status = "Required";
               }
               if (values.referral_status === "placed") {
@@ -427,7 +430,7 @@ return (
             const start_date =
               values.start_date === ""
                 ? null
-                : values.referral_status !== "placed"?null:values.start_date;
+                : values.referral_status !== "placed" ? null : values.start_date;
             const end_date =
               values.end_date === ""
                 ? null
@@ -436,7 +439,7 @@ return (
               values.referral_status === ""
                 ? null
                 : values.referral_status;
-            const location =  values.Location === "" ? null : values.Location
+            const location =  values.Location === "" ? null : values.Location.value
             await props.onFormSubmit(
               searchData[0].client_code,
               Program_Completion,
@@ -514,7 +517,7 @@ return (
                           : false
                       }
                     />
-                    <label >Not Placed</label>
+                    <label >Accepted but not placed</label>
                   </div>
                   <div css={fieldBox}>
                     <input
@@ -613,7 +616,7 @@ return (
               </div>
               <div css={fieldRow}>
                 <div css={twoCol}>
-                  <label css={label}>Remain out of care Likelihood</label>
+                  <label css={label}>Remain Out of Care Likelihood</label>
                 </div>
                 <div css={twoCol}>
                   <input
@@ -709,7 +712,7 @@ return (
               
               <div css={fieldRow}>
                 <div css={twoCol}>
-                  <label css={label}>Remained out of care</label>
+                  <label css={label}>Remained Out of Care</label>
                 </div>
                 <div css={twoCol}>
                   <select

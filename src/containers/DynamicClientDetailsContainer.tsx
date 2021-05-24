@@ -141,6 +141,7 @@ export class DynamicClientDetailsContainer extends React.Component<
       this.props.enqueueSnackbar("Data saved successfully.");
       
     } catch (error) {
+      console.log(error)
       this.setState({
         isLoading: false
         // program_completion_response: "An error occured. Please try again."
