@@ -3,6 +3,7 @@ import { jsx } from "@emotion/core";
 import { useState, useEffect, Fragment } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { format, getMonth } from "date-fns";
+import Modal from "react-modal";
 import { Formik, ErrorMessage, FormikErrors } from "formik";
 import Button from "@material-ui/core/Button";
 import Accordion from "@material-ui/core/Accordion";
@@ -35,7 +36,16 @@ import * as Types from "../api/definitions";
 import { baseApiUrl } from "../api/api";
 import color from "@material-ui/core/colors/amber";
 import { domainPath } from "../App"
-
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -110%)'
+  }
+};
 interface DynamicClientDetailsProps {
   client: any;
   index: any;
@@ -92,6 +102,7 @@ interface FormValues {
 
 const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
   const history = useHistory();
+  const [modalIsOpen,setIsOpen] = useState(false);
   const [predicted_program, setPredictedProgram] = useState<string | null>(
     null
   );
@@ -112,7 +123,14 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
   const [version_changed, setVersion] = useState<any | null>(
     null
   );
+  function openModal() {
+    setIsOpen(true);
+  }
  
+  function closeModal(){
+    setIsOpen(false);
+    
+  }
   useEffect(() => {
     if (
       !SelectedVersion ||
@@ -289,6 +307,7 @@ const locationOptions = props.client.SuggestedLocations
     }
     return date;   
       };
+     
  return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -373,11 +392,20 @@ const locationOptions = props.client.SuggestedLocations
 
         )
       }
-      <h3> Click <a href="#" onClick={() =>
-        history.push(
-          `/${domainPath}/existing-client/edit-details/${index}&true`
-        )
-      }><u style={{ color: "red" }}>here</u></a> to update latest version of Client details.</h3>
+      { props.client.referral_status === "not_placed" || props.client.referral_status === "rejected" || props.client.Remained_Out_of_Care ? 
+         (<h3> Click <a href="#" onClick={() =>
+          history.push(
+            `/${domainPath}/existing-client/edit-details/${index}&true`
+          )
+        }><u style={{ color: "red" }}>here</u></a> to Re-Referral the Client.</h3>):
+          props.client.Program_Completion !== "" ||  props.client.referral_status !== "pending" ? 
+          "" :  (<h3> Click <a href="#" onClick={() =>
+            history.push(
+              `/${domainPath}/existing-client/edit-details/${index}&true`
+            )
+          }><u style={{ color: "red" }}>here</u></a> to update the Client details.</h3>)
+          }
+     
 
       {props.is_role_type === "Contributor" || !props.is_prediction_available? "" : (
         <Formik
@@ -411,8 +439,12 @@ const locationOptions = props.client.SuggestedLocations
             return errors;
           }}
 
-          onSubmit={async (values, helpers) => {
-            if (!searchData[0].client_code) {
+          onSubmit={async (values, helpers) => { 
+            if(values.referral_status !== "pending" && !modalIsOpen){
+              await openModal()
+             
+            } else {
+           if (!searchData[0].client_code) {
               return false;
             }
             const Program_Completion =
@@ -440,6 +472,7 @@ const locationOptions = props.client.SuggestedLocations
                 ? null
                 : values.referral_status;
             const location =  values.Location === "" ? null : values.Location.value
+            setIsOpen(false)
             await props.onFormSubmit(
               searchData[0].client_code,
               Program_Completion,
@@ -458,6 +491,7 @@ const locationOptions = props.client.SuggestedLocations
               //values.roc_confidence!.value!
             );
             helpers.resetForm();
+            }
           }}
         >
           {({ values, handleSubmit, handleChange }) => (
@@ -478,7 +512,7 @@ const locationOptions = props.client.SuggestedLocations
                     <input
                       type="radio"
                       onChange={handleChange}
-                      disabled = {version_changed} 
+                      disabled = {version_changed || props.client.referral_status !== "pending"} 
                       name="referral_status"
                       value="pending"
                       checked={
@@ -495,7 +529,7 @@ const locationOptions = props.client.SuggestedLocations
                       onChange={handleChange}
                       name="referral_status"
                       value="placed"
-                      disabled = {version_changed} 
+                      disabled = {version_changed || props.client.referral_status !== "pending"} 
                       checked={
                         values.referral_status !== null
                           ? values.referral_status === "placed"
@@ -508,7 +542,7 @@ const locationOptions = props.client.SuggestedLocations
                     <input
                       type="radio"
                       onChange={handleChange}
-                      disabled = {version_changed} 
+                      disabled = {version_changed || props.client.referral_status !== "pending"} 
                       name="referral_status"
                       value="not_placed"
                       checked={
@@ -523,7 +557,7 @@ const locationOptions = props.client.SuggestedLocations
                     <input
                       type="radio"
                       onChange={handleChange}
-                      disabled = {version_changed} 
+                      disabled = {version_changed || props.client.referral_status !== "pending"} 
                       name="referral_status"
                       value="rejected"
                       checked={
@@ -546,9 +580,9 @@ const locationOptions = props.client.SuggestedLocations
                   <label css={label}>Program</label>
                 </div>
                 <div css={twoCol}>
-                  <Dropdown
+                  <Dropdown 
                     name="Program"
-                    disabled={version_changed ? version_changed : values.Program_Completion !== ""} 
+                    disabled={version_changed ? version_changed : props.client.referral_status !== "pending" ? true : values.Program_Completion !== ""} 
                     options={programOptions}
                     onChange={(p: any) => onProgramChange(p, values)}
                     defaultValue={programOptions.find(
@@ -562,10 +596,10 @@ const locationOptions = props.client.SuggestedLocations
                 <div css={twoCol}>
                   <label css={label}>Location</label>  
                 </div>
-                <div css={twoCol}>
+                <div css={twoCol}> 
                   <Dropdown
                     name="Location"
-                    disabled={version_changed ? version_changed :values.Program_Completion !== ""}
+                    disabled={version_changed ? version_changed : props.client.referral_status !== "pending" ? true : values.Program_Completion !== ""}
                     options={locationOptions}
                      // onChange={(p: any) => onLocationChange(p, values)}
                     defaultValue={locationOptions.find(
@@ -584,7 +618,7 @@ const locationOptions = props.client.SuggestedLocations
                   <input
                     type="date"
                     name="start_date"
-                    disabled = {version_changed}  
+                    disabled = {version_changed || props.client.referral_status !== "pending" }  
                    css={inputField}
                     placeholder=""
                     value={values.start_date || ""}
@@ -604,7 +638,7 @@ const locationOptions = props.client.SuggestedLocations
                     type="text"
                     name="confidence"
                     readOnly
-                    disabled = {version_changed}
+                    disabled = {version_changed || props.client.referral_status !== "pending" }
                     css={inputField}
                     // disabled={Number(values.Program_Completion) === 0}
                     placeholder=""
@@ -623,7 +657,7 @@ const locationOptions = props.client.SuggestedLocations
                     type="text"
                     name="roc_confidence"
                     readOnly
-                    disabled = {version_changed}
+                    disabled = {version_changed || props.client.referral_status !== "pending" }
                     css={inputField}
                     // disabled={Number(values.Program_Completion) === 0}
                     placeholder=""
@@ -641,7 +675,7 @@ const locationOptions = props.client.SuggestedLocations
                   <select
                     css={selectField}
                     onChange={handleChange}
-                    disabled = {version_changed || values.referral_status === "pending"}
+                    disabled = {version_changed || values.referral_status !== "placed" || client.Program_Completion !== "" }
                     name="Program_Completion"
                     value={
                       values.Program_Completion !== null
@@ -666,7 +700,7 @@ const locationOptions = props.client.SuggestedLocations
                     <input
                       type="date"
                       name="end_date"
-                      disabled = {version_changed}
+                      disabled = {version_changed || client.Program_Completion !== ""} 
                       css={inputField}
                       // disabled={Number(values.Program_Completion) === 0}
                       placeholder=""
@@ -687,7 +721,7 @@ const locationOptions = props.client.SuggestedLocations
                   <div css={fieldBox}>
                     <input
                       type="checkbox"
-                      disabled={
+                      disabled={ props.client.Remained_Out_of_Care ? true :
                         version_changed ? version_changed : values.Program_Completion !== ""
                           ? values.Program_Completion === "0" || values.Program_Completion === 0 
                           : true
@@ -718,10 +752,10 @@ const locationOptions = props.client.SuggestedLocations
                   <select
                     css={selectField}
                     onChange={handleChange}
-                    disabled={
+                    disabled={ props.client.Remained_Out_of_Care ? true :
                      version_changed ? version_changed : values.Program_Completion !== ""
                         ? values.Program_Completion === "0" || values.Program_Completion === 0 
-                        : true
+                        : true 
                     }
                     name="Remained_Out_of_Care"
                     value={
@@ -744,15 +778,59 @@ const locationOptions = props.client.SuggestedLocations
                 <Button
                   type="submit"
                   size="large"
-                  variant="contained"
+                  variant="contained"  
                   color="primary"
-                  disabled = {version_changed}
+                  disabled = {version_changed || ["not_placed","rejected"].includes(props.client.referral_status) || props.client.Remained_Out_of_Care ? true : false}
+                  
                 >
                   Submit
               </Button>
               </div>
+              <Modal
+            isOpen={modalIsOpen}
+            ariaHideApp={false}
+            onRequestClose={closeModal} 
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+           <h3>On submission, you will not be able to update the details anymore.<br/> Are you sure you want to submit?</h3> 
+           <div css={fieldRow} > 
+           <div css={twoCol}>
+               &nbsp;
+              </div>
+                <div css={twoCol}>
+                <Button
+                  type="submit"
+                  size="large"
+                  variant="contained"
+                  color="primary"
+                  disabled = {version_changed} 
+                   onClick ={(e)=>handleSubmit()}
+                >
+                  Yes
+              </Button>
+              </div>
+              <div css={twoCol}>
+              <Button
+                  type="submit"
+                  size="large"
+                  variant="contained"
+                  color="primary"
+                  disabled = {version_changed}
+                  onClick= {(e)=> setIsOpen(false)}
+                >
+                  No
+              </Button>
+                </div>
+                <div css={twoCol}>
+                
+              </div>
+</div>
+          </Modal>
             </form>
+            
           )}
+          
         </Formik>
         )} 
       {props.program_completion_response && (

@@ -27,7 +27,7 @@ interface ProgramSelectionProps {
   client: Types.Client;
   programList: Types.Program[];
   onProgramSelect: (selected_program: string) => void;
-  onLocationSelect: (selected_location: string) => Promise<void>;
+  onLocationSelect: (selected_location: string, pcr_score:any, roc_score: any) => Promise<void>;
   submitPrediction: (client: Types.Client) => void;
   isLoading: boolean;
   hasError: boolean;
@@ -89,15 +89,17 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
           initialValues={getInitialValues()}
           validate={values => {
             const errors: FormikErrors<FormValues> = {};
-            if (!values.client_selected_location) {
-              errors.client_selected_location = "Required";
-            }
+            // if (!values.client_selected_location) {
+            //   errors.client_selected_location = "Required";
+            // }
             return errors;
           }}
           enableReinitialize
           onSubmit={async values => {
             const clientCode = props.client["Client Code"];
-            await props.onLocationSelect(values.client_selected_location);
+            await props.onLocationSelect(values.client_selected_location,
+                                         values.Confidence,
+                                         values.Roc_confidence);
             setClientCode(clientCode);
           }}
         >

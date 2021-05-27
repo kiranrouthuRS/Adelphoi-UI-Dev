@@ -1292,6 +1292,8 @@ export const saveLocationAndProgram = async (
   client_code: string,
   selected_program: string,
   selected_location: string,
+  pcr_score: any,
+  roc_score: any,
   is_accessToken: any
 ) => {
   const currentUser = store.getState().user.user.accessToken;
@@ -1300,7 +1302,9 @@ export const saveLocationAndProgram = async (
       `${baseApiUrl}/${domainPath}/update_list/${client_code}/`,
       {
         client_selected_program: selected_program,
-        client_selected_locations: selected_location
+        client_selected_locations: selected_location,
+        pcr_score: pcr_score,
+        roc_score: roc_score
       }, {
       headers: {
         'Authorization': `Bearer ${is_accessToken}`

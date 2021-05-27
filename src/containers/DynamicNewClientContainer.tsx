@@ -44,7 +44,7 @@ export interface DynamicNewClientContainerProp
     is_accessToken: any
   ) => Promise<void>;
   getPcr: (client_code: string, selected_program: string) => Promise<void>;
-  saveLocationAndProgram: (selected_location: string) => Promise<void>;
+  saveLocationAndProgram: (selected_location: string, pcr_score: any, roc_score: any) => Promise<void>;
   clearErrors: () => void;
   clearClient: () => void;
   // getAvailablePrograms: () => Promise<void>;
@@ -162,7 +162,7 @@ export class DynamicNewClientContainer extends React.Component<
     //this.props.clearClient();
   };
 
-  saveProgramAndLocation = async (selected_location: string) => {
+  saveProgramAndLocation = async (selected_location: string, pcr_score: any, roc_score: any) => {
 
 
     const { client: clientState } = this.props;
@@ -172,7 +172,7 @@ export class DynamicNewClientContainer extends React.Component<
       return;
     }
     this.setState({ isLoading: true });
-    await this.props.saveLocationAndProgram(selected_location);
+    await this.props.saveLocationAndProgram(selected_location,pcr_score,roc_score); 
     this.setState({ isLoading: false });
 
     this.props.enqueueSnackbar("Data saved successfully.");

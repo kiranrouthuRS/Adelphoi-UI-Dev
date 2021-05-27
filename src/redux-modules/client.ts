@@ -52,7 +52,7 @@ export const actions = {
   ): ThunkAction<Promise<string>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       if (program && location) {
-        await saveLocationAndProgram(client_code, program, location,"fff");
+        await saveLocationAndProgram(client_code, program, location,"fff","dd","sss");
       }
       const response = await updateProgramCompletion(
         client_code,
@@ -242,7 +242,7 @@ export const actions = {
         client.client_code!,
         programParam,
         selected_location,
-        "fff"
+        "fff","ss","wwe"
       );
       if (!response) {
         throw Error("something went wrong while submitting");

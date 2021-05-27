@@ -280,7 +280,10 @@ export const actions = {
 
   saveLocationAndProgram(
     selected_location: string,
-    selected_program?: string
+    pcr_score: any,
+    roc_score: any, 
+    selected_program?: string,
+    
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const client = getState().client!.client;
@@ -290,6 +293,7 @@ export const actions = {
         client_selected_locations: selected_location
       };
       dispatch(update({ client: cl }));
+      console.log(client)
       let programParam: string;
       if (!selected_program && client.client_selected_program && client.client_selected_program[0]) {
         programParam = Array.isArray(client.client_selected_program) ? client.client_selected_program[0] : client.client_selected_program;
@@ -302,6 +306,8 @@ export const actions = {
         client["Client Code"]!,
         programParam,
         selected_location,
+        pcr_score,
+        roc_score,
         currentUser
 
       );
