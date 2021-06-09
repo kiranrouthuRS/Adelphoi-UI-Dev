@@ -22,7 +22,7 @@ import {
   fetch_Demo_Analytics,
   fetch_PCR_Calibration_Analytics
 } from "../api/api";
-import { store } from "../index";
+
 const initialState: AnalyticsState = {
   analyticsList: [],
   PCRAnalyticsList:[],

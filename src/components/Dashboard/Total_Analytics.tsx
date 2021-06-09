@@ -149,21 +149,22 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                 <div css={twoCol}>
 
                     <div style={{
-                        background: "#36A2EB",
+                        background: "#ffffff",
+                        border: "3px solid black", 
                         width: "150px",
                         height: "150px",
                         borderRadius: "50%",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: "#ffffff",
+                        color: "#000000",
                         // padding: "20px",
                         // marginBottom: "10px"
 
                     }} >
                         <strong>{props.AnalyticsList.total ? props.AnalyticsList.total.count : 0}</strong>
                     </div>
-                    <label style={{ marginBottom: "20px" }}>Total Referrals</label>
+                    <label style={{ marginBottom: "20px", marginLeft: "10px" }}>Total Referrals</label>
 
                 </div>
                 <div css={twoCol}>

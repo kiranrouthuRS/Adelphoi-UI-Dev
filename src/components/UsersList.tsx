@@ -9,23 +9,17 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { connect } from "react-redux"
 import { AppState } from "../redux-modules/root";
-import { store } from "../index"; 
 import {
-  wrap,
-  subHeading,
+ subHeading,
   fieldRow,
   fieldBox,
-  mainContent,
   twoCol,
   inputField,
   tableHeader,
   tableRow,
   dataTable,
-  backdrop,
   label,
   selectField
 } from "./styles";
@@ -175,10 +169,10 @@ export class UsersList extends React.Component<
     if (e.currentTarget.dataset.id === 0 || e.currentTarget.dataset.id) {
       userID = e.currentTarget.dataset.id;
     }
-     const response = await this.props.getAvailableUsers(userID) 
+    await this.props.getAvailableUsers(userID) 
     const singleuser = (this.props.availableUsersList && this.props.availableUsersList) || [];
     const singlerole = (this.props.rolesList && this.props.rolesList) || [];
-    const roleID: any = singlerole.filter(id => id.name == singleuser[0].role_type)
+    const roleID: any = singlerole.filter(id => id.name === singleuser[0].role_type)
      this.setState({
       id: singleuser[0].id,
       full_name: "",
@@ -210,7 +204,6 @@ export class UsersList extends React.Component<
   render() {
     const { usersList, rolesList } = this.props;
     const isEdit = this.state.isEdit
-    const arr = Array.isArray(rolesList)
     return (
       <form name="UsersForm" onSubmit={this.handleSubmit}>
         <h1 css={subHeading}>{isEdit ? "Edit User" : "Add New User"}</h1>
@@ -316,7 +309,7 @@ export class UsersList extends React.Component<
               <option value="" >Select</option>
                
               { Array.isArray(rolesList) ? rolesList  &&  rolesList.map((role, key) =>
-                <option value={role.id} >{role.name}
+                <option value={role.id} key={key}>{role.name}
 
                 </option>) : ""} 
             </select>
@@ -330,7 +323,7 @@ export class UsersList extends React.Component<
           <Grid item xs={6}>
             <Box color="#4caf50" fontWeight="fontWeightBold">{this.state.message} </Box>
           </Grid>
-          <Grid item xs={4} alignItems="center">
+          <Grid item xs={4} >
 
             <Button
               type="submit"

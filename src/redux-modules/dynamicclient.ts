@@ -293,7 +293,6 @@ export const actions = {
         client_selected_locations: selected_location
       };
       dispatch(update({ client: cl }));
-      console.log(client)
       let programParam: string;
       if (!selected_program && client.client_selected_program && client.client_selected_program[0]) {
         programParam = Array.isArray(client.client_selected_program) ? client.client_selected_program[0] : client.client_selected_program;

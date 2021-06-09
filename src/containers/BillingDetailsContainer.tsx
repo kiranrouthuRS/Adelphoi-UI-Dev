@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import { AppState } from "../redux-modules/root";
 import { ContainerProps } from "./Container";
 import { withSnackbar, WithSnackbarProps } from "notistack";
-import { RouteComponentProps } from 'react-router-dom';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
 import BillingDetails from '../components/BillingDetails';
 import * as Types from "../api/definitions";
 interface MatchParams {
@@ -30,7 +28,7 @@ export class BillingDeatilsContainer extends React.Component<
       showLoginFailedMsg: false,
     };
   }
- public render() {
+   render() {
   const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     return (
     

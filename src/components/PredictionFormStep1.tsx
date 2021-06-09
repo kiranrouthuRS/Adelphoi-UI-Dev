@@ -113,27 +113,8 @@ const DobPicker: React.FC<FormikProps<Types.Client> & FieldProps> = props => {
     </MuiPickersUtilsProvider> 
   );
 };
-const logout = css`
-  position: relative;
-  top: -25px;
-  right: 25px;
-  radius: 2px;
-  
-  @media all and (max-width: 520px) {
-    top: 0;
-    right: 0;
-  }
-`;
-const profile = css`
-  position: relative;
-  top: -25px;
-  right: -1 0px; 
-  radius: 2px;
-  @media all and (max-width: 520px) {
-    top: 0;
-    right: 25;
-  }
-`;
+
+
 const PredictionFormStep1: React.FC<PredictionFormStep1Props> = props => {
   const { Referral, isEdit  } = props;
   const renderErrorNotification = () => {

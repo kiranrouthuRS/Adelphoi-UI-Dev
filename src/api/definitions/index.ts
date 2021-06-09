@@ -31,6 +31,13 @@ export interface Billing {
   eDate: string;
   
 }
+export interface Notifications {
+  startDate: string;
+  endDate: string;
+  sDate: string;
+  eDate: string;
+  
+}
 export interface Credential {
   email: string;
   password: string;
@@ -328,6 +335,12 @@ export const emptyBilling: Billing = {
   eDate: ''
 };
 
+export const emptyNotifications: Notifications = { 
+  startDate: '', 
+  endDate:'',
+  sDate: '',
+  eDate: ''
+};
 export const primary_language: string[] = ["", "English", "Other"];
 
 export const RefSourceCode: ObjectLiteral = {

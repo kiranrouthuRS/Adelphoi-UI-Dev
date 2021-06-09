@@ -336,7 +336,7 @@ const locationOptions = props.client.SuggestedLocations
               </select>
             </div>
           </div>
-          {props.is_role_type === "Contributor" || !props.is_prediction_available? "" :
+          {props.is_role_type === "Contributor" || !props.is_prediction_available ? "" :
           <div
             css={twoCol}
             style={{
@@ -361,7 +361,7 @@ const locationOptions = props.client.SuggestedLocations
       )}
       {
         SelectedVersion && SelectedVersion[0].sections.map((ques, id) =>
-          <Accordion defaultExpanded={id === 0 ? true : false}>
+          <Accordion defaultExpanded={id === 0 ? true : false} key={id}> 
             <AccordionSummary
               css={panelHeader}
               expandIcon={<ExpandMoreIcon />}
@@ -371,8 +371,8 @@ const locationOptions = props.client.SuggestedLocations
             </AccordionSummary>
             <AccordionDetails css={panel}>
               {display(id, SelectedVersion).map((item, index) => {
-                return <div css={fieldRow}>{item.map((ques, index_1) => {
-                  return <div css={twoCol}>
+                return <div css={fieldRow} key={index}>{item.map((ques, index_1) => {
+                  return <div css={twoCol} key={index_1}>
                     <label css={txtLabel}>{ques.question}</label>  
                     <div css={txtDetail}>
                       {Array.isArray(ques.answer)? ques.answer.toString(): 
@@ -395,7 +395,7 @@ const locationOptions = props.client.SuggestedLocations
       { props.client.referral_status === "not_placed" || props.client.referral_status === "rejected" || props.client.Remained_Out_of_Care ? 
          (<h3> Click <a href="#" onClick={() =>
           history.push(
-            `/${domainPath}/existing-client/edit-details/${index}&true`
+            `/${domainPath}/existing-client/edit-details/${index}&true` 
           )
         }><u style={{ color: "red" }}>here</u></a> to Re-Referral the Client.</h3>):
           props.client.Program_Completion !== "" ||  props.client.referral_status !== "pending" ? 
@@ -793,7 +793,7 @@ const locationOptions = props.client.SuggestedLocations
             style={customStyles}
             contentLabel="Example Modal"
           >
-           <h3>On submission, you will not be able to update the details anymore.<br/> Are you sure you want to submit?</h3> 
+           <h3>Are you sure you want to submit? <br/> Submission will save this data into a version that cannot be changed</h3> 
            <div css={fieldRow} > 
            <div css={twoCol}>
                &nbsp;

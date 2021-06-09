@@ -9,7 +9,6 @@ import * as analytics from "../redux-modules/analytics";
 import { ContainerProps } from "./Container";
 import * as Types from "../api/definitions";
 import Dashboard from "../components/Dashboard/Dashboard";
-import Logout from "../components/Logout"
 import { domainPath } from "../App"
 interface MatchParams {
   index: string;
@@ -70,8 +69,6 @@ export class DashboardContainer extends React.Component<
   async componentDidMount() {
     const { client: clientState } = this.props;
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
-    const clientList = (clientState && clientState.clientList) || {};
-    const { index } = this.props.match.params;
     this.setState({ isLoading: true });
 
     this.setState({ isLoading: false,accessToken: is_accessToken });
@@ -100,7 +97,7 @@ export class DashboardContainer extends React.Component<
       this.props.GetAge_Analytics(this.state.filters,is_accessToken);
     //  const demo = { q: "lang", days_count: '30' };
     //   this.props.get_Demo_Analytics(demo,is_accessToken) 
-    const data = { referral_source: "0", days_count: '30' };
+    // const data = { referral_source: "0", days_count: '30' };
      //this.props.getPerformance_Analytics(data,is_accessToken);
   }
 

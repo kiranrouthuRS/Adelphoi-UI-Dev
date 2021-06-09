@@ -141,7 +141,7 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
                         props.Program_Alloc_List.map((pgm, key) => (
                             <TableRow
                                 hover
-                                key={key || undefined}
+                                key={key}
                                 css={tableRow}
                             >
                                 <TableCell>{pgm.program}</TableCell>

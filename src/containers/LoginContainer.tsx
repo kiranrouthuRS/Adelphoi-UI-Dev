@@ -8,7 +8,6 @@ import * as user from "../redux-modules/user";
 import * as dynamicclient from "../redux-modules/dynamicclient";
 import { AppState } from "../redux-modules/root";
 import { domainPath } from "../App"
-import { store } from "../index";
 export interface LoginContainerState {
   isLoading: boolean;
   error: string;
@@ -27,7 +26,7 @@ export class LoginContainer extends React.Component<
 > {
   constructor(props: LoginContainerProp) {
     super(props);
-    const isLoggedIn: any = props.user && props.user.user;
+    // const isLoggedIn: any = props.user && props.user.user;
     if (localStorage.refreshToken) {
       this.props.history.push(`/${domainPath}/new-client`)
       
@@ -44,7 +43,7 @@ export class LoginContainer extends React.Component<
   }
 
   onLogin = async (email: string,password: string) => {
-    const { history, location } = this.props;
+    const { history} = this.props;
 
     if (!email) {
       return false;
@@ -64,7 +63,7 @@ export class LoginContainer extends React.Component<
         await this.props.getConfiguredQuestions(is_accessToken);
         if(pwd_updated){
           history.push(is_configured !== true ? (`/${domainPath}/welcomepage`) :
-          domainPath == "adelphoiDDD" ? (`/${domainPath}/new-client`):(`/${domainPath}/new-client`));;
+          (`/${domainPath}/new-client`));;
           
         }else{
           history.push(`/${domainPath}/changepassword`);

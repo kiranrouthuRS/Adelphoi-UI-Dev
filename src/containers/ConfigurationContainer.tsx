@@ -17,7 +17,6 @@ import * as programLocation from "../redux-modules/location";
 import ProgramList from "../components/ProgramList";
 import UsersList from "../components/UsersList";
 import ReferralList from "../components/ReferralList";
-import Logout from "../components/Logout"
 import LocationList from "../components/LocationList";
 import ConfigurationForm from "../components/ConfigurationForm";
 import { updateConfiguration } from "../api/api";
@@ -129,7 +128,6 @@ export class ConfigurationContainer extends React.Component<
     const locationList = (locationState && locationState.locationList) || [];
     const { match, location,user } = this.props;
     const role_type:any = user && user.user && user.user.role_type
-    const is_configured:any = user && user.user && user.user.is_fully_configured
     return (
       <Switch>
         <Route path={`/${domainPath}/configuration`}>

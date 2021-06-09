@@ -110,7 +110,7 @@ const Market_Analytics: React.FC<Market_AnalyticsProps> = props => {
                         props.marketList.map((pgm, key) => (
                             <TableRow
                                 hover
-                                key={key || undefined}
+                                key={key}
                                 css={tableRow}
                             >
                                 <TableCell>{pgm.referral_source}</TableCell>

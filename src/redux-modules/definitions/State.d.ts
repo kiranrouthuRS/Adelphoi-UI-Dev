@@ -49,7 +49,11 @@ export interface AnalyticsState {
   Demo_List: Types.Analytics[];
   PCR_Calibration_List: Types.Analytics[];
 }
-
+export interface NotificationState {
+  pendingList: Types.Notifications[];
+  rocList: Types.Notifications[];
+  pcrList: Types.Notifications[];
+}
 export interface QuestionsState {
   configuredQuestionsList: Types.DynamicClient[];
   client: Types.DynamicClient;

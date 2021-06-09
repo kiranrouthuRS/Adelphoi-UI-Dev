@@ -15,16 +15,11 @@ import {
   inputField,
   label1,
   fieldBox,
-  fieldBox1,
   selectField,
-  datePicker
 } from "./styles";
 import * as Types from "../api/definitions";
-import ErrorMessage from "./ErrorMessage";
 import { Fragment } from "react";
-import { store } from "../index";
 import { AppState } from "../redux-modules/root";
-import { AnyARecord } from "dns";
 import { uploadcsvfile, downloadcsvfile } from "../api/api"
 
 
@@ -201,13 +196,11 @@ export class PredictionFormStep extends React.Component<
     let jump = "";
     let ques_jump = "";
     if (type === "select") {
-      const length = e.target.dataset.length;
-      var optionElement = e.target.childNodes[e.target.selectedIndex]
+      let optionElement = e.target.childNodes[e.target.selectedIndex]
       let idx = optionElement.getAttribute('data-idx');
       jump = optionElement.getAttribute('data-jump');
       ques_jump = optionElement.getAttribute('data-quesjump');
-      let idy = optionElement.getAttribute('data-idy');
-      let jumpto = jump.split(',').filter(j => j)
+     let jumpto = jump.split(',').filter(j => j)
       let ques_jumpto = ques_jump.split(',').filter(j => j)
       this.setState({
         prevJump: {
@@ -276,7 +269,6 @@ export class PredictionFormStep extends React.Component<
     if (val1 === "") {
       if (type === "checkbox") {
         const checked = e.target.checked;
-        const idy = e.target.dataset.idy;
         this.setState({
           client_form: {
             ...this.state.client_form,
@@ -389,7 +381,7 @@ export class PredictionFormStep extends React.Component<
         this.setState({
           isSubmitted: false,
           err_msg: this.props.errors,
-          isOpen: this.props.errors ? true : false,
+          isOpen: this.props.errors ? true : false
           // isSuccess: true
         })
       } else {
@@ -400,7 +392,6 @@ export class PredictionFormStep extends React.Component<
 
   uploadCSV = async (e) => {
     e.preventDefault()
-    let { name } = e.target;
     let file = e.target.files[0]
     this.setState({
       csvfile: file
@@ -426,7 +417,7 @@ export class PredictionFormStep extends React.Component<
 
   downloadCSV = async (e) => {
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
-    const res = await downloadcsvfile(is_accessToken)
+    await downloadcsvfile(is_accessToken)
   }
 
   display = (id) => {
@@ -453,7 +444,7 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions } = this.state;
-    const { errors } = this.props;
+   
     
     return (
       <div css={wrap}>
@@ -503,14 +494,13 @@ export class PredictionFormStep extends React.Component<
             {DynamicQuestions.map((sections, index) =>
               sections.related === "true" ? "" :
                 <React.Fragment>
-
-                  <h1 css={subHeading}>{sections.section}</h1>
+              <h1 css={subHeading} key={index}>{sections.section}</h1>
                   {
 
                     this.display(index).map((item, ind) => {
-                      return <div css={fieldRow}>{item.map((ques, index_1) =>
+                      return <div css={fieldRow} key={ind}>{item.map((ques, index_1) =>
                         ques.related !== "yes" &&
-                        (<div css={twoCol}>
+                        (<div css={twoCol} key={index_1}>
                           <label css={label1} >{ques.question}</label>
                           {ques.description &&
                             <label style={{ fontSize: "16px" }}> ({ques.description})</label>
@@ -540,7 +530,7 @@ export class PredictionFormStep extends React.Component<
                             ques.answer_type === "RADIO" ?
                               <React.Fragment>
                                 {ques.suggested_answers.map((ans, i) =>
-                                  <div
+                                  <div key={i}
                                     css={fieldBox}
                                     style={{ width: "47.8%", display: "inline-block" }}
                                   >

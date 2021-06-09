@@ -61,6 +61,7 @@ interface MatchProps extends RouteComponentProps<MatchParams> {}
 export interface BillingDetailsProps {
 accessToken: any
 
+
 }
 
 

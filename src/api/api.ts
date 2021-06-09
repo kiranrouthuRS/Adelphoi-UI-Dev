@@ -568,6 +568,73 @@ export const downloadReportCSV = async (id, accessToken) => {
   }
 };
 
+export const fetchAllNotifications = async (
+  accessToken: string,
+  type: string,
+  start_date: any = "",
+  end_date: any = ""
+  ) => {
+  const { dispatch } = store
+  const currentUser = store.getState().user.user.accessToken; 
+  let daterange =""
+   if(start_date){
+      daterange = `?start_date=${start_date}&end_date=${end_date}`
+   }
+  try {
+    return await axios.get(`${baseApiUrl}/${domainPath}/notifications/${type}${daterange}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+      .then(response => {
+       const bill = response.data.response
+        return response.data.response;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+
+    throwError(error)
+
+  }
+};
+
+export const Download_Notifications = async (
+  type: string,
+  start_date: any = "",
+  end_date: any = ""
+  ) => {
+  const { dispatch } = store
+  const currentUser = store.getState().user.user.accessToken; 
+  let daterange =""
+   if(start_date){
+      daterange = `&start_date=${start_date}&end_date=${end_date}`
+   }
+  try {
+    return await axios.get(`${baseApiUrl}/${domainPath}/notifications/${type}?download${daterange}`, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    })
+      .then(response => {
+        const bill = response.data.response
+        const path = response.data.response.csv
+        window.open(`${loginApiUrl}/${path}`);
+        return response.data.response;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+
+    throwError(error)
+
+  }
+};
+
 export const fetchReferral = async () => {
   try {
     const response = await axios.get(`${baseApiUrl}/${domainPath}/referral_list`);

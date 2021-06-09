@@ -265,7 +265,7 @@ export const actions = {
       }
       dispatch(update({ client }));
       try {
-        const response = await insertPrediction(client);
+        await insertPrediction(client);
       } catch (error) {
         throw error;
       }

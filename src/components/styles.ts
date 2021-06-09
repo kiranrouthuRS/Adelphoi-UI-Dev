@@ -206,3 +206,88 @@ export const txtDetail = css`
   color: #8284e5;
   font-weight: bold;
 `;
+
+export const outerCircle = css`
+background: #000;
+border-radius: 50%;
+height: 150px;
+color: #fff;
+width: 150px;
+position: relative;
+  `;
+export const innerCircle  = css`
+position: absolute;
+color: #000;
+background: #fff;
+border-radius: 50%;
+height: 80px;
+width: 80px;
+/*
+ Put top edge and left edge in the center
+*/
+top: 70%;
+left: 60%;
+margin: -51px 0px 0px -39px;
+  `;
+
+// export const circle = css`
+//   background: #000000;
+//   border-radius: 50%;
+//   color: #fff;
+//   display: block;
+//   height: 0;
+//   overflow: hidden;
+//   padding-top: 100%;
+//   position: relative;
+//   width: 100%;
+//   `;
+
+//   export const smallCircle = css`
+//   background: #FFFFFF;
+//   border: "10px solid white";
+//   border-radius: 50%;
+//   color: #fff;
+//   display: flex; 
+//     justify-content: space-between;
+//   height: 0;
+//   overflow: hidden;
+//   padding-top: 100%;
+  
+//   width: 40%;
+//   `;
+
+  export const smallcircleContent = css`
+  align-items: center;
+  display: flex;
+  height: 100%;
+  hyphens: auto;
+  justify-content: center;
+  left: 50%;
+  padding: 0.75em;
+  position: absolute;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  width: 100%;
+  `;
+
+  export const circleContent = css`
+  align-items: center;
+  display: flex;
+  height: 100%;
+  hyphens: auto;
+  justify-content: center;
+  left: 50%;
+  padding: 0.75em;
+  position: absolute;
+  text-align: center;
+  transform: translate(-60%, -77%);
+  top: 50%;
+  width: 100%;
+  `;
+
+
+  export const container = css`
+  max-width: 66vmin;
+  width: 66%;
+  `;

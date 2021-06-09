@@ -11,13 +11,13 @@ import { ConfigurationSchema } from "../ValidationSchema";
 import { Pie } from 'react-chartjs-2';
 import {
     wrap,
-    subHeading,
+    outerCircle,
     selectField,
     fieldRow,
-    mainContent,
+    circleContent,
     twoCol,
-    inputField,
-    fieldBox,
+    innerCircle,
+    smallcircleContent,
     txtLabel,
     label
 } from "../styles";
@@ -74,12 +74,12 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
     useEffect(() => {
         props.onSelectChange(filters)
     }, [filters.referral_source || filters.location]);
-    
-    useEffect(()=>{
+
+    useEffect(() => {
         setfilters(prevState => {
-            return { ...prevState, referral_status: "", referral_source: "", location: "" } 
+            return { ...prevState, referral_status: "", referral_source: "", location: "" }
         });
-    },[props.filter.days_count]) 
+    }, [props.filter.days_count])
     return (
         <div>
             <Grid container spacing={3} >
@@ -134,79 +134,29 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
             </Grid>
             <div css={fieldRow} style={{ justifyContent: "center", marginTop: "10px" }}>
                 <div css={twoCol}>
-
-                    <div style={{
-                        background: "#36A2EB",
-                        width: "150px",
-                        height: "150px",
-                        borderRadius: "50%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#ffffff",
-                        //padding: "20px",
-                        //marginBottom: "10px"
-
-                    }} >
-                        <strong> {props.PCRList.pcr ? props.PCRList.pcr.count : 0}</strong>
+                    <div css={outerCircle}>
+                        <span css={circleContent}>
+                            <strong >{props.PCRList.pcr ? props.PCRList.pcr.count : 0} <br /> PCR  </strong>
+                        </span>
+                        <div css={innerCircle}>
+                            <span css={smallcircleContent}>
+                                <strong>{props.ROCList.roc ? props.ROCList.roc.count : 0}  <br /> ROC </strong>
+                            </span>
+                        </div>
 
                     </div>
-                                        Program completion rate
-
-                                </div>
-                <div css={twoCol}>
-
-                    <div style={{
-                        background: "#36A2EB",
-                        width: "150px",
-                        height: "150px",
-                        borderRadius: "50%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#ffffff",
-                        //padding: "20px",
-                        //marginBottom: "10px"
-
-                    }} >
-                        <strong> {props.ROCList.roc ? props.ROCList.roc.count : 0}</strong>
-
-                    </div>
-    Remain out of care
-
-</div>
-                <div css={twoCol}>
-
-                    <Pie data={program}
-                        options={{
-                            responsive: true,
-                            legend: {
-                                display: true,
-                                position: 'right',
-                                labels: {
-                                    fontColor: 'black',
-                                    boxWidth: 15,
-                                }
-
-                            },
-
-                            plugins: {
-                                datalabels: {
-                                    formatter: (data) => {
-
-                                        return data;
-
-
-                                    },
-                                    color: 'black',
-                                }
-                            }
-                        }}
-                    />
-
-
+                    
                 </div>
-
+                <div css={twoCol}>
+                    <div style={{marginTop: "50px"}}>
+                    <strong >  PCR - </strong>Program Completion Rate <br />
+                    <strong >  ROC - </strong>Remained Out of Care
+                   </div>
+                   </div>
+                   <div css={twoCol}>
+                   &nbsp;
+                   </div>
+                   
             </div>
 
         </div>

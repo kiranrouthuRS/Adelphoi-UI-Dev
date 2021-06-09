@@ -74,7 +74,7 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                 backgroundColor: '#FF6384',
                 borderColor: '#FF6384',
                 borderCapStyle: 'butt',
-                borderDash: [0,5],
+                borderDash: [5,5],
                 borderDashOffset: 0.9,
                 borderJoinStyle: 'miter',
                 pointBorderColor: '#FF6384',
@@ -86,7 +86,7 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10, 
-               data: ROC_Count
+                data: ROC_Count
             },
             
         ]
@@ -108,9 +108,16 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                     scales: {
                         yAxes: [
                           {
+                            display: true,
+                            ticks: {
+                                beginAtZero: true,
+                                steps: 10,
+                                stepValue: 5,
+                                max: 100
+                            },
                             scaleLabel: {
                               display: true,
-                              // labelString: "Likelihood",
+                              //labelString: "Likelihood",
                             },
                           },
                         ],
@@ -126,7 +133,7 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                 }} />
               </Grid>
             </Grid>
-            <Grid container spacing={1} >
+            <Grid container spacing={3} >
             
                 
                                     
@@ -140,7 +147,13 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                     // },
                     scales: {
                         yAxes: [
-                          {
+                          {display: true,
+                            ticks: {
+                                beginAtZero: true,
+                                steps: 10,
+                                stepValue: 5,
+                                max: 100
+                            },
                             scaleLabel: {
                               display: true,
                               // labelString: "Likelihood",
@@ -153,9 +166,9 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                               display: true,
                               // labelString: "Count",
                             },
-                            grid: {
-                                borderColor: 'red'
-                              }
+                            // grid: {
+                            //     borderColor: 'red'
+                            //   }
                           },
                         ],
                       }

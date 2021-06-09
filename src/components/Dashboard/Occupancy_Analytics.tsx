@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
         width: 100,
     }
 }));
-interface Other_AnalyticsProps {
+interface Occupancy_AnalyticsProps {
     Replace_analytics: any;
     Stay_analytics: any;
     Occupancy_analytics: any;
@@ -50,7 +50,7 @@ interface Other_AnalyticsProps {
     onSelectChange: (src: any) => void;
 }
 
-const OtherParam_Analytics: React.FC<Other_AnalyticsProps> = props => {
+const Occupancy_Analytics: React.FC<Occupancy_AnalyticsProps> = props => {
     const classes = useStyles();
     const [filters, setfilters] = useState({ referral_source: "", location: "" });
 
@@ -118,27 +118,6 @@ const OtherParam_Analytics: React.FC<Other_AnalyticsProps> = props => {
                 <div css={twoCol}>
 
                     <div style={{
-                         background: "#ffffff",
-                         border: "3px solid black",
-                         width: "150px",
-                         height: "150px",
-                         borderRadius: "50%",
-                         display: "flex",
-                         alignItems: "center",
-                         justifyContent: "center",
-                         color: "#000000",
-                        // padding: "20px",
-                        // marginBottom: "10px"
-
-                    }} >
-                        <strong> {props.Replace_analytics.replacement_rate ? props.Replace_analytics.replacement_rate : 0}</strong>
-                    </div>
-Replacement rate
-
-                                </div>
-                <div css={twoCol}>
-
-                    <div style={{
                         background: "#ffffff",
                         border: "3px solid black",
                         width: "150px",
@@ -148,16 +127,17 @@ Replacement rate
                         alignItems: "center",
                         justifyContent: "center",
                         color: "#000000",
-                        //padding: "20px",
-                        //marginBottom: "10px"
+                        // padding: "20px",
+                        // marginBottom: "10px"
 
                     }} >
-                        <strong> {props.Stay_analytics.avg_length_of_stay ? props.Stay_analytics.avg_length_of_stay : 0}</strong>
+                        <strong>
+                            {props.Occupancy_analytics.occupancy_rate ? props.Occupancy_analytics.occupancy_rate : 0}
+                        </strong>
                     </div>
-                                        Average Length of stay
+Occupancy rate
 
                                 </div>
-                
 
             </div>
 
@@ -165,4 +145,4 @@ Replacement rate
     );
 };
 
-export default OtherParam_Analytics;
+export default Occupancy_Analytics;

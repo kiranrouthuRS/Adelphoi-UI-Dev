@@ -34,7 +34,7 @@ const Client_Demographics: React.FC<Client_DemographicsProps> = props => {
     const gender = {
         labels: ['Female', 'Male'],
         datasets: [{
-            label: 'Gender',
+            label: 'Count',
             barPercentage: 0.25,
             data: [props.Gender_List.female, props.Gender_List.male],
             backgroundColor: [
@@ -51,7 +51,7 @@ const Client_Demographics: React.FC<Client_DemographicsProps> = props => {
     const age = {
         labels: ages,
         datasets: [{
-            label: 'Age',
+            label: 'Count',
             barPercentage: 0.25,
             data: count,
             backgroundColor: ['#a3863b', '#3b90a3', '#d21243', '#3700FF', '#ffa600', '#038c25', '#C9DE00', '#00A6B4', '#a1124b', '#48fc12', '#FB13F3', '#cc1fa4', '#FF6384', '#FF0084'],
@@ -67,7 +67,7 @@ const Client_Demographics: React.FC<Client_DemographicsProps> = props => {
     const disc = {
         labels: demo1,
         datasets: [{
-            label: "none",
+            label: "Count",
             barPercentage: 0.25,
             data: demo2,
             backgroundColor: ['#a3863b', '#3b90a3', '#d21243', '#3700FF', '#ffa600', '#038c25', '#C9DE00', '#00A6B4', '#a1124b', '#48fc12', '#FB13F3', '#cc1fa4', '#36A2EB'],

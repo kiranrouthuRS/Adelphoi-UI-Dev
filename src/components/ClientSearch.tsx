@@ -21,7 +21,7 @@ import {
   tableRow,
   dataTable
 } from "./styles";
-import * as Types from "../api/definitions";
+
 
 interface ClientSearchProps {
   clientList: any;
@@ -161,10 +161,10 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
               </TableHead>
               <TableBody>
                 {/* {clientList.questions.length > 0 ? ( */}
-                {client.length > 0 ? client.map(cl => (
+                {client.length > 0 ? client.map((cl,i) => (
                   <TableRow
                     hover
-                    key={cl.Client_Code || undefined}
+                    key={i}
                     onClick={() =>
                       history.push(
                         `existing-client/client-details/${cl[0].answer}`

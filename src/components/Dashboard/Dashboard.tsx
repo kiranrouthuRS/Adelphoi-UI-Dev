@@ -12,6 +12,7 @@ import OtherParam_Analytics from "./Other_Analytics";
 import Allocation_Analytics from "./Allocation_Analytics";
 import ProgramAnalytics from "./Program_Analytics";
 import Client_Demographics from "./Client_Demographics";
+import Occupancy_Analytics from "./Occupancy_Analytics";
 import Tool_Analytics from "./Tool_Analytics";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -373,11 +374,34 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                 aria-controls="panel1a-content"
                             >
                                 <h1 css={panelHeading}>
-                                    Other Parameters – of referrals who are accepted and placed.
+                                Replacement rate and Average Length of stay – of referrals who are accepted and placed.
                                 </h1>
                             </AccordionSummary>
                             <AccordionDetails css={panel}>
                                 <OtherParam_Analytics
+                                    Replace_analytics={props.Replace_analytics}
+                                    Stay_analytics={props.Stay_analytics}
+                                    Occupancy_analytics={props.Occupancy_analytics}
+                                    filter={filters}
+                                    Referral={Referral}
+                                    Location={Location}
+                                    onSelectChange={Other_HandleChange}
+                                />
+                            </AccordionDetails>
+                        </Accordion>
+                        
+                        <Accordion >
+                            <AccordionSummary
+                                css={panelHeader}
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                            >
+                                <h1 css={panelHeading}>
+                                Occupancy rate – of referrals who are accepted and placed.
+                                </h1>
+                            </AccordionSummary>
+                            <AccordionDetails css={panel}>
+                                <Occupancy_Analytics
                                     Replace_analytics={props.Replace_analytics}
                                     Stay_analytics={props.Stay_analytics}
                                     Occupancy_analytics={props.Occupancy_analytics}
@@ -453,7 +477,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                 aria-controls="panel1a-content"
                             >
                                 <h1 css={panelHeading}>
-                                    Client Demographics
+                                    Client Demographics at the Time of Referral - of accepted and placed referrals
                                 </h1>
                             </AccordionSummary>
                             <AccordionDetails css={panel}>

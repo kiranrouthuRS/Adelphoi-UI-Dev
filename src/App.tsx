@@ -8,31 +8,26 @@ import { connect } from "react-redux";
 import configureStore from "./redux-modules/configureStore";
 import { AppState } from "./redux-modules/root";
 import * as user from "./redux-modules/user";
-import { css, jsx, Global } from "@emotion/core";
+import { jsx } from "@emotion/core";
 import {
   Switch,
   Route,
   BrowserRouter as Router,
-  Redirect,useHistory
+  Redirect
 } from "react-router-dom";
-import AppShell from "./AppShell";
-
 import NewClientContainer from "./containers/NewClientContainer";
 import DynamicNewClientContainer from "./containers/DynamicNewClientContainer";
 import ExistingClientContainer from "./containers/ExistingClientContainer";
 import DynamicExistingClientContainer from "./containers/DynamicExistingClientContainer";
 import ConfigurationContainer from "./containers/ConfigurationContainer";
 import LoginContainer from "./containers/LoginContainer";
-import {Logout} from "./api/api";  
 import LOGOUT from "./components/Logout";
-import axios from "axios";
 import PrivateRoute from './PrivateRoute';
 import Welcomepage from './components/welcomepage'
 import ChangePasswordContainer from './containers/ChangePasswordContainer'
 import BillingDetailsContainer from './containers/BillingDetailsContainer'
+import NotificationsContainer from './containers/NotificationsContainer'
 import DashboardContainer from './containers/Dashboardcontainer'
-import { baseApiUrl } from "./api/api"; 
-import { id } from "date-fns/esm/locale";
 export const { store } = configureStore(createHistory());
 const url = typeof window !== 'undefined' ? window.location.pathname : '';
   let str1 = url.split('/');
@@ -111,6 +106,10 @@ return (
                 <PrivateRoute
                   path={`/${dom}/billing`}
                   component={BillingDetailsContainer} 
+                />
+                 <PrivateRoute
+                  path={`/${dom}/notifications`}
+                  component={NotificationsContainer} 
                 />
               </Switch>
               

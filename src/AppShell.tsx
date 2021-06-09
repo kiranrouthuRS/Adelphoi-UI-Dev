@@ -12,6 +12,7 @@ import {  Global } from "@emotion/core";
 import { domainPath } from "./App"
 import { loginApiUrl } from "./api/api"
 import MenuIcon from '@material-ui/icons/Menu';
+
 import Sidemenu from './Sidemenu'
 import { store } from "./index"; 
 import IdleTimerContainer from './containers/IdleTimerContainer'
@@ -162,39 +163,8 @@ const logopath = children&&children[1].props.appState.user.user.logo_path;
           src={`${loginApiUrl}/${logopath}`}
         />
         <Sidemenu/>
-        {/* <a
-              href={`/${domainPath}/billing`}
-              css={billing}
-            >
-              Billing
-            </a> */}
-         {/* <div css={profile} className="dropdown"> 
-  <button className="dropbtn">
-    <MenuIcon style={{fontSize:"18px"}}/>
-    <span >Menu</span></button>
-  <div className="dropdown-content"> 
-  <Link to="/dashboard">Dashboard</Link>
-  <a href={`/${domainPath}/dashboard`}>Dashboard</a>
-    <a  href={`/${domainPath}/billing`}>Billing</a>
-    <a href={`/${domainPath}/changepassword`}>Profile</a>
-    <a href={`/${domainPath}/logout`}>Logout</a>
-  </div>
-</div>    */}
-        {/* <a
-              href={`/${domainPath}/changepassword`}
-              css={profile}
-            >
-              Profile
-            </a>
-                <a
-              href={`/${domainPath}/logout`}
-              css={logout}
-            >
-              Logout
-            </a> */}
-      </div>
-      
-           <div css={nav}>
+        </div>
+         <div css={nav}>
            {is_configured === true ?
                  <Route
                    path={`/${domainPath}/new-client`}
