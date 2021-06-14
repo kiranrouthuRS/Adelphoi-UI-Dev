@@ -99,10 +99,12 @@ export class DashboardContainer extends React.Component<
     //   this.props.get_Demo_Analytics(demo,is_accessToken) 
     // const data = { referral_source: "0", days_count: '30' };
      //this.props.getPerformance_Analytics(data,is_accessToken);
+     this.setState({ isLoading: false });
   }
 
   getDateAnalytics = async (analytics: any) => {
     const is_accessToken: any = this.state.accessToken
+    this.setState({ isLoading: true });
     await this.props.getDateAnalytics(analytics,is_accessToken);
     await this.props.getPCRAnalytics(analytics,is_accessToken);
     await this.props.getROCAnalytics(analytics,is_accessToken);
@@ -131,35 +133,68 @@ export class DashboardContainer extends React.Component<
     }
     
     await this.props.getPerformance_Analytics(data,is_accessToken)
+    this.setState({ isLoading: false });
   };
 
   getTotalAnalytics = async (filter: any) => {
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
+    this.setState({ isLoading: true });
     await this.props.getDateAnalytics(filter,is_accessToken);
+    this.setState({ isLoading: false });
   };
 
   getProgramAnalytics = async (filter: any) => {
     const is_accessToken: any = this.state.accessToken
+    this.setState({ isLoading: true });
    await this.props.getPCRAnalytics(filter,is_accessToken);
     await this.props.getROCAnalytics(filter,is_accessToken);
+    this.setState({ isLoading: false });
   };
-  getOtherAnalytics = async (filter: any) => {
+  getOtherAnalytics = async (filter: any, type) => {
     const is_accessToken: any = this.state.accessToken
-    await this.props.getReplacementAnalytics(filter,is_accessToken);
-    await this.props.getOccupancyAnalytics(filter,is_accessToken);
-    await this.props.getStayAnalytics(filter,is_accessToken);
+    switch(type) {
+      case 'others':
+        try {
+          this.setState({ isLoading: true });
+          await this.props.getReplacementAnalytics(filter,is_accessToken);
+          await this.props.getStayAnalytics(filter,is_accessToken);
+          this.setState({ isLoading: false });
+        } catch (error) {
+          console.log(error);
+          this.setState({ isLoading: false });
+        } 
+        break;
+      
+      case 'occupancy':
+        try {
+          this.setState({ isLoading: true });
+          await this.props.getOccupancyAnalytics(filter,is_accessToken);
+          this.setState({ isLoading: false });
+        } catch (error) {
+          console.log(error);
+          this.setState({ isLoading: false }); 
+        } 
+        break;
+       }
+    
   };
   getPerformance = async (filter: any) => {
     const is_accessToken: any = this.state.accessToken
+    this.setState({ isLoading: true });
     await this.props.getPerformance_Analytics(filter,is_accessToken)
+    this.setState({ isLoading: false });
   };
   getDemo = async (filter: any) => {
     const is_accessToken: any = this.state.accessToken
+    this.setState({ isLoading: true });
     await this.props.get_Demo_Analytics(filter,is_accessToken)
+    this.setState({ isLoading: false });
   };
   getCalibration = async (filter: any) => {
     const is_accessToken: any = this.state.accessToken
+    this.setState({ isLoading: true });
     await this.props.get_PCR_Calibration_Analytics(filter,is_accessToken)
+    this.setState({ isLoading: false });
   };
   render() {
     const {

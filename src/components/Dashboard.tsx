@@ -85,7 +85,7 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
         week: '',
         month: '',
         life_time: '',
-        days_count: '2000'
+        days_count: '' 
     }
     const [filters, setFilters] = useState(initialState);
     const { onFormSubmit, Analytics, Referral, Location } = props;
@@ -265,7 +265,7 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                                 <Link data-name="month" data-id="30" onClick={filterAnalytics}>Last 30 days </Link>
                             </Grid>
                             <Grid item xs={4}>
-                                <Link data-name="life_time" data-id="2000" onClick={filterAnalytics}>Life time </Link>
+                                <Link data-name="life_time" data-id="" onClick={filterAnalytics}>Life time </Link>
                             </Grid>
                         </Grid>
                         <div style={{ boxSizing: "content-box", width: "100%", border: "solid #5B6DCD 1px", padding: "10px", marginBottom: "10px", marginTop: "10px" }}>

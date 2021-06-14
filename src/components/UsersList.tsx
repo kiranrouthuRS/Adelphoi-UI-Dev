@@ -11,6 +11,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
 import { connect } from "react-redux"
 import { AppState } from "../redux-modules/root";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import {
  subHeading,
   fieldRow,
@@ -21,7 +23,8 @@ import {
   tableRow,
   dataTable,
   label,
-  selectField
+  selectField,
+  backdrop
 } from "./styles";
 import * as Types from "../api/definitions";
 
@@ -38,6 +41,7 @@ export interface UsersListState {
   isEdit: boolean;
   message: string;
   accessToken: string[];
+  isLoading: boolean;
 }
 
 export interface UsersListProps {
@@ -75,6 +79,7 @@ export class UsersList extends React.Component<
       isEdit: false,
       message: "",
       accessToken: [],
+      isLoading: this.props.isLoading
     
     };
   }
@@ -95,6 +100,7 @@ export class UsersList extends React.Component<
       role_type: this.state.role_type
     };
     if (isEdit) {
+      this.setState({ isLoading: true });
      const response: any = await this.props.updateUsers(users,is_accessToken); 
      this.setState({
         message: response.status === "failed" ? response.message:"User updated successfully",
@@ -106,7 +112,9 @@ export class UsersList extends React.Component<
       this.setState({
         message: response.status === "failed" ? response.message:"User created successfully"
       })
+      
     }
+    this.setState({ isLoading: false });
     this.setState({
       id: "",
       full_name: "",
@@ -169,6 +177,7 @@ export class UsersList extends React.Component<
     if (e.currentTarget.dataset.id === 0 || e.currentTarget.dataset.id) {
       userID = e.currentTarget.dataset.id;
     }
+    this.setState({ isLoading: true });
     await this.props.getAvailableUsers(userID) 
     const singleuser = (this.props.availableUsersList && this.props.availableUsersList) || [];
     const singlerole = (this.props.rolesList && this.props.rolesList) || [];
@@ -185,7 +194,7 @@ export class UsersList extends React.Component<
       role_type_text: singleuser[0].role_type,
       isEdit: true
     });
-
+    this.setState({ isLoading: false });
   }
   handleDelete = async (e: any) => {
     e.preventDefault();
@@ -195,7 +204,9 @@ export class UsersList extends React.Component<
     }
 
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
+    this.setState({ isLoading: true });
     await this.props.deleteUsers(userID,is_accessToken)
+    this.setState({ isLoading: false });
     this.setState({
       message: "User deleted successfully"
     })
@@ -206,6 +217,9 @@ export class UsersList extends React.Component<
     const isEdit = this.state.isEdit
     return (
       <form name="UsersForm" onSubmit={this.handleSubmit}>
+        <Backdrop css={backdrop} open={this.props.isLoading || this.state.isLoading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
         <h1 css={subHeading}>{isEdit ? "Edit User" : "Add New User"}</h1>
         <div css={fieldRow}>
           <div css={twoCol}>

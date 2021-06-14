@@ -41,23 +41,27 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
         labels: [
             'Accepted & placed',
             'Accepted not placed',
-            'Rejected'
+            'Rejected',
+            'Pending'
         ],
         datasets: [{
             data: [
                 props.AnalyticsList.placed ? props.AnalyticsList.placed.count : 0,
                 props.AnalyticsList.not_placed ? props.AnalyticsList.not_placed.count : 0,
-                props.AnalyticsList.rejected ? props.AnalyticsList.rejected.count : 0
+                props.AnalyticsList.rejected ? props.AnalyticsList.rejected.count : 0,
+                props.AnalyticsList.pending ? props.AnalyticsList.pending.count : 0
             ],
             backgroundColor: [
                 '#FF6384',
                 '#36A2EB',
-                '#FFCE56'
+                '#FFCE56',
+                '#a3863b'
             ],
             hoverBackgroundColor: [
                 '#FF6384',
                 '#36A2EB',
-                '#FFCE56'
+                '#FFCE56',
+                '#a3863b'
             ]
         }],
 
@@ -94,7 +98,7 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                         <option value="placed">Accepted &amp; placed</option>
                         <option value="not_placed">Accepted not placed</option>
                         <option value="rejected">Rejected</option>
-
+                        <option value="pending">Pending</option>
                     </select>
                 </Grid>
                 <Grid item xs={6} sm={3}>

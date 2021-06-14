@@ -18,6 +18,8 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import {
     subHeading,
     label,
@@ -25,6 +27,7 @@ import {
     panel,
     panelHeading,
     panelHeader,
+    backdrop
 } from "../styles";
 import * as Types from "../../api/definitions";
 
@@ -69,7 +72,7 @@ interface DashboardProps {
     onFormSubmit: (analytics: Types.Analytics) => void;
     totalAnalytics: (filter: any) => void;
     Program_Analytics: (filter: any) => void;
-    Other_Analytics: (filter: any) => void;
+    Other_Analytics: (filter: any, type: any) => void;
     Performance_Analytics: (filter: any) => void;
     Demo_Analytics: (filter: any) => void;
     Calibration_Analytics: (filter: any) => void;
@@ -111,7 +114,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
     };
     const Total_HandleChange = async (src) => {
         let filter = filters;
-        
+
         await setFilters(prevState => {
             return {
                 ...prevState, referral_source: src.referral_source,
@@ -119,7 +122,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                 location: src.location
             }
         });
-        
+
         let data = {
             start_date: filter.start_date,
             end_date: filter.end_date,
@@ -131,7 +134,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
         await props.totalAnalytics(data);
 
     };
-    
+
     const Program_HandleChange = async (src) => {
         let filter = filters;
         await setFilters(prevState => {
@@ -140,7 +143,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                 pgm_location: src.location
             }
         });
-        
+
         let data = {
             start_date: filter.start_date,
             end_date: filter.end_date,
@@ -148,7 +151,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
             location: src.location,
             days_count: filter.days_count
         }
-        
+
         await props.Program_Analytics(data);
 
     };
@@ -160,7 +163,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                 pgm_location: src.location
             }
         });
-        
+
         let data = {
             start_date: filter.start_date,
             end_date: filter.end_date,
@@ -168,20 +171,41 @@ const Dashboard: React.FC<DashboardProps> = props => {
             location: src.location,
             days_count: filter.days_count
         }
-        
-        await props.Other_Analytics(data);
+
+        await props.Other_Analytics(data, "others");
+
+    };
+
+    const Occupancy_HandleChange = async (src) => {
+        let filter = filters;
+        await setFilters(prevState => {
+            return {
+                ...prevState, pgm_referral_source: src.referral_source,
+                pgm_location: src.location
+            }
+        });
+
+        let data = {
+            start_date: filter.start_date,
+            end_date: filter.end_date,
+            referral_source: src.referral_source,
+            location: src.location,
+            days_count: filter.days_count
+        }
+
+        await props.Other_Analytics(data, "occupancy");
 
     };
     const Performance_HandleChange = async (src) => {
-        
-        
+
+
         let filter = filters;
         filter["per_referral_source"] = src
         await setFilters(prevState => {
             return { ...prevState, per_referral_source: src }
         });
 
-        
+
         let data = {
             start_date: filter.start_date,
             end_date: filter.end_date,
@@ -192,14 +216,14 @@ const Dashboard: React.FC<DashboardProps> = props => {
 
     };
     const Demo_HandleChange = async (src) => {
-        
-        
+
+
         let filter = filters;
         await setFilters(prevState => {
             return { ...prevState, q: src }
         });
 
-        
+
         let data = {
             start_date: filter.start_date,
             end_date: filter.end_date,
@@ -210,16 +234,16 @@ const Dashboard: React.FC<DashboardProps> = props => {
 
     };
     const Calibration_HandleChange = async (src) => {
-        
-        
+
+
         let filter = filters;
         await setFilters(prevState => {
             return { ...prevState, q: src }
         });
 
-        
+
         let data = {
-            start_date: filter.start_date, 
+            start_date: filter.start_date,
             end_date: filter.end_date,
             pcr: src.pcr,
             roc: src.roc,
@@ -230,7 +254,9 @@ const Dashboard: React.FC<DashboardProps> = props => {
     };
     return (
         <div className={classes.root}>
-
+            <Backdrop css={backdrop} open={props.isLoading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <Formik
                 initialValues={Types.emptyAnalytics}
                 enableReinitialize
@@ -250,7 +276,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                             <h2 css={subHeading}>Dashboard</h2>
                         </Grid>
                         <Grid container item xs={12} spacing={3}>
-                              <Grid item xs={4}>
+                            <Grid item xs={4}>
                                 <label css={label}
                                 //style={{ marginTop: 16 }}
                                 >
@@ -272,7 +298,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                         //handleChange(e);
                                     }}
                                 />
-                                <ErrorMessage component="span" name="end_date" />
+                                <ErrorMessage component="span" name="start_date" />
                             </Grid>
                             <Grid item xs={4}>
                                 <label css={label}
@@ -318,7 +344,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                 <Link data-name="month" href="#" data-id="30" onClick={filterAnalytics}>Last 30 days </Link>
                             </Grid>
                             <Grid item xs={4}>
-                                <Link data-name="life_time" href="#" data-id="2000" onClick={filterAnalytics}>Life time </Link>
+                                <Link data-name="life_time" href="#" data-id="" onClick={filterAnalytics}>Life time </Link>
                             </Grid>
                         </Grid>
 
@@ -374,7 +400,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                 aria-controls="panel1a-content"
                             >
                                 <h1 css={panelHeading}>
-                                Replacement rate and Average Length of stay – of referrals who are accepted and placed.
+                                    Replacement rate and Average Length of stay – of referrals who are accepted and placed.
                                 </h1>
                             </AccordionSummary>
                             <AccordionDetails css={panel}>
@@ -389,7 +415,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                 />
                             </AccordionDetails>
                         </Accordion>
-                        
+
                         <Accordion >
                             <AccordionSummary
                                 css={panelHeader}
@@ -397,7 +423,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                 aria-controls="panel1a-content"
                             >
                                 <h1 css={panelHeading}>
-                                Occupancy rate – of referrals who are accepted and placed.
+                                    Occupancy rate – of referrals who are accepted and placed.
                                 </h1>
                             </AccordionSummary>
                             <AccordionDetails css={panel}>
@@ -408,7 +434,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                     filter={filters}
                                     Referral={Referral}
                                     Location={Location}
-                                    onSelectChange={Other_HandleChange}
+                                    onSelectChange={Occupancy_HandleChange}
                                 />
                             </AccordionDetails>
                         </Accordion>
@@ -458,7 +484,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                 aria-controls="panel1a-content"
                             >
                                 <h1 css={panelHeading}>
-                                FirstMatch&trade; Prediction Tool Analytics & Calibration​
+                                    FirstMatch&trade; Prediction Tool Analytics & Calibration
                                 </h1>
                             </AccordionSummary>
                             <AccordionDetails css={panel}>
@@ -490,7 +516,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                             </AccordionDetails>
                         </Accordion>
 
-                         
+
                     </form>
                 )}
             </Formik>

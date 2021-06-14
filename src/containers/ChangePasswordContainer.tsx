@@ -4,10 +4,8 @@ import axios from 'axios'
 import * as Types from "../api/definitions";
 import { ContainerProps } from "./Container";
 import ChangePassword from "../components/changepassword";
-import * as user from "../redux-modules/user";
 import { domainPath } from "../App"
 import { loginApiUrl } from '../api/api';
-import { store } from "../index";
 export interface ChangePasswordContainerState {
   isLoading: boolean;
   error: string;
@@ -35,7 +33,7 @@ ChangePasswordContainerState
 
   onLogin = async (old_password: string,password: string,retype_password: string) => {
     const { history, location } = this.props;
-
+    this.setState({ isLoading: true });
     if (!old_password) {
       return false;
     }
@@ -49,7 +47,7 @@ ChangePasswordContainerState
     const token = this.props.user && this.props.user.user && this.props.user.user.accessToken;
     const is_configured : any = this.props.user && this.props.user.user && this.props.user.user.is_fully_configured;
     try {
-  const response = await axios.patch(`${loginApiUrl}/organizations/${domainPath}/users/${user_id}/`, changepwd, {
+  await axios.patch(`${loginApiUrl}/organizations/${domainPath}/users/${user_id}/`, changepwd, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -63,6 +61,7 @@ ChangePasswordContainerState
         hasLoginError: true,
         isLoading: false
       });
+      this.setState({ isLoading: false });
       return;
     }
   };

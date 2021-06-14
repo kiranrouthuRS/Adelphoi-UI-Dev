@@ -2,33 +2,16 @@
 import React from "react";
 import { jsx, css, Global } from "@emotion/core";
 import { Formik, FormikErrors } from "formik";
-import Container from "@material-ui/core/Container";
-import Avatar from "@material-ui/core/Avatar";
-import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
-import logo from "../image/logo.png";
-//import "./Home.css";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import { Link as RouterLink, useHistory } from "react-router-dom";
 import { domainPath } from "../App"
-
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import {
-    wrap,
-    subHeading,
     fieldRow,
-    mainContent,
-    twoCol,
-    inputField,
-    label,
-    fieldBox,
-    selectField,
-    datePicker
+    backdrop
 } from "./styles";
 
 const App = css`
@@ -151,7 +134,9 @@ const ChangePassword: React.FC<ChangePasswordProps> = props => {
     const domain = domainPath.charAt(0).toUpperCase() + domainPath.substr(1).toLowerCase();
     return (
         <div >
-
+            <Backdrop css={backdrop} open={props.isLoading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className={classes.paper}>
                 {error && (
                     <Typography
@@ -192,70 +177,70 @@ const ChangePassword: React.FC<ChangePasswordProps> = props => {
                         touched
                     }) => (
 
-                            <form className={classes.form} noValidate
-                                onSubmit={handleSubmit}>
-                                <Typography component="div" variant="h5"
-                                    className={classes.brandTitle}>
-                                    Change Password
+                        <form className={classes.form} noValidate
+                            onSubmit={handleSubmit}>
+                            <Typography component="div" variant="h5"
+                                className={classes.brandTitle}>
+                                Change Password
                                 </Typography >
-                                <TextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    required
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                type="password"
+                                id="old_password"
+                                label="Old_password"
+                                name="old_password"
+                                value={values.old_password || ""}
+                                onChange={handleChange}
+                                autoComplete="old_password"
+                                autoFocus
+                            />
+                            {touched.old_password && errors.old_password ? <div style={{ color: "red" }}>{errors.old_password}</div> : null}
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                value={values.password || ""}
+                                onChange={handleChange}
+                                autoComplete="current-password"
+                            />
+                            {touched.password && errors.password ? <div style={{ color: "red" }}>{errors.password}</div> : null}
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="retype_password"
+                                label="Retype_Password"
+                                type="password"
+                                id="retype_password"
+                                value={values.retype_password || ""}
+                                onChange={handleChange}
+                                autoComplete="current-password"
+                            />
+                            {touched.retype_password && errors.retype_password ? <div style={{ color: "red" }}>{errors.retype_password}</div> : null}
+                            <div css={fieldRow} style={{ justifyContent: "center" }}>
+                                <Button
+                                    type="submit"
                                     fullWidth
-                                    type="password"
-                                    id="old_password"
-                                    label="Old_password"
-                                    name="old_password"
-                                    value={values.old_password || ""}
-                                    onChange={handleChange}
-                                    autoComplete="old_password"
-                                    autoFocus
-                                />
-                                {touched.old_password && errors.old_password ? <div style={{ color: "red" }}>{errors.old_password}</div> : null}
-                                <TextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    value={values.password || ""}
-                                    onChange={handleChange}
-                                    autoComplete="current-password"
-                                />
-                                {touched.password && errors.password ? <div style={{ color: "red" }}>{errors.password}</div> : null}
-                                <TextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="retype_password"
-                                    label="Retype_Password"
-                                    type="password"
-                                    id="retype_password"
-                                    value={values.retype_password || ""}
-                                    onChange={handleChange}
-                                    autoComplete="current-password"
-                                />
-                                {touched.retype_password && errors.retype_password ? <div style={{ color: "red" }}>{errors.retype_password}</div> : null}
-                                <div css={fieldRow} style={{ justifyContent: "center" }}>
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        variant="contained"
-                                        color="primary"
-                                        className={classes.submit}
-                                    >
-                                        Update
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.submit}
+                                >
+                                    Update
           </Button>
-                                </div>
-                            </form>
+                            </div>
+                        </form>
 
 
-                        )}
+                    )}
                 </Formik>
             </div>
 

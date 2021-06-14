@@ -307,7 +307,6 @@ const locationOptions = props.client.SuggestedLocations
     }
     return date;   
       };
-     
  return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -673,12 +672,12 @@ const locationOptions = props.client.SuggestedLocations
                 </div>
                 <div css={twoCol}>
                   <select
-                    css={selectField}
+                    css={selectField} 
                     onChange={handleChange}
-                    disabled = {version_changed || values.referral_status !== "placed" || client.Program_Completion !== "" }
+                    disabled = {version_changed || client.Program_Completion || values.referral_status !== "placed" } 
                     name="Program_Completion"
                     value={
-                      values.Program_Completion !== null
+                      values.Program_Completion !== null 
                         ? values.Program_Completion && values.Program_Completion.toString()
                         : ""
                     }

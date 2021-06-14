@@ -62,12 +62,13 @@ export class ConfigurationContainer extends React.Component<
     return {
       isLoading: false,
       hasError: false,
-      error: "",
+      error: "", 
       config_update_response: null
     };
   }
 
   saveConfiguration = async (config: Types.Configuration) => {
+    this.setState({ isLoading: true });
     try {
       await updateConfiguration(config);
       this.props.enqueueSnackbar("Configuration Data saved successfully.");
@@ -76,12 +77,13 @@ export class ConfigurationContainer extends React.Component<
         "An error occurred while saving configuration"
       );
     }
+    this.setState({ isLoading: false });
   };
 
   async componentDidMount() {
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     this.props.closeSnackbar();
-    
+    this.setState({ isLoading: true }); 
     try {
       await this.props.getRoles(is_accessToken);
     } catch (error) {
@@ -92,6 +94,7 @@ export class ConfigurationContainer extends React.Component<
       } 
     }
     await this.props.getUsers();
+    this.setState({ isLoading: false });
     // await  this.props.getReferral();
     // await this.props.getPrograms();
     // await this.props.getLocations();   
@@ -128,6 +131,7 @@ export class ConfigurationContainer extends React.Component<
     const locationList = (locationState && locationState.locationList) || [];
     const { match, location,user } = this.props;
     const role_type:any = user && user.user && user.user.role_type
+    console.log(this.state.isLoading) 
     return (
       <Switch>
         <Route path={`/${domainPath}/configuration`}>

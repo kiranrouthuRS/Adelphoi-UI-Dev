@@ -135,13 +135,20 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
             <div css={fieldRow} style={{ justifyContent: "center", marginTop: "10px" }}>
                 <div css={twoCol}>
                     <div css={outerCircle}>
-                        <span css={circleContent}>
+                        <span css={circleContent}> 
                             <strong >{props.PCRList.pcr ? props.PCRList.pcr.count : 0} <br /> PCR  </strong>
                         </span>
                         <div css={innerCircle}>
                             <span css={smallcircleContent}>
-                                <strong>{props.ROCList.roc ? props.ROCList.roc.count : 0}  <br /> ROC </strong>
+                                <strong>{props.ROCList.roc ? props.ROCList.roc.count : 0}  <br /> ROC 
+                                <br/>
+                                <small>
+                            {props.PCRList.pcr && props.ROCList.roc.count ? ((props.ROCList.roc.count / props.PCRList.pcr.count)*100).toFixed(1): "0"}%
+                            </small>
+                                </strong>
+                               
                             </span>
+                            
                         </div>
 
                     </div>
