@@ -56,7 +56,10 @@ const OtherParam_Analytics: React.FC<Other_AnalyticsProps> = props => {
 
     useEffect(() => {
         props.onSelectChange(filters)
-    }, [filters.referral_source || filters.location]);
+    }, [filters.referral_source]);
+    useEffect(() => {
+        props.onSelectChange(filters)
+    }, [filters.location]);
     useEffect(() => {
         setfilters(prevState => {
             return { ...prevState, referral_status: "", referral_source: "", location: "" }
@@ -76,9 +79,12 @@ const OtherParam_Analytics: React.FC<Other_AnalyticsProps> = props => {
                         css={selectField}
                         name="referral_source"
                         value={filters.referral_source || ""}
-                        onChange={(e) => setfilters(prevState => {
-                            return { ...prevState, referral_source: e.target.value }
-                        })}
+                        onChange={e => {
+                            const val = e.target.value;
+                            setfilters(prevState => {
+                                return { ...prevState, referral_source: val}
+                            });
+                            }}
                     >
                         <option value="">Select</option>
                         {props.Referral.map(r => (
@@ -99,9 +105,12 @@ const OtherParam_Analytics: React.FC<Other_AnalyticsProps> = props => {
                         css={selectField}
                         name="location"
                         value={filters.location || ""}
-                        onChange={(e) => setfilters(prevState => {
-                            return { ...prevState, location: e.target.value }
-                        })}
+                        onChange={e => {
+                            const val = e.target.value;
+                            setfilters(prevState => {
+                                return { ...prevState, location: val}
+                            });
+                            }}
                     >
                         <option value="">Select</option>
                         {props.Location.map(l => (

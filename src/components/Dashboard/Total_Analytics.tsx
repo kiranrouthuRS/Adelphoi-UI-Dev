@@ -67,10 +67,15 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
 
     };
     const [filters, setfilters] = useState({ referral_status: "", referral_source: "", location: "" });
-
     useEffect(() => {
         props.onSelectChange(filters)
-    }, [filters.referral_status||filters.referral_source||filters.location]);
+    }, [filters.referral_status]);
+    useEffect(() => {
+        props.onSelectChange(filters)
+    }, [filters.referral_source]);
+    useEffect(() => {
+        props.onSelectChange(filters)
+    }, [filters.location]);
     useEffect(()=>{
         setfilters(prevState => {
             return { ...prevState, referral_status: "", referral_source: "", location: "" } 
@@ -90,9 +95,12 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                         css={selectField}
                         name="referral_status"
                         value={filters.referral_status || ""}
-                        onChange={(e) => setfilters(prevState => {
-                            return { ...prevState, referral_status: e.target.value }
-                        })}
+                        onChange={e => {
+                            const val = e.target.value;
+                            setfilters(prevState => {
+                                return { ...prevState, referral_status: val}
+                            })
+                            }}
                     >
                         <option value="">Select</option>
                         <option value="placed">Accepted &amp; placed</option>
@@ -112,9 +120,19 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                         css={selectField}
                         name="referral_source"
                         value={filters.referral_source || ""}
-                        onChange={(e) => setfilters(prevState => {
-                            return { ...prevState, referral_source: e.target.value }
-                        })}
+                        // onChange={ e => {
+                        //     let val = e.target.value;
+                        //     setfilters(prevState => {
+                        //     return { ...prevState, referral_source: e.target.value }
+                        // })}};
+                        onChange={e => {
+                            const val = e.target.value;
+                            setfilters(prevState => {
+                                return { ...prevState, referral_source: val}
+                            })
+                            
+                          }}
+                       
                     >
                         <option value="">Select</option>
                         {props.Referral.map(r => (
@@ -135,9 +153,16 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                         css={selectField}
                         name="location"
                         value={filters.location || ""}
-                        onChange={(e) => setfilters(prevState => {
-                            return { ...prevState, location: e.target.value }
-                        })}
+                        // onChange={(e) => setfilters(prevState => {
+                        //     return { ...prevState, location: e.target.value }
+                        // })}
+                        onChange={e => {
+                            const val = e.target.value;
+                            setfilters(prevState => {
+                                return { ...prevState, location: val}
+                            })
+                            
+                          }}
                     >
                         <option value="">Select</option>
                         {props.Location.map(l => (

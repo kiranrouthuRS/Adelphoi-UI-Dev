@@ -146,7 +146,7 @@ export class DashboardContainer extends React.Component<
   getProgramAnalytics = async (filter: any) => {
     const is_accessToken: any = this.state.accessToken
     this.setState({ isLoading: true });
-   await this.props.getPCRAnalytics(filter,is_accessToken);
+    await this.props.getPCRAnalytics(filter,is_accessToken);
     await this.props.getROCAnalytics(filter,is_accessToken);
     this.setState({ isLoading: false });
   };

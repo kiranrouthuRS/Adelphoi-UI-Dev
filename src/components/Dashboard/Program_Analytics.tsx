@@ -1,16 +1,9 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import React, { useState, useEffect } from "react";
-import { Formik, ErrorMessage } from "formik";
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
-import { ConfigurationSchema } from "../ValidationSchema";
-import { Pie } from 'react-chartjs-2';
 import {
-    wrap,
     outerCircle,
     selectField,
     fieldRow,
@@ -19,10 +12,8 @@ import {
     innerCircle,
     smallcircleContent,
     txtLabel,
-    label
+   
 } from "../styles";
-import * as Types from "../../api/definitions";
-import { borderRadius } from "react-select/src/theme";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -73,8 +64,11 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
 
     useEffect(() => {
         props.onSelectChange(filters)
-    }, [filters.referral_source || filters.location]);
-
+    }, [filters.referral_source]);
+    useEffect(() => {
+        props.onSelectChange(filters)
+    }, [filters.location]);
+    
     useEffect(() => {
         setfilters(prevState => {
             return { ...prevState, referral_status: "", referral_source: "", location: "" }
@@ -94,9 +88,12 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
                         css={selectField}
                         name="referral_source"
                         value={filters.referral_source || ""}
-                        onChange={(e) => setfilters(prevState => {
-                            return { ...prevState, referral_source: e.target.value }
-                        })}
+                       onChange={e => {
+                            const val = e.target.value;
+                            setfilters(prevState => {
+                                return { ...prevState, referral_source: val}
+                            });
+                            }}
                     >
                         <option value="">Select</option>
                         {props.Referral.map(r => (
@@ -117,9 +114,12 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
                         css={selectField}
                         name="location"
                         value={filters.location || ""}
-                        onChange={(e) => setfilters(prevState => {
-                            return { ...prevState, location: e.target.value }
-                        })}
+                       onChange={e => {
+                            const val = e.target.value;
+                            setfilters(prevState => {
+                                return { ...prevState, location: val}
+                            });
+                            }}
                     >
                         <option value="">Select</option>
                         {props.Location.map(l => (
