@@ -143,7 +143,7 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
                                 <strong>{props.ROCList.roc ? props.ROCList.roc.count : 0}  <br /> ROC 
                                 <br/>
                                 <small>
-                            {props.PCRList.pcr && props.ROCList.roc.count ? ((props.ROCList.roc.count / props.PCRList.pcr.count)*100).toFixed(1): "0"}%
+                            {props.PCRList.pcr && props.ROCList.roc&&props.ROCList.roc.count ? ((props.ROCList.roc.count / props.PCRList.pcr.count)*100).toFixed(1): "0"}%
                             </small>
                                 </strong>
                                
