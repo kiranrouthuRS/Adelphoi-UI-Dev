@@ -108,20 +108,21 @@ export const actions = {
         if (!cl) {
           return (response as unknown) as string;
         }
-         cl.referral_status = referral_status ? referral_status : null;
+        cl.referral_status = referral_status ? referral_status : null;
          cl.start_date = start_date ? start_date : null;
          cl.end_date = end_date ? end_date : null;
          cl.Program_Completion = Program_Completion ? Program_Completion : Program_Completion === 0 ? 0 : null;
          cl.Remained_Out_of_Care = Remained_Out_of_Care ? Remained_Out_of_Care : Remained_Out_of_Care === 0 ? 0 :null;
          cl.program_significantly_modified = program_significantly_modified ? program_significantly_modified : null; 
-        const updatedCl = {
+         cl.selected_location = location ? location : null
+         const updatedCl = {
           ...cl,
           Program_Completion,
           Returned_to_Care,
           Remained_Out_of_Care,
           program_significantly_modified,
-          selected_location: location || cl.selected_location
-        };
+          // selected_location: location
+                };
         if (!updatedCl["Client Code"]) {
           return (response as unknown) as string;
         }

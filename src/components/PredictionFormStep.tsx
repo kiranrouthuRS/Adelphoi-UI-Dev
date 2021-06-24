@@ -444,7 +444,6 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions } = this.state;
-   
     
     return (
       <div css={wrap}>
@@ -503,9 +502,10 @@ export class PredictionFormStep extends React.Component<
                         (<div css={twoCol} key={index_1}>
                           <label css={label1} >{ques.question}</label>
                           {ques.description &&
-                            <label style={{ fontSize: "16px" }}> ({ques.description})</label>
+                            <label > 
+                            <small>({ques.description})</small>
+                            </label>
                           } <br />
-
                           {ques.answer_type === "SELECT" ?
                             <select
                               css={selectField}
@@ -521,7 +521,7 @@ export class PredictionFormStep extends React.Component<
                                   value={ans.id}
                                   data-idx={index}
                                   data-idy={ind}
-                                  data-jump={ques.suggested_jump.map(sj => ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
+                                  data-jump={ques.suggested_jump.map(sj => sj !== null &&  ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
                                   data-quesjump={ques.suggested_jump.length > 0 ? ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.question_jumpto ? sj.question_jumpto : "" : "") : ""}
                                   selected={this.state.client_form[ques.question.replace(/ /g, "_")]&&this.state.client_form[ques.question.replace(/ /g, "_")].toString() === ans.id.toString()}>{ans.value}</option>
                               )}
@@ -591,6 +591,7 @@ export class PredictionFormStep extends React.Component<
                                       data-msg={ques.error_msg}
                                       data-idx={index}
                                       data-idy={ind}
+                                      readOnly = {ques.field_type === 0}
                                       name={ques.question.replace(/ /g, "_")}
                                       value={ques.question === "Age" ? (
                                         this.state.client_form[ques.question.replace(/ /g, "_")] = this.getAge(this.state.client_form["Date_of_Birth"], this.state.client_form["Date_of_Referral"])
@@ -620,6 +621,7 @@ export class PredictionFormStep extends React.Component<
 
                                   </Fragment>
                           }
+
                           {
                             this.state.error[ques.question.replace(/ /g, "_")] &&
                             <div style={{ color: "red" }}>{this.state.error[ques.question.replace(/ /g, "_")]}</div>

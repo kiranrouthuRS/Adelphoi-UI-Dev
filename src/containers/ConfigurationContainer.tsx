@@ -131,7 +131,6 @@ export class ConfigurationContainer extends React.Component<
     const locationList = (locationState && locationState.locationList) || [];
     const { match, location,user } = this.props;
     const role_type:any = user && user.user && user.user.role_type
-    console.log(this.state.isLoading) 
     return (
       <Switch>
         <Route path={`/${domainPath}/configuration`}>

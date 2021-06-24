@@ -391,13 +391,15 @@ const locationOptions = props.client.SuggestedLocations
 
         )
       }
-      { props.client.referral_status === "not_placed" || props.client.referral_status === "rejected" || props.client.Remained_Out_of_Care ? 
+       { props.client.referral_status === "not_placed" || 
+          props.client.referral_status === "rejected" || 
+                       props.client.Remained_Out_of_Care ? 
          (<h3> Click <a href="#" onClick={() =>
           history.push(
-            `/${domainPath}/existing-client/edit-details/${index}&true` 
+            `/${domainPath}/existing-client/edit-details/${index}&true`  
           )
-        }><u style={{ color: "red" }}>here</u></a> to Re-Referral the Client.</h3>):
-          props.client.Program_Completion !== "" ||  props.client.referral_status !== "pending" ? 
+        }><u style={{ color: "red" }}>here</u></a> to Re-Refer the Client.</h3>):
+         ( props.client.Program_Completion !== "" ||  props.client.referral_status !== "pending" )? 
           "" :  (<h3> Click <a href="#" onClick={() =>
             history.push(
               `/${domainPath}/existing-client/edit-details/${index}&true`
@@ -593,7 +595,7 @@ const locationOptions = props.client.SuggestedLocations
               </div>
               <div css={fieldRow}>
                 <div css={twoCol}>
-                  <label css={label}>Location</label>  
+                  <label css={label}>Location </label>  
                 </div>
                 <div css={twoCol}> 
                   <Dropdown

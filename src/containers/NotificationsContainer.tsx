@@ -133,7 +133,7 @@ export class NotificationsContainer extends React.Component<
       case 'pending':
         try {
           this.setState({ isLoading: true });
-          await Download_Notifications(Type,start_date,end_date); 
+          await Download_Notifications(Type,start_date,end_date,is_accessToken); 
           this.setState({ isLoading: false });
         } catch (error) {
           console.log(error);
@@ -144,7 +144,7 @@ export class NotificationsContainer extends React.Component<
       case 'pcr':
         try {
           this.setState({ isLoading: true });
-          await Download_Notifications(Type,start_date,end_date); 
+          await Download_Notifications(Type,start_date,end_date,is_accessToken); 
           this.setState({ isLoading: false });
         } catch (error) {
           console.log(error);
@@ -155,7 +155,7 @@ export class NotificationsContainer extends React.Component<
       case 'roc':
         try {
           this.setState({ isLoading: true });
-          await Download_Notifications(Type,start_date,end_date); 
+          await Download_Notifications(Type,start_date,end_date,is_accessToken); 
           this.setState({ isLoading: false });
         } catch (error) {
           console.log(error);

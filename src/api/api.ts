@@ -604,7 +604,8 @@ export const fetchAllNotifications = async (
 export const Download_Notifications = async (
   type: string,
   start_date: any = "",
-  end_date: any = ""
+  end_date: any = "",
+  is_accessToken: any
   ) => {
   const { dispatch } = store
   const currentUser = store.getState().user.user.accessToken; 
@@ -615,7 +616,7 @@ export const Download_Notifications = async (
   try {
     return await axios.get(`${baseApiUrl}/${domainPath}/notifications/${type}?download${daterange}`, {
       headers: {
-        'Authorization': `Bearer ${currentUser}`
+        'Authorization': `Bearer ${is_accessToken}`
       }
     })
       .then(response => {

@@ -33,7 +33,9 @@ const Sidemenu: React.FC = (props) => {
         <MenuIcon style={{ fontSize: "18px" }} />
         <span >Menu</span></button>
       <div className="dropdown-content">
+        {domainPath === "adelphoi" && 
         <Link to={`/${domainPath}/dashboard`}>Dashboard</Link>
+        }
         <Link to={`/${domainPath}/notifications`}>
         {setNewNotification ? (
           <Badge badgeContent={"new"} color="secondary">
