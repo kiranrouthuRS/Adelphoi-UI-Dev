@@ -389,7 +389,7 @@ export const actions = {
                   let data = [] as any;
                 updatedDClient = cl; 
                 const res = await fetchLocations(
-                  updatedDClient["Client Code"],
+                  Object.keys(updatedDClient).includes("New Client Code") ? updatedDClient["New Client Code"] :  updatedDClient["Client Code"],
                   updatedDClient.program_type,
                   is_accessToken
                 );

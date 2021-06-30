@@ -307,6 +307,7 @@ const locationOptions = props.client.SuggestedLocations
     }
     return date;   
       };
+     
  return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -393,6 +394,7 @@ const locationOptions = props.client.SuggestedLocations
       }
        { props.client.referral_status === "not_placed" || 
           props.client.referral_status === "rejected" || 
+          props.client.Program_Completion === 0   ||
                        props.client.Remained_Out_of_Care ? 
          (<h3> Click <a href="#" onClick={() =>
           history.push(
@@ -676,7 +678,7 @@ const locationOptions = props.client.SuggestedLocations
                   <select
                     css={selectField} 
                     onChange={handleChange}
-                    disabled = {version_changed || client.Program_Completion || values.referral_status !== "placed" } 
+                    disabled = {version_changed || props.client.Program_Completion === 0  ? true : values.referral_status !== "placed" } 
                     name="Program_Completion"
                     value={
                       values.Program_Completion !== null 
@@ -754,7 +756,7 @@ const locationOptions = props.client.SuggestedLocations
                     css={selectField}
                     onChange={handleChange}
                     disabled={ props.client.Remained_Out_of_Care ? true :
-                     version_changed ? version_changed : values.Program_Completion !== ""
+                     version_changed ? version_changed :  values.Program_Completion !== ""
                         ? values.Program_Completion === "0" || values.Program_Completion === 0 
                         : true 
                     }
@@ -781,7 +783,9 @@ const locationOptions = props.client.SuggestedLocations
                   size="large"
                   variant="contained"  
                   color="primary"
-                  disabled = {version_changed || ["not_placed","rejected"].includes(props.client.referral_status) || props.client.Remained_Out_of_Care ? true : false}
+                  disabled = {version_changed || 
+                    ["not_placed","rejected"].includes(props.client.referral_status) 
+                    || props.client.Remained_Out_of_Care || props.client.Program_Completion === 0 ? true : false}
                   
                 >
                   Submit
