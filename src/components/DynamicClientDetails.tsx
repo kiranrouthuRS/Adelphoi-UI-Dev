@@ -394,8 +394,8 @@ const locationOptions = props.client.SuggestedLocations
       }
        { props.client.referral_status === "not_placed" || 
           props.client.referral_status === "rejected" || 
-          props.client.Program_Completion === 0   ||
-                       props.client.Remained_Out_of_Care ? 
+          ([0].includes(props.client.Program_Completion)  || 
+                       props.client.Remained_Out_of_Care?.toString()) ? 
          (<h3> Click <a href="#" onClick={() =>
           history.push(
             `/${domainPath}/existing-client/edit-details/${index}&true`  
@@ -433,7 +433,7 @@ const locationOptions = props.client.SuggestedLocations
               }
               
             }
-            if (values.Program_Completion === "1" || values.Program_Completion === "2") {
+            if (values.Program_Completion === "0" ||values.Program_Completion === "1" ) {
               if (!values.end_date) {
                 errors.end_date = "Required";
               }
@@ -674,18 +674,18 @@ const locationOptions = props.client.SuggestedLocations
                 <div css={twoCol}>
                   <label css={label}>Program Completion</label>
                 </div>
-                <div css={twoCol}>
+                <div css={twoCol}> 
                   <select
                     css={selectField} 
                     onChange={handleChange}
-                    disabled = {version_changed || props.client.Program_Completion === 0  ? true : values.referral_status !== "placed" } 
+                    disabled = {version_changed || [0,1,2].includes(props.client.Program_Completion)   ? true : values.referral_status !== "placed" } 
                     name="Program_Completion"
                     value={
                       values.Program_Completion !== null 
                         ? values.Program_Completion && values.Program_Completion.toString()
                         : ""
-                    }
-                  >
+                    }   
+                  > 
                     <option value="">Select</option>
                     <option value="1">Yes</option> 
                     <option value="0">No</option>
@@ -703,7 +703,7 @@ const locationOptions = props.client.SuggestedLocations
                     <input
                       type="date"
                       name="end_date"
-                      disabled = {version_changed || client.Program_Completion !== ""} 
+                      disabled = {version_changed || props.client.Program_Completion?.toString() !== ""}    
                       css={inputField}
                       // disabled={Number(values.Program_Completion) === 0}
                       placeholder=""
@@ -755,7 +755,7 @@ const locationOptions = props.client.SuggestedLocations
                   <select
                     css={selectField}
                     onChange={handleChange}
-                    disabled={ props.client.Remained_Out_of_Care ? true :
+                    disabled={ props.client.Remained_Out_of_Care?.toString() ? true :
                      version_changed ? version_changed :  values.Program_Completion !== ""
                         ? values.Program_Completion === "0" || values.Program_Completion === 0 
                         : true 
@@ -763,7 +763,7 @@ const locationOptions = props.client.SuggestedLocations
                     name="Remained_Out_of_Care"
                     value={
                       values.Remained_Out_of_Care !== null
-                        ? values.Remained_Out_of_Care && values.Remained_Out_of_Care.toString()
+                        ? values.Remained_Out_of_Care?.toString()
                         : ""
                     }
                   >
@@ -785,7 +785,7 @@ const locationOptions = props.client.SuggestedLocations
                   color="primary"
                   disabled = {version_changed || 
                     ["not_placed","rejected"].includes(props.client.referral_status) 
-                    || props.client.Remained_Out_of_Care || props.client.Program_Completion === 0 ? true : false}
+                    || props.client.Remained_Out_of_Care?.toString() || props.client.Program_Completion === 0 ? true : false}
                   
                 >
                   Submit

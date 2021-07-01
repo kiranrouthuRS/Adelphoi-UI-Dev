@@ -321,22 +321,28 @@ import { uploadcsvfile, downloadcsvfile } from "../api/api"
                     if (type === "number") {
                       const err = parseInt(value) < parseInt(val1)
                       const err1 = parseInt(value) > parseInt(val2)
-                      if(this.state.isEdit === "true" && name === "Client_Code"){
-                        this.setState(prevState => ({
-                          client_form: {
-                            ...prevState.client_form,
-                            [name]: value,
-                            ["Client_Code1"]: this.state.ClientCode
-                          }
-                        }))
-                      } else {
-                        this.setState({
-                          client_form: {
-                            ...this.state.client_form,
-                            [name]: value,
-                          }
-                        })
-                      }
+                      // if(this.state.isEdit === "true" && name === "Client_Code"){
+                      //   this.setState(prevState => ({
+                      //     client_form: {
+                      //       ...prevState.client_form,
+                      //       [name]: value,
+                      //       ["Client_Code1"]: this.state.ClientCode
+                      //     }
+                      //   }))
+                      // } else {
+                      //   this.setState({
+                      //     client_form: {
+                      //       ...this.state.client_form,
+                      //       [name]: value,
+                      //     }
+                      //   })
+                      // }
+                      this.setState({
+                        client_form: {
+                          ...this.state.client_form,
+                          [name]: value,
+                        }
+                      })
                       this.setState({
                       error: {
                           ...this.state.error,
@@ -381,11 +387,11 @@ import { uploadcsvfile, downloadcsvfile } from "../api/api"
                   !client_form[ele] && Required_List[ele] === "yes" && (isValid_Data = false)
                 ))
                 let formData = Object.assign({}, ...data)
-                           if(Object.keys(formData).includes("Client Code1")){
-                                formData["New Client Code"] = formData["Client Code"];
-                                formData["Client Code"] = formData["Client Code1"]; 
-                                delete formData["Client Code1"];
-                          }
+                          //  if(Object.keys(formData).includes("Client Code1")){
+                          //       formData["New Client Code"] = formData["Client Code"];
+                          //       formData["Client Code"] = formData["Client Code1"]; 
+                          //       delete formData["Client Code1"];
+                          // }
                 if (isValid_Data) {
                   if (this.state.isEdit === "true" || !this.state.hasError) {
                     await this.props.onFormSubmit(formData);
