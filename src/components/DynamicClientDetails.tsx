@@ -270,6 +270,7 @@ const locationOptions = props.client.SuggestedLocations
     setPredictedProgram(val[0].client_selected_program);
     setPredictedReferral(val[0].selected_referral);
     setPredictedLocation(val[0].client_selected_locations);
+    setReferralStatus(val[0].referral_status) 
     props.onVersionSelect(props.searchData[0].client_code,version_id);
   
   }
