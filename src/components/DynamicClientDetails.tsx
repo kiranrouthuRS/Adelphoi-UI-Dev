@@ -112,6 +112,12 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
   const [referralStatus, setReferralStatus] = useState<string | null>(
     null
   ); 
+  const [startDate, setStartDate] = useState<string | null>(
+    null
+  );
+  const [endDate, setEndDate] = useState<string | null>(
+    null
+  );
   const [predicted_location, setPredictedLocation] = useState<string | null>(
     null
   );
@@ -250,10 +256,10 @@ const locationOptions = props.client.SuggestedLocations
       Location: location || "",
 
       start_date:
-        client.start_date !== null ? client.start_date : "",
+        client.start_date !== null ? startDate ? startDate : client.start_date : "",
 
       end_date:
-        client.end_date !== null ? client.end_date : "",
+        client.end_date !== null ? endDate ? endDate : client.end_date : "",
 
       referral_status:
         client.referral_status !== null ? referralStatus ? referralStatus: client.referral_status : ""
@@ -270,7 +276,9 @@ const locationOptions = props.client.SuggestedLocations
     setPredictedProgram(val[0].client_selected_program);
     setPredictedReferral(val[0].selected_referral);
     setPredictedLocation(val[0].client_selected_locations);
-    setReferralStatus(val[0].referral_status) 
+    setReferralStatus(val[0].referral_status);
+    setStartDate(val[0].start_date);
+    setEndDate(val[0].end_date);
     props.onVersionSelect(props.searchData[0].client_code,version_id);
   
   }
