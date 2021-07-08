@@ -184,7 +184,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     return <h1 css={subHeading}>No client found</h1>;
   }
   const { client, Referral, searchData } = props;
-  let suggested_locations : any = props.client.SuggestedLocations.length > 0 ? props.client.SuggestedLocations : 
+  let suggested_locations : any = props.client.SuggestedLocations?.length > 0 ? props.client.SuggestedLocations : 
                                                           props.client["Suggested Locations"]
  const programOptions = props.client.SuggestedPrograms
     ? props.client.SuggestedPrograms.map(p => {
