@@ -149,12 +149,11 @@ export const actions = {
       if (locations.length > 0) {
         const cl: Types.Client = {
           ...getState().client!.client,
-          SuggestedLocations: [...locations],
+          SuggestedLocations: [...locations], 
           client_selected_program: selected_program
         };
         dispatch(update({ client: cl }));
-
-        const clientList = getState().client?.clientList;
+         const clientList = getState().client?.clientList;
         if (clientList && clientList[Number(client_code)]) {
           const client = clientList[client_code];
           const cl: Types.Client = {
@@ -347,7 +346,7 @@ export const actions = {
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const response = await searchDClient(client_code, client_name, is_accessToken);
-      const arr = response.response;
+      let arr = response.response;
       let clientList: { [key: string]: any } = {};
       arr && arr.map((c: any) => {
         if (c.client_code) {
@@ -356,8 +355,31 @@ export const actions = {
         return null;
       });
       dispatch(update({ clientList, searchData: response.response }));
+      let locations = arr ? arr[0]["Suggested Locations"] : [];
+      if (locations.length > 0) {
+        const cl: Types.Client = {
+          ...getState().client!.client,
+          SuggestedLocations: [...locations],
+         
+        };
+        dispatch(update({ client: cl }));
+        const clientList = getState().client?.clientList;
+        if (clientList && clientList[Number(client_code)]) {
+          const client = clientList[client_code];
+          const cl: Types.Client = {
+            ...client,
+            SuggestedLocations: [...locations],
+            
+          };
+         clientList[client_code] = cl;
+          dispatch(update({ clientList}));
+        }
+      }
+      
       return;
-    };
+        };
+      
+    
   },
 
 

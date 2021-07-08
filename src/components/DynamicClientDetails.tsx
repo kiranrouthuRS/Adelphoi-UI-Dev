@@ -146,16 +146,15 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
       setSelectedVersion([searchData[length]]);
     }
   }, [props.searchData]);
-
   useEffect(() => {
     if (
       !predicted_program ||
       predicted_program === props.client.selected_program
     ) {
-      setPredictedProgram(searchData[0].model_program);
+      setPredictedProgram(props.client.model_program);
       
     }
-  }, [props.client.selected_program,]);
+  }, [props.client.selected_program]);
   useEffect(() => {
     if (
       !predicted_referral ||
@@ -185,7 +184,9 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     return <h1 css={subHeading}>No client found</h1>;
   }
   const { client, Referral, searchData } = props;
-  const programOptions = props.client.SuggestedPrograms
+  let suggested_locations : any = props.client.SuggestedLocations.length > 0 ? props.client.SuggestedLocations : 
+                                                          props.client["Suggested Locations"]
+ const programOptions = props.client.SuggestedPrograms
     ? props.client.SuggestedPrograms.map(p => {
       return {
         label: p,
@@ -194,15 +195,15 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
       };
     })
     : [];
-const locationOptions = props.client.SuggestedLocations
-    ? props.client.SuggestedLocations.map(l => {
+const locationOptions = suggested_locations
+    ? suggested_locations.map(l => {
       return {
         label: l,
         value: l,
         predicted: l === predicted_location
       };
-    })
-    : [];
+    }):
+   []; 
   const getInitialValues = (): FormValues => {
     const { client, is_role_type, searchData } = props;
     let program: any = null;
@@ -711,8 +712,8 @@ const locationOptions = props.client.SuggestedLocations
                   <div css={twoCol}>
                     <input
                       type="date"
-                      name="end_date"
-                      disabled = {version_changed || props.client.Program_Completion?.toString() !== ""}    
+                      name="end_date" 
+                      disabled = {version_changed || [0,1].includes(props.client.Program_Completion) }     
                       css={inputField}
                       // disabled={Number(values.Program_Completion) === 0}
                       placeholder=""
