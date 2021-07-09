@@ -156,7 +156,7 @@ const Welcomepage: React.FC<LoginFormProps> = props => {
         </Avatar> */}
         <Typography component="div" variant="h2"
           className={classes.brandTitle}>
-              Thank you for  registering with FirstMatch&trade;. Configuration is in Progress...
+              Thank you for  registering with FirstMatch&reg;. Configuration is in Progress...
         </Typography >
               
               </div>

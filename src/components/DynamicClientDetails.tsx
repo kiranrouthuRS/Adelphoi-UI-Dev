@@ -184,8 +184,9 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
     return <h1 css={subHeading}>No client found</h1>;
   }
   const { client, Referral, searchData } = props;
-  let suggested_locations : any = props.client.SuggestedLocations?.length > 0 ? props.client.SuggestedLocations : 
-                                                          props.client["Suggested Locations"]
+  let suggested_locations : any = props.client.SuggestedLocations?.length > 0 ? 
+                                               props.client.SuggestedLocations : 
+                                               props.client["Suggested Locations"]
  const programOptions = props.client.SuggestedPrograms
     ? props.client.SuggestedPrograms.map(p => {
       return {
@@ -408,13 +409,13 @@ const locationOptions = suggested_locations
                        props.client.Remained_Out_of_Care?.toString()) ? 
          (<h3> Click <a href="#" onClick={() =>
           history.push(
-            `/${domainPath}/existing-client/edit-details/${index}&true`  
+            `/${domainPath}/existing-client/edit-details/${index}&true&true`  
           )
         }><u style={{ color: "red" }}>here</u></a> to Re-Refer the Client.</h3>):
          ( props.client.Program_Completion !== "" ||  props.client.referral_status !== "pending" )? 
           "" :  (<h3> Click <a href="#" onClick={() =>
             history.push(
-              `/${domainPath}/existing-client/edit-details/${index}&true`
+              `/${domainPath}/existing-client/edit-details/${index}&true&false`
             )
           }><u style={{ color: "red" }}>here</u></a> to update the Client details.</h3>)
           }

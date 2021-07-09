@@ -108,7 +108,7 @@ DynamicExistingClientContainerState
         ></Route>
         <Route
           exact
-          path={`/${domainPath}/existing-client/edit-details/:index&:isEdit`}
+          path={`/${domainPath}/existing-client/edit-details/:index&:isEdit&:Rerefer`}
           component={DynamicNewClientContainer}
         ></Route>
       </Switch>

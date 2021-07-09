@@ -198,7 +198,7 @@ const Login: React.FC<LoginFormProps> = props => {
         </Avatar> */}
         <Typography component="div" variant="h5"
           className={classes.brandTitle}>
-              Login to FirstMatch&trade; for {domain}
+              Login to FirstMatch&reg; for {domain}
         </Typography >
               {error && (
                 <Typography

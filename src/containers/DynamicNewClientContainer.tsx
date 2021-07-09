@@ -16,6 +16,7 @@ import { domainPath } from "../App"
 import { store } from "../index";
 interface MatchParams {
   index: string;
+  Rerefer: string;
 }
 export interface DynamicNewClientContainerState {
   isLoading: boolean;
@@ -91,6 +92,7 @@ export class DynamicNewClientContainer extends React.Component<
 
   async componentDidMount() {
     this.props.closeSnackbar();
+    this.GetQuestions();
     // this.props.getAvailablePrograms();
     }
   saveClientStep1 = async (client: Types.DynamicClient) => {
@@ -210,11 +212,12 @@ export class DynamicNewClientContainer extends React.Component<
     const clientList = (clientState && clientState.clientList) || {};
     const configuredQuestionsList: any = (questionsState && questionsState.configuredQuestionsList) || [];
     const { match: { params } } = this.props;
-    const { index } = this.props.match.params;
+    const { index, Rerefer } = this.props.match.params;
     let currentClient: Types.Client;
     currentClient = clientState ? clientState.client : Types.emptyClient;
     const availableProgramList =
       (programState && programState.availableProgramList) || [];
+      console.log(configuredQuestionsList)
     return (
       <Switch>
         <Route exact path={`/${domainPath}/new-client/program-selection`}>
@@ -243,10 +246,11 @@ export class DynamicNewClientContainer extends React.Component<
             );
           }}
         ></Route>
-        <Route exact path={index ? `/${domainPath}/existing-client/edit-details/:index&:isEdit` : `/${domainPath}/new-client`}>
+        <Route exact path={index ? `/${domainPath}/existing-client/edit-details/:index&:isEdit&:Rerefer` : `/${domainPath}/new-client`}>
           <PredictionFormStep
             {...this.state}
             isEdit={index ? "true" : "false"}
+            reReffer={Rerefer ? Rerefer : ""}
             Referral={referralList}
             user={this.props && this.props.user}
             DynamicQuestions={index ? clientList[index].sections : configuredQuestionsList}

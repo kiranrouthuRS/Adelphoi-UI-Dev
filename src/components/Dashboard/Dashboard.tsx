@@ -484,7 +484,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                 aria-controls="panel1a-content"
                             >
                                 <h1 css={panelHeading}>
-                                    FirstMatch&trade; Prediction Tool Analytics & Calibration
+                                    FirstMatch&reg; Prediction Tool Analytics & Calibration
                                 </h1>
                             </AccordionSummary>
                             <AccordionDetails css={panel}>
