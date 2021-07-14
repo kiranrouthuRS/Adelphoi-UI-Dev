@@ -207,6 +207,7 @@ const locationOptions = suggested_locations
    []; 
   const getInitialValues = (): FormValues => {
     const { client, is_role_type, searchData } = props;
+    console.log(client)
     let program: any = null;
     let location: any = null;
     let referral: any = null;
@@ -266,8 +267,9 @@ const locationOptions = suggested_locations
       referral_status:
         client.referral_status !== null ? referralStatus ? referralStatus: client.referral_status : ""
     };
- 
+    
   };
+  
    const handleChange = (e) => {
     const { name, value } = e.target;
     var optionElement = e.target.childNodes[e.target.selectedIndex]
@@ -307,13 +309,17 @@ const locationOptions = suggested_locations
 
   }
   const is_date = function(date) {
-    let dateObj: any = new Date(date);
+     let dateObj: any = new Date(date.replace(/-/g, '\/'));   
     const regex=new RegExp("([0-9]{4}[-](0[1-9]|1[0-2])[-]([0-2]{1}[0-9]{1}|3[0-1]{1})|([0-2]{1}[0-9]{1}|3[0-1]{1})[-](0[1-9]|1[0-2])[-][0-9]{4})"); 
-   if(regex.test(date)){
+   console.log(date)
+    console.log(dateObj)
+    if(regex.test(date)){
+      console.log(date)
       let year = dateObj.getFullYear();
         let month = 1 + (dateObj.getMonth())
         let datee = dateObj.getDate();
         let date1 = [ month.toString().length>1 ?month:`0${month}`, datee, year].join("-")
+        console.log(date1)
     return date1
     }
     return date;   
@@ -387,8 +393,9 @@ const locationOptions = suggested_locations
                     <label css={txtLabel}>{ques.question}</label>  
                     <div css={txtDetail}>
                       {Array.isArray(ques.answer)? ques.answer.toString(): 
-                      ques.answer.toString().includes("-")?is_date(ques.answer) :   
-                      ques.question === "Age"?props.searchData[0].ageAtEpisodeStart?props.searchData[0].ageAtEpisodeStart:
+                      ques.answer.toString().includes("-") ? is_date(ques.answer) :       
+                      ques.question === "Age" ? props.searchData[0].ageAtEpisodeStart 
+                                        ? props.searchData[0].ageAtEpisodeStart:
                       ques.answer:ques.answer} 
                     </div>
                   </div>
