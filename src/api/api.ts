@@ -1498,7 +1498,7 @@ function throwError(error: any) {
   if (error.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
-    error.response.data);
+    console.log(error.response.data);
     console.log("code", error.response.status);
     console.log(error.response.headers);
     const errorResponse = {
