@@ -101,7 +101,7 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
 
                 </Grid>
             </Grid>
-            <Grid container spacing={1} >
+            {/* <Grid container spacing={1} >
                 <Grid item xs={12}>
                     <Pie data={allocated}
                         options={{
@@ -125,7 +125,7 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
 
 
                 </Grid>
-            </Grid>
+            </Grid> */}
 
             <Table aria-label="clients table" css={dataTable}>
                 <TableHead>

@@ -15,6 +15,7 @@ export const emptyUser: Types.User = {
   user_id: "",
   is_pwd_updated: "",
   logo_path: "",
+  header_color:"", 
   is_fully_configured: "",
   performance_entry: "",
   is_prediction_available: ""
@@ -46,7 +47,7 @@ export const actions = {
           if (response.status === "success") {
             const { token, role_type,
               user_id, is_pwd_updated,
-              logo_path, is_fully_configured,
+              logo_path, is_fully_configured,header_color,
               is_prediction_available,
               is_suspended } = response.response;
             const entries: any = performance.getEntriesByType("navigation");
@@ -58,6 +59,7 @@ export const actions = {
               user_id: user_id,
               is_pwd_updated: is_pwd_updated,
               logo_path: logo_path,
+              header_color:header_color,
               is_fully_configured: is_fully_configured,
               performance_entry: action[0],
               is_prediction_available: is_prediction_available === true ?

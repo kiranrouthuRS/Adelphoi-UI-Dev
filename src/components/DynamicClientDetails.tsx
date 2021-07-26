@@ -181,7 +181,7 @@ const DynamicClientDetails: React.FC<DynamicClientDetailsProps> = props => {
 
   let { index } = useParams();
   if (!index) {
-    return <h1 css={subHeading}>No client found</h1>;
+    return <h1 css={subHeading} >No client found</h1>;
   }
   const { client, Referral, searchData } = props;
   let suggested_locations : any = props.client.SuggestedLocations?.length > 0 ? 
@@ -207,7 +207,6 @@ const locationOptions = suggested_locations
    []; 
   const getInitialValues = (): FormValues => {
     const { client, is_role_type, searchData } = props;
-    console.log(client)
     let program: any = null;
     let location: any = null;
     let referral: any = null;
@@ -311,15 +310,12 @@ const locationOptions = suggested_locations
   const is_date = function(date) {
      let dateObj: any = new Date(date.replace(/-/g, '\/'));   
     const regex=new RegExp("([0-9]{4}[-](0[1-9]|1[0-2])[-]([0-2]{1}[0-9]{1}|3[0-1]{1})|([0-2]{1}[0-9]{1}|3[0-1]{1})[-](0[1-9]|1[0-2])[-][0-9]{4})"); 
-   console.log(date)
-    console.log(dateObj)
-    if(regex.test(date)){
-      console.log(date)
+   if(regex.test(date)){
       let year = dateObj.getFullYear();
         let month = 1 + (dateObj.getMonth())
         let datee = dateObj.getDate();
         let date1 = [ month.toString().length>1 ?month:`0${month}`, datee, year].join("-")
-        console.log(date1)
+        
     return date1
     }
     return date;   

@@ -63,8 +63,8 @@ interface MatchParams {
 }
 interface MatchProps extends RouteComponentProps<MatchParams> { }
 export interface BillingDetailsProps {
-    accessToken: any
-
+    accessToken: any;
+    headerColor: string;
 
 }
 
@@ -202,7 +202,7 @@ class BillingDetails extends React.Component<
                         <CircularProgress color="inherit" /> 
                     </Backdrop>
                     <form name="UsersForm" >
-                        <h1 css={subHeading}>Order Reports</h1>
+                    <h1 css={subHeading} style= {{color: this.props.headerColor}}>Order Reports</h1> 
                         <p>Billing cycle – <strong>{billing_cycle}</strong>, base fare <b>${base_fare}</b> other charges - <b>${other_fare}​</b></p>
                         <div css={fieldRow}>
                             <div css={twoCol}>
@@ -233,8 +233,9 @@ class BillingDetails extends React.Component<
                                     type="submit"
                                     size="large"
                                     variant="contained"
-                                    color="primary"
-                                    style={{ marginRight: 10 }}
+                                    style={{ marginRight: 10, 
+                                        backgroundColor: this.props.headerColor,
+                                        color: "#fff" }}
                                     onClick={this.onLoad}
                                 >
                                     Load
@@ -350,8 +351,9 @@ class BillingDetails extends React.Component<
                                 type="submit"
                                 size="large"
                                 variant="contained"
-                                color="primary"
-                                style={{ marginRight: 10, marginTop: 10 }}
+                                style={{ marginRight: 10, marginTop: 10,
+                                    backgroundColor: this.props.headerColor,
+                                    color: "#fff" }}
                                 onClick={this.downloadOrder}
                             >
                                 Download CSV
@@ -361,9 +363,10 @@ class BillingDetails extends React.Component<
                                     type="submit"
                                     size="large"
                                     variant="contained"
-                                    color="primary"
                                     data-id={this.state.record_ID}
-                                    style={{ marginRight: 10, marginTop: 10 }}
+                                    style={{ marginRight: 10, marginTop: 10,
+                                        backgroundColor: this.props.headerColor,
+                                        color: "#fff" }}
                                     onClick={this.downloadReport}
                                 >
                                     Download CSV
@@ -373,8 +376,9 @@ class BillingDetails extends React.Component<
                                     type="submit"
                                     size="large"
                                     variant="contained"
-                                    color="primary"
-                                    style={{ marginRight: 10, marginTop: 10 }}
+                                    style={{ marginRight: 10, marginTop: 10,
+                                        backgroundColor: this.props.headerColor,
+                                        color: "#fff" }}
                                     onClick={this.downloadAllRecords}
                                 >
                                     Download all order reports

@@ -41,6 +41,7 @@ interface Program_AnalyticsProps {
 }
 
 const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
+    
     const classes = useStyles();
     const program = {
         labels: [

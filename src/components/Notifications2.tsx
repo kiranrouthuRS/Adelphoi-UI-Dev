@@ -34,6 +34,7 @@ interface Notification2Props {
     downloadReport: (Type: any, start_date: any, end_date: any) => void;
     isLoading: boolean;
     error: string;
+    headerColor: string;
     
 }
 
@@ -82,7 +83,7 @@ const Notifications2: React.FC<Notification2Props> = props => {
                 {({ values, handleSubmit, handleChange, setFieldValue }) => (
 
                     <form name="UsersForm" onSubmit={handleSubmit}>
-                        <h1 css={subHeading}>Pending Clients:</h1>
+                        <h1 css={subHeading} style= {{color: props.headerColor}}>Pending Clients:</h1>
                         <div css={fieldRow}>
                             <div css={twoCol}>
                                 <label css={label}>Date of Referral From</label>
@@ -128,8 +129,9 @@ const Notifications2: React.FC<Notification2Props> = props => {
                                     type="submit"
                                     size="large"
                                     variant="contained"
-                                    color="primary"
-                                    style={{ marginRight: 10 }}
+                                    style={{ marginRight: 10, 
+                                        backgroundColor: props.headerColor,
+                                        color: "#fff" }}
                                 // onClick={this.onLoad}
                                 >
                                     Search
@@ -202,8 +204,9 @@ const Notifications2: React.FC<Notification2Props> = props => {
                             type="submit"
                             size="large"
                             variant="contained"
-                            color="primary"
-                            style={{ marginRight: 10, marginTop: 10 }}
+                            style={{ marginRight: 10, marginTop: 10,
+                                backgroundColor: props.headerColor,
+                                color: "#fff" }}
                           onClick={() => props.downloadReport("pending", startdate, enddate)}
                         >
                             Download Report

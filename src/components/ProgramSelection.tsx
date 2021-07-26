@@ -77,7 +77,6 @@ const ProgramSelection: React.FC<ProgramSelectionProps> = props => {
   const onProgramChange = (program: any) => {
     props.onProgramSelect(program.value);
   };
-  console.log(props.client)
    return (
     <div css={wrap}>
       <div css={mainContent}>

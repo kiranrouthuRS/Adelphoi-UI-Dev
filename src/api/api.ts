@@ -8,7 +8,7 @@ import { domainPath } from "../App"
 import { AppState } from "../redux-modules/root";
 import FormData from "form-data"
 export const baseApiUrl = `http://3.7.135.210:8005/organizations`;
-export const loginApiUrl = "http://3.7.135.210:8005"; 
+export const loginApiUrl = "http://3.7.135.210:8005";  
 
 
 
@@ -218,6 +218,7 @@ export const insertDClient = async (client_form, is_accessToken) => {
   var data = new FormData();
   var myJSON = JSON.stringify(client_form);
   data.append('client_form', myJSON);
+  console.log(myJSON)
   try {
     const response = await axios.post(`${baseApiUrl}/${domainPath}/clients`, data, {
       headers: {
@@ -1497,7 +1498,7 @@ function throwError(error: any) {
   if (error.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
-    console.log(error.response.data);
+    error.response.data);
     console.log("code", error.response.status);
     console.log(error.response.headers);
     const errorResponse = {

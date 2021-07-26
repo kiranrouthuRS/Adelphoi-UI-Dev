@@ -354,7 +354,6 @@ export const actions = {
         }
         return null;
       });
-      console.log(arr)
       dispatch(update({ clientList, searchData: response.response }));
       let locations = arr ? arr[0]["Suggested Locations"]? arr[0]["Suggested Locations"] :[] : [];
       if (locations.length > 0) {

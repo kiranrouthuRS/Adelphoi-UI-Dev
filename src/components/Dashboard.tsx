@@ -189,9 +189,9 @@ const Dashboard: React.FC<ConfigurationFormProps> = props => {
                 }}
             >
                 {({ values, handleSubmit, handleChange }) => (
-                    <form name="configurationForm" onSubmit={handleSubmit}>
+                    <form name="configurationForm" onSubmit={handleSubmit}>   
                         <Grid item xs={12}>
-                            <h2 css={subHeading}>Dashboard</h2>
+                            <h2 css={subHeading}>Dashboard</h2>     
                         </Grid>
                         <Grid container item xs={12} spacing={3}>
 

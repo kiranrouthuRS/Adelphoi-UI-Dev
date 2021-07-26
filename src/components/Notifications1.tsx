@@ -8,12 +8,13 @@ import { subHeading,fieldRow} from "./styles";
 import { domainPath } from "../App"
 interface Notifications1Props {
     getNotifications : (Type: any) => void;
+    headerColor: string;
     
   }
 const Notifications1: React.FC<Notifications1Props> = props => {
           return(
             <form name="UsersForm" >
-            <h1 css={subHeading}>Notification Center:</h1> 
+            <h1 css={subHeading} style= {{color: props.headerColor}}>Notification Center:</h1> 
    <div css={fieldRow} > 
    <Link to={`/${domainPath}/notifications/pending`} onClick={()=>props.getNotifications("pending")}>There are clients still in pending status - Click to view</Link>
    </div>

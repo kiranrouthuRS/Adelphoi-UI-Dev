@@ -36,6 +36,7 @@ interface Notification4Props {
     downloadReport: (Type: any, start_date: any, end_date: any) => void;
     isLoading: boolean;
     error: string;
+    headerColor: string;
     // isLoading: boolean;
     // hasError: boolean;
     // error: string;
@@ -87,7 +88,7 @@ const Notifications4: React.FC<Notification4Props> = props => {
                 {({ values, handleSubmit, handleChange, setFieldValue }) => (
 
                     <form name="UsersForm" onSubmit={handleSubmit}>
-                         <h1 css={subHeading}>Clients without Remained-Out-of-Care Outcomes, Post one year from their End Date:</h1>
+                         <h1 css={subHeading} style= {{color: props.headerColor}}>Clients without Remained-Out-of-Care Outcomes, Post one year from their End Date:</h1>
                         <div css={fieldRow}>
                             <div css={twoCol}>
                                 <label css={label}>End Date From</label>
@@ -133,8 +134,9 @@ const Notifications4: React.FC<Notification4Props> = props => {
                                     type="submit"
                                     size="large"
                                     variant="contained"
-                                    color="primary"
-                                    style={{ marginRight: 10 }}
+                                    style={{ marginRight: 10, 
+                                        backgroundColor: props.headerColor,
+                                        color: "#fff" }}
                                 // onClick={this.onLoad}
                                 >
                                     Search
@@ -212,8 +214,9 @@ const Notifications4: React.FC<Notification4Props> = props => {
                                     type="submit"
                                     size="large"
                                     variant="contained"
-                                    color="primary"
-                                    style={{ marginRight: 10, marginTop: 10 }}
+                                    style={{ marginRight: 10, marginTop: 10,
+                                        backgroundColor: props.headerColor,
+                                        color: "#fff" }}
                                     onClick={() => props.downloadReport("roc", startdate, enddate)}
                                 >
                                     Download Report

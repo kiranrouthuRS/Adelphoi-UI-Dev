@@ -29,6 +29,7 @@ interface ClientSearchProps {
   isLoading: boolean;
   hasError: boolean;
   error: string;
+  headerColor: string;
 }
 
 interface FormValues {
@@ -95,8 +96,10 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
                   type="submit"
                   size="small"
                   variant="contained"
-                  color="primary"
-                  style={{ maxHeight: 44 }}
+                  style={{ marginRight: 10, 
+                    backgroundColor: props.headerColor,
+                    color: "#fff",maxHeight: 44  }}
+                 
                 >
                   <SearchIcon />
                 </Button>
@@ -105,7 +108,7 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
           )}
         </Formik>
         <div>
-          <h1 css={subHeading}>Client List</h1>
+          <h1 css={subHeading} style= {{color: props.headerColor}}>Client List</h1>
           {domainPath === "adelphoiDDD" ?
             <Table aria-label="clients table" css={dataTable}>
               <TableHead>

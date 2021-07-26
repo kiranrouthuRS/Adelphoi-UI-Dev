@@ -79,6 +79,7 @@ interface DashboardProps {
     isLoading: boolean;
     hasError: boolean;
     error: string;
+    headerColor: string;
 }
 
 
@@ -273,7 +274,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
                 {({ values, handleSubmit, handleChange }) => (
                     <form name="configurationForm" onSubmit={handleSubmit}>
                         <Grid item xs={12}>
-                            <h2 css={subHeading}>Dashboard</h2>
+                            <h2 css={subHeading} style= {{color: props.headerColor}}>Dashboard</h2>
                         </Grid>
                         <Grid container item xs={12} spacing={3}>
                             <Grid item xs={4}>
@@ -329,7 +330,9 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                     type="submit"
                                     size="large"
                                     variant="contained"
-                                    color="primary"
+                                    style={{ marginRight: 10, 
+                                        backgroundColor: props.headerColor,
+                                        color: "#fff" }}
                                 >
                                     Submit
                                 </Button>

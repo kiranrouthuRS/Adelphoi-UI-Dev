@@ -20,6 +20,7 @@ interface MatchParams {
 export interface NotificationsContainerState {
     isLoading: boolean;
     error: string;
+    headerColor: string;
  
 }
 export interface NotificationsContainerProps
@@ -39,8 +40,16 @@ export class NotificationsContainer extends React.Component<
     this.state = {
       isLoading: false,
       error: "",
+      headerColor: "" 
    
     };
+  }
+
+  async componentDidMount(){
+    const header_color: any = this.props.user && this.props.user.user.header_color;
+    this.setState({
+      headerColor: header_color
+    })
   }
   
   getAllNotifications = async(Type: any) => {
@@ -200,6 +209,7 @@ export class NotificationsContainer extends React.Component<
       </Route>
       <Route exact path={`/${domainPath}/notifications`}>
          <Notifications1 
+           headerColor = {this.state.headerColor}
            getNotifications = {this.getAllNotifications}
          />
       </Route>

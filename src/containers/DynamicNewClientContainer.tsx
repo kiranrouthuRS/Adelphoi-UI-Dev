@@ -117,11 +117,14 @@ export class DynamicNewClientContainer extends React.Component<
       }
     }
     else {
+      if(res !== null && res.data.message === "client not registered"){
+        this.props.enqueueSnackbar("Client not registered. Please update the client outcomes.")
+      }else{
       this.setState({
         error: res.data.response
       })
     }
-
+  }
   };
 
   getLocationsAndPcr = async (selected_program: string) => {
@@ -201,6 +204,7 @@ export class DynamicNewClientContainer extends React.Component<
 
     } catch (error) {
       console.log(error);
+      console.log(error)
       this.setState({ isLoading: false });
       this.props.enqueueSnackbar("An error occurred." + error);
     }
@@ -217,7 +221,7 @@ export class DynamicNewClientContainer extends React.Component<
     currentClient = clientState ? clientState.client : Types.emptyClient;
     const availableProgramList =
       (programState && programState.availableProgramList) || [];
-      console.log(configuredQuestionsList)
+     
     return (
       <Switch>
         <Route exact path={`/${domainPath}/new-client/program-selection`}>

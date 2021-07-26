@@ -31,17 +31,45 @@ interface Tool_AnalyticsProps {
 
 const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
     // const history = useHistory();
-
     const classes = useStyles();
-    let PCR_Count = Object.keys(props.PCRCalibrationList).map(list=>props.PCRCalibrationList[list].positive_percent)
+    let PCR_Count = Object.keys(props.PCRCalibrationList).map(list=>props.PCRCalibrationList[list].positive_count)
+    let PCR_Percentage = (Object.keys(props.PCRCalibrationList).map(list=>props.PCRCalibrationList[list].positive_percent))
     let PCR_Label = Object.keys(props.PCRCalibrationList).map(list=>list)
-    let ROC_Count = Object.keys(props.ROCCalibrationList).map(list=>props.ROCCalibrationList[list].positive_percent)
+    let ROC_Count = Object.keys(props.ROCCalibrationList).map(list=>props.ROCCalibrationList[list].positive_count)
+    let ROC_Percentage = Object.keys(props.ROCCalibrationList).map(list=>props.ROCCalibrationList[list].positive_percent)
     let ROC_Label = Object.keys(props.ROCCalibrationList).map(list=>list)
     const PCR_Performance = {
         labels: PCR_Label,
         datasets: [
             {
-                label: "PCR",
+              label: "Percentage", 
+              fill: false,
+              lineTension: 0.1,
+              backgroundColor: '#000000',
+              borderColor: '#FF6384',
+              borderCapStyle: 'butt',
+              borderDash: [5,5],
+              borderDashOffset: 0.9,
+              borderJoinStyle: 'miter',
+              pointBorderColor: '#FF6384',
+              pointBackgroundColor: '#fff',
+              pointBorderWidth: 6, 
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: '#FF6384',
+              pointHoverBorderColor: '#FF6384',
+              pointHoverBorderWidth: 2,
+              pointRadius: 1,
+              pointHitRadius: 10, 
+              data: PCR_Percentage
+          },
+            
+        ]
+    };
+    const ROC_Performance = {
+      labels: ROC_Label,
+        datasets: [
+            {
+              label: "Percentage",
                 fill: false,
                 lineTension: 0.1, 
                 backgroundColor: 'rgba(75,192,192,0.4)',
@@ -59,44 +87,88 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-               data: PCR_Count
-            },
+               data: ROC_Percentage
+          },
+          
             
         ]
     };
-    const ROC_Performance = {
-      labels: ROC_Label,
-        datasets: [
-            {
-                label: "ROC",
-                fill: false,
-                lineTension: 0.1,
-                backgroundColor: '#FF6384',
-                borderColor: '#FF6384',
-                borderCapStyle: 'butt',
-                borderDash: [5,5],
-                borderDashOffset: 0.9,
-                borderJoinStyle: 'miter',
-                pointBorderColor: '#FF6384',
-                pointBackgroundColor: '#fff',
-                pointBorderWidth: 6, 
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: '#FF6384',
-                pointHoverBorderColor: '#FF6384',
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10, 
-                data: ROC_Count
-            },
-            
-        ]
-    };
+    var data = {
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      datasets: [
+          {
+              label: "My First dataset",
+              fill: false,
+              lineTension: 0.1,
+              backgroundColor: "rgba(75,192,192,0.4)",
+              borderColor: "rgba(75,192,192,1)",
+              borderCapStyle: 'butt',
+              borderDash: [],
+              borderDashOffset: 0.0,
+              borderJoinStyle: 'miter',
+              pointBorderColor: "rgba(75,192,192,1)",
+              pointBackgroundColor: "#fff",
+              pointBorderWidth: 1,
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: "rgba(75,192,192,1)",
+              pointHoverBorderColor: "rgba(220,220,220,1)",
+              pointHoverBorderWidth: 2,
+              pointRadius: 1,
+              pointHitRadius: 10,
+              data: [65, 59, 80, 81, 56, 55, 40],
+              spanGaps: false,
+          }
+      ]
+  };
+  
+  
+  
+  var options = {
+          responsive: true,
+          title: {
+              display: true,
+              position: "top",
+              text: 'anything',
+              fontSize: 18,
+              fontColor: "#111"
+          },
+          tooltips: {
+                  enabled: true,
+                  mode: 'single',
+                  callbacks: {
+                      label: function(tooltipItems, data) { 
+                         var multistringText = [tooltipItems.yLabel];
+                             multistringText.push('Another Item');
+                             multistringText.push(tooltipItems.index+1);
+                             multistringText.push('One more Item');
+                          return multistringText;
+                      }
+                  }
+              },
+          legend: {
+              display: true,
+              position: "bottom",
+              labels: {
+                  fontColor: "#333",
+                  fontSize: 16
+              }
+          },
+          scales:{
+              yAxes:[{
+                  ticks:{
+                      min:0
+  
+                  }
+              }]
+  
+          }
+      }
     return (
         <div>
          
            <Grid container spacing={3} >
                                             
-                                <Grid item xs={12}>         
+                                <Grid item xs={12}>          
                        <Line data={PCR_Performance}  options={{
                     legend: {
                         display: true
@@ -109,8 +181,25 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                         yAxes: [
                           {
                             display: true,
+                            scales: {
+                              yAxes: [{
+                                ticks: {
+                                  beginAtZero: false,
+                                }
+                              }]
+                            },
+                            plugins: {
+                              datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                formatter: Math.round,
+                                font: {
+                                  weight: 'bold'
+                                }
+                              }
+                            }, 
                             ticks: {
-                                beginAtZero: true,
+                                // beginAtZero: true,
                                 steps: 10,
                                 stepValue: 5,
                                 max: 100
@@ -131,6 +220,7 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                         ],
                       }
                 }} />
+                {/* <Line data={data}  options={options}/> */}
               </Grid>
             </Grid>
             <Grid container spacing={3} >

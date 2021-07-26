@@ -11,7 +11,8 @@ import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
     fieldRow,
-    backdrop
+    backdrop,
+    subHeading
 } from "./styles";
 
 const App = css`
@@ -123,6 +124,7 @@ interface ChangePasswordProps {
     isLoading: boolean;
     error: string;
     hasLoginError: boolean;
+    headerColor: any;
 }
 
 
@@ -179,10 +181,9 @@ const ChangePassword: React.FC<ChangePasswordProps> = props => {
 
                         <form className={classes.form} noValidate
                             onSubmit={handleSubmit}>
-                            <Typography component="div" variant="h5"
-                                className={classes.brandTitle}>
+                            <h2 css={subHeading} style= {{color: props.headerColor}}>
                                 Change Password
-                                </Typography >
+                                </h2 >
                             <TextField
                                 variant="outlined"
                                 margin="normal"
@@ -229,10 +230,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = props => {
                             <div css={fieldRow} style={{ justifyContent: "center" }}>
                                 <Button
                                     type="submit"
-                                    fullWidth
+                                    
                                     variant="contained"
-                                    color="primary"
-                                    className={classes.submit}
+                                    
+                                    style={{ marginRight: 10, 
+                                        backgroundColor: props.headerColor,
+                                        color: "#fff" }}
                                 >
                                     Update
           </Button>

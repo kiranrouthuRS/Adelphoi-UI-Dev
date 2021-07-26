@@ -50,6 +50,7 @@ export interface UsersListProps {
   rolesList: Types.Users[];
   isLoading: boolean;
   user: any;
+  headerColor: string;
   createUsers: (users: Types.Users,is_accessToken:any) => Promise<void>;
   updateUsers: (users: Types.Users,is_accessToken:any) => Promise<void>;
   deleteUsers: (users: Types.Users,is_accessToken:any) => Promise<void>;
@@ -220,7 +221,7 @@ export class UsersList extends React.Component<
         <Backdrop css={backdrop} open={this.props.isLoading || this.state.isLoading}>
                 <CircularProgress color="inherit" />
             </Backdrop>
-        <h1 css={subHeading}>{isEdit ? "Edit User" : "Add New User"}</h1>
+        <h1 css={subHeading}  style= {{color: this.props.headerColor}}>{isEdit ? "Edit User" : "Add New User"}</h1>
         <div css={fieldRow}>
           <div css={twoCol}>
             <label css={label}>First Name</label>
@@ -344,7 +345,9 @@ export class UsersList extends React.Component<
               size="large"
               variant="contained"
               color="primary"
-              style={{ marginRight: 10 }}
+              style={{ marginRight: 10, 
+                backgroundColor: this.props.headerColor,
+                color: "#fff" }}
             >
               {isEdit ? "Update User" : "ADD USER"}
             </Button>

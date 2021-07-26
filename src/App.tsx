@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import configureStore from "./redux-modules/configureStore";
 import { AppState } from "./redux-modules/root";
 import * as user from "./redux-modules/user";
-import { jsx } from "@emotion/core";
+import { jsx, css } from "@emotion/core";  
 import {
   Switch,
   Route,
@@ -28,6 +28,8 @@ import ChangePasswordContainer from './containers/ChangePasswordContainer'
 import BillingDetailsContainer from './containers/BillingDetailsContainer'
 import NotificationsContainer from './containers/NotificationsContainer'
 import DashboardContainer from './containers/Dashboardcontainer'
+import {AppBar, Container, Toolbar, Typography  } from "@material-ui/core";
+
 export const { store } = configureStore(createHistory());
 const url = typeof window !== 'undefined' ? window.location.pathname : '';
   let str1 = url.split('/');
@@ -38,6 +40,7 @@ const url = typeof window !== 'undefined' ? window.location.pathname : '';
     logout: (accessToken:any) => void;
     
   }
+  
 const App: React.FC<AppProps> = props => {
   const {  logout, appState } = props;
   const { user } = appState;
@@ -59,8 +62,9 @@ const App: React.FC<AppProps> = props => {
 },[localStorage.refreshToken])
 
 return (
+  
     <React.Fragment>
-      
+      {/* <Header/>  */}
       
       <Provider store={store}> 
        
@@ -117,6 +121,18 @@ return (
            </Router>
         </SnackbarProvider>
       </Provider>
+      {/* <AppBar position="static" color="default">
+          <Container maxWidth="xs">
+            <Toolbar>
+              <Typography style={{textAlign:"left"}} color="primary"> 
+                © Copy right, All right reserved by FirstMatch - 2021
+              </Typography>
+              <Typography color="inherit"> 
+                Powered by: FirstMatch&reg;
+              </Typography>
+            </Toolbar>
+          </Container>
+        </AppBar> */}
        </React.Fragment> 
     
      

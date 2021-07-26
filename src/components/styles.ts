@@ -229,33 +229,6 @@ top: 70%;
 left: 60%;
 margin: -51px 0px 0px -39px;
   `;
-
-// export const circle = css`
-//   background: #000000;
-//   border-radius: 50%;
-//   color: #fff;
-//   display: block;
-//   height: 0;
-//   overflow: hidden;
-//   padding-top: 100%;
-//   position: relative;
-//   width: 100%;
-//   `;
-
-//   export const smallCircle = css`
-//   background: #FFFFFF;
-//   border: "10px solid white";
-//   border-radius: 50%;
-//   color: #fff;
-//   display: flex; 
-//     justify-content: space-between;
-//   height: 0;
-//   overflow: hidden;
-//   padding-top: 100%;
-  
-//   width: 40%;
-//   `;
-
   export const smallcircleContent = css`
   align-items: center;
   display: flex;

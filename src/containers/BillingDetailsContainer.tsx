@@ -30,10 +30,12 @@ export class BillingDeatilsContainer extends React.Component<
   }
    render() {
   const is_accessToken: any = this.props.user && this.props.user.user.accessToken
+  const header_color: any = this.props.user && this.props.user.user.header_color
     return (
     
     <BillingDetails
             accessToken={is_accessToken}
+            headerColor={header_color}
             />
     );
   }

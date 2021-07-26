@@ -6,6 +6,7 @@ export interface User {
   user_id: string;
   is_pwd_updated: string;
   logo_path: string;
+  header_color: string;
   is_fully_configured: string;
   performance_entry: string;
   is_prediction_available: string;

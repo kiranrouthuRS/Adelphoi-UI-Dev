@@ -131,6 +131,7 @@ export class ConfigurationContainer extends React.Component<
     const locationList = (locationState && locationState.locationList) || [];
     const { match, location,user } = this.props;
     const role_type:any = user && user.user && user.user.role_type
+    const header_color:any = user && user.user && user.user.header_color
     return (
       <Switch>
         <Route path={`/${domainPath}/configuration`}>
@@ -181,6 +182,7 @@ export class ConfigurationContainer extends React.Component<
               {role_type === "Consultant"  || role_type === "Contributor" ? "":
                 <UsersList
                   usersList={usersList}
+                  headerColor={header_color}
                   availableUsersList={availableUsersList}
                   rolesList={rolesList}
                   {...this.state}

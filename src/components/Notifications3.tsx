@@ -36,6 +36,7 @@ interface Notification3Props {
     downloadReport: (Type: any, start_date: any, end_date: any) => void;
     isLoading: boolean;
     error: string;
+    headerColor: string;
     // isLoading: boolean;
     // hasError: boolean;
     // error: string;
@@ -88,7 +89,7 @@ const Notifications3: React.FC<Notification3Props> = props => {
                 {({ values, handleSubmit, handleChange, setFieldValue }) => (
 
                     <form name="UsersForm" onSubmit={handleSubmit}>
-       <h1 css={subHeading}>Clients without a Program Completion and End Date:</h1>
+       <h1 css={subHeading} style= {{color: props.headerColor}}>Clients without a Program Completion and End Date:</h1>
                          <div css={fieldRow}>
                             <div css={twoCol}>
                                 <label css={label}>Start Date From</label>
@@ -134,8 +135,9 @@ const Notifications3: React.FC<Notification3Props> = props => {
                                     type="submit"
                                     size="large"
                                     variant="contained"
-                                    color="primary"
-                                    style={{ marginRight: 10 }}
+                                    style={{ marginRight: 10, 
+                                        backgroundColor: props.headerColor,
+                                        color: "#fff" }}
                                 // onClick={this.onLoad}
                                 >
                                     Search
@@ -209,8 +211,9 @@ const Notifications3: React.FC<Notification3Props> = props => {
                                 type="submit"
                                 size="large"
                                 variant="contained"
-                                color="primary"
-                                style={{ marginRight: 10, marginTop: 10 }}
+                                style={{ marginRight: 10, marginTop: 10,
+                                    backgroundColor: props.headerColor,
+                                    color: "#fff" }}
                                 onClick={() => props.downloadReport("pcr", startdate, enddate)}
                             >
                               Download Report

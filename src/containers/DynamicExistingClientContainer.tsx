@@ -81,6 +81,7 @@ DynamicExistingClientContainerState
     const { client: clientState, program: programState, referral: referralState } = this.props;
     const referralList = (referralState && referralState.referralList) || [];
     const clientList = (clientState && clientState.clientList) || {};
+    const headerColor: any = this.props.user && this.props.user.user.header_color
   const {is_Searched}= this.state
   return (
       <Switch>
@@ -88,6 +89,7 @@ DynamicExistingClientContainerState
           <ClientSearch
             clientList={is_Searched ? Object.values(clientList):[]}
             {...this.state}
+            headerColor= {headerColor} 
             onFormSubmit={this.searchDClient}
           />
         </Route>

@@ -20,6 +20,7 @@ export interface DashboardContainerState {
   hasError: boolean;
   filters: any;
   accessToken: any;
+  headerColor: any
 }
 
 export interface DashboardContainerProps
@@ -59,6 +60,7 @@ export class DashboardContainer extends React.Component<
       isLoading: false,
       hasError: false,
       accessToken: "",
+      headerColor: "",
       error: "",
       filters: {
         days_count: "30",
@@ -69,9 +71,10 @@ export class DashboardContainer extends React.Component<
   async componentDidMount() {
     const { client: clientState } = this.props;
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
+    const header_color: any = this.props.user && this.props.user.user.header_color
     this.setState({ isLoading: true });
 
-    this.setState({ isLoading: false,accessToken: is_accessToken });
+    this.setState({ isLoading: false, accessToken: is_accessToken, headerColor: header_color });
     try {
       await this.props.getDReferral(is_accessToken);
     } catch (error) {

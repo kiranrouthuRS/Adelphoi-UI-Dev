@@ -10,6 +10,7 @@ export interface ChangePasswordContainerState {
   isLoading: boolean;
   error: string;
   hasLoginError: boolean;
+  headerColor: any;
 }
 
 export interface ChangePasswordContainerProp extends ContainerProps {}
@@ -27,9 +28,17 @@ ChangePasswordContainerState
     return {
       isLoading: false,
       hasLoginError: false,
-      error: ""
+      error: "",
+      headerColor: ""
     };
   }
+  
+   async componentDidMount(){
+    const header_color = this.props.user && this.props.user.user && this.props.user.user.header_color;
+    this.setState({
+      headerColor: header_color 
+    })
+   }
 
   onLogin = async (old_password: string,password: string,retype_password: string) => {
     const { history, location } = this.props;
