@@ -23,6 +23,7 @@ export interface DynamicNewClientContainerState {
   error: any;
   hasError: boolean;
   isSuccess: boolean;
+  
 }
 
 export interface DynamicClient {
@@ -71,7 +72,8 @@ export class DynamicNewClientContainer extends React.Component<
       isLoading: false,
       hasError: false,
       error: "",
-      isSuccess: false
+      isSuccess: false,
+      
     };
   }
 
@@ -92,8 +94,6 @@ export class DynamicNewClientContainer extends React.Component<
 
   async componentDidMount() {
     this.props.closeSnackbar();
-    this.GetQuestions();
-    // this.props.getAvailablePrograms();
     }
   saveClientStep1 = async (client: Types.DynamicClient) => {
     const { history } = this.props;
@@ -221,7 +221,7 @@ export class DynamicNewClientContainer extends React.Component<
     currentClient = clientState ? clientState.client : Types.emptyClient;
     const availableProgramList =
       (programState && programState.availableProgramList) || [];
-     
+    
     return (
       <Switch>
         <Route exact path={`/${domainPath}/new-client/program-selection`}>
@@ -261,7 +261,9 @@ export class DynamicNewClientContainer extends React.Component<
             // DynamicQuestions={index ? Object.keys(clientList[index]).map((key, id) => clientList[index][key] && clientList[index][key].hasOwnProperty("section") ? clientList[index][key] : "") : configuredQuestionsList}
             client={currentClient.model_program ? Types.emptyClient : currentClient}
             onFormSubmit={this.saveClientStep1}
+            GetQuestions={this.GetQuestions}
             errors={this.state.error}
+            dynamicclient= ""
           />
         </Route>
       </Switch>

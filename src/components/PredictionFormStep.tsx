@@ -6,6 +6,7 @@ import Modal from "react-modal";
 import Button from "@material-ui/core/Button";
 import FormData from "form-data"
 import { searchDClient } from "../api/api";
+import * as dynamicclient from "../redux-modules/dynamicclient";
 // import {header_color} from "./configure" 
 import {
   wrap,
@@ -31,6 +32,7 @@ interface PredictionFormStepProps {
   DynamicQuestions: any;
   client: Types.Client;
   onFormSubmit: (client: Types.Client) => void;
+  GetQuestions: () => void;
   isLoading: boolean;
   hasError: boolean;
   error: string;
@@ -38,6 +40,7 @@ interface PredictionFormStepProps {
   reReffer: string;
   errors: any;
   user: any;
+  dynamicclient: any;
 
 
 }
@@ -122,9 +125,9 @@ export class PredictionFormStep extends React.Component<
     };
   }
   async componentDidMount() {
-  
-   await this.setState({
-      DynamicQuestions: this.props.DynamicQuestions,
+    await this.props.GetQuestions()
+    await this.setState({
+       DynamicQuestions: this.props.DynamicQuestions,
       isOpen: this.props.errors ? true : false,
       err_msg: this.props.errors,
       header_color: this.props.user && this.props.user.user.header_color
@@ -469,8 +472,7 @@ export class PredictionFormStep extends React.Component<
   render() {
     
     const { DynamicQuestions, header_color } = this.state;
-    
-    return (
+     return (
       <div css={wrap}>
 
         <div css={mainContent}>
@@ -688,11 +690,5 @@ export class PredictionFormStep extends React.Component<
   }
 };
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    dynamicclient: state.dynamicclient
-  };
-};
-export default connect(mapStateToProps,
-  null)(PredictionFormStep);
+export default PredictionFormStep;
 

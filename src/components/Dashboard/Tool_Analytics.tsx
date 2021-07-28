@@ -33,16 +33,16 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
     // const history = useHistory();
     const classes = useStyles();
     let PCR_Count = Object.keys(props.PCRCalibrationList).map(list=>props.PCRCalibrationList[list].positive_count)
-    let PCR_Percentage = (Object.keys(props.PCRCalibrationList).map(list=>props.PCRCalibrationList[list].positive_percent))
+    let PCR_Percentage = (Object.keys(props.PCRCalibrationList).map(list=>props.PCRCalibrationList[list].positive_percent > 0 ? props.PCRCalibrationList[list].positive_percent : null))
     let PCR_Label = Object.keys(props.PCRCalibrationList).map(list=>list)
     let ROC_Count = Object.keys(props.ROCCalibrationList).map(list=>props.ROCCalibrationList[list].positive_count)
-    let ROC_Percentage = Object.keys(props.ROCCalibrationList).map(list=>props.ROCCalibrationList[list].positive_percent)
+    let ROC_Percentage = Object.keys(props.ROCCalibrationList).map(list=>props.ROCCalibrationList[list].positive_percent > 0 ? props.ROCCalibrationList[list].positive_percent : null)
     let ROC_Label = Object.keys(props.ROCCalibrationList).map(list=>list)
     const PCR_Performance = {
         labels: PCR_Label,
         datasets: [
             {
-              label: "Percentage", 
+              label: "PCR", 
               fill: false,
               lineTension: 0.1,
               backgroundColor: '#000000',
@@ -69,7 +69,7 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
       labels: ROC_Label,
         datasets: [
             {
-              label: "Percentage",
+              label: "ROC",
                 fill: false,
                 lineTension: 0.1, 
                 backgroundColor: 'rgba(75,192,192,0.4)',
@@ -93,54 +93,26 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
             
         ]
     };
-    var data = {
-      labels: ["January", "February", "March", "April", "May", "June", "July"],
-      datasets: [
-          {
-              label: "My First dataset",
-              fill: false,
-              lineTension: 0.1,
-              backgroundColor: "rgba(75,192,192,0.4)",
-              borderColor: "rgba(75,192,192,1)",
-              borderCapStyle: 'butt',
-              borderDash: [],
-              borderDashOffset: 0.0,
-              borderJoinStyle: 'miter',
-              pointBorderColor: "rgba(75,192,192,1)",
-              pointBackgroundColor: "#fff",
-              pointBorderWidth: 1,
-              pointHoverRadius: 5,
-              pointHoverBackgroundColor: "rgba(75,192,192,1)",
-              pointHoverBorderColor: "rgba(220,220,220,1)",
-              pointHoverBorderWidth: 2,
-              pointRadius: 1,
-              pointHitRadius: 10,
-              data: [65, 59, 80, 81, 56, 55, 40],
-              spanGaps: false,
-          }
-      ]
-  };
-  
-  
-  
-  var options = {
+   
+  let PCR_Options = {
           responsive: true,
-          title: {
-              display: true,
-              position: "top",
-              text: 'anything',
-              fontSize: 18,
-              fontColor: "#111"
-          },
+          // title: {
+          //     display: true,
+          //     position: "top",
+          //     text: 'anything',
+          //     fontSize: 18,
+          //     fontColor: "#111"
+          // },
           tooltips: {
                   enabled: true,
                   mode: 'single',
                   callbacks: {
-                      label: function(tooltipItems, data) { 
-                         var multistringText = [tooltipItems.yLabel];
-                             multistringText.push('Another Item');
-                             multistringText.push(tooltipItems.index+1);
-                             multistringText.push('One more Item');
+                      label: function(tooltipItems, index) { 
+                        console.log(tooltipItems)
+                        console.log(tooltipItems.index)  
+                        console.log(PCR_Count[tooltipItems.index])    
+                         var multistringText = [`Percentage ${tooltipItems.yLabel}`];
+                            multistringText.push(`Count ${PCR_Count[tooltipItems.index]}`);
                           return multistringText;
                       }
                   }
@@ -163,106 +135,62 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
   
           }
       }
+      let ROC_Options = {
+        responsive: true,
+        // title: {
+        //     display: true,
+        //     position: "top",
+        //     text: 'anything',
+        //     fontSize: 18,
+        //     fontColor: "#111"
+        // },
+        tooltips: {
+                enabled: true,
+                mode: 'single',
+                callbacks: {
+                    label: function(tooltipItems, index) { 
+                      console.log(tooltipItems)
+                      console.log(tooltipItems.index)  
+                      console.log(ROC_Count[tooltipItems.index])    
+                       var multistringText = [`Percentage ${tooltipItems.yLabel}`];
+                          multistringText.push(`Count ${ROC_Count[tooltipItems.index]}`);
+                        return multistringText;
+                    }
+                }
+            },
+        legend: {
+            display: true,
+            position: "bottom",
+            labels: {
+                fontColor: "#333",
+                fontSize: 16
+            }
+        },
+        scales:{
+            yAxes:[{
+                ticks:{
+                    min:0
+
+                }
+            }]
+
+        }
+    }
     return (
         <div>
          
            <Grid container spacing={3} >
                                             
                                 <Grid item xs={12}>          
-                       <Line data={PCR_Performance}  options={{
-                    legend: {
-                        display: true
-                     },
-                    //  title: {
-                    //     display: true,
-                    //     text: 'PCR Performance Graph'
-                    // },
-                    scales: {
-                        yAxes: [
-                          {
-                            display: true,
-                            scales: {
-                              yAxes: [{
-                                ticks: {
-                                  beginAtZero: false,
-                                }
-                              }]
-                            },
-                            plugins: {
-                              datalabels: {
-                                anchor: 'end',
-                                align: 'top',
-                                formatter: Math.round,
-                                font: {
-                                  weight: 'bold'
-                                }
-                              }
-                            }, 
-                            ticks: {
-                                // beginAtZero: true,
-                                steps: 10,
-                                stepValue: 5,
-                                max: 100
-                            },
-                            scaleLabel: {
-                              display: true,
-                              //labelString: "Likelihood",
-                            },
-                          },
-                        ],
-                        xAxes: [
-                          {
-                            scaleLabel: {
-                              display: true,
-                              // labelString: "Count",
-                            },
-                          },
-                        ],
-                      }
-                }} />
-                {/* <Line data={data}  options={options}/> */}
+                      
+                <Line data={PCR_Performance}  options={PCR_Options}/>
               </Grid>
             </Grid>
             <Grid container spacing={3} >
             
-                
+            <Line data={ROC_Performance} options={ROC_Options}/>
                                     
-                       <Line data={ROC_Performance}  options={{
-                    legend: {
-                        display: true
-                     },
-                    //  title: {
-                    //     display: true,
-                    //     text: 'ROC Performance Graph'
-                    // },
-                    scales: {
-                        yAxes: [
-                          {display: true,
-                            ticks: {
-                                beginAtZero: true,
-                                steps: 10,
-                                stepValue: 5,
-                                max: 100
-                            },
-                            scaleLabel: {
-                              display: true,
-                              // labelString: "Likelihood",
-                            },
-                          },
-                        ],
-                        xAxes: [
-                          {
-                            scaleLabel: {
-                              display: true,
-                              // labelString: "Count",
-                            },
-                            // grid: {
-                            //     borderColor: 'red'
-                            //   }
-                          },
-                        ],
-                      }
-                }} />
+                       
                 </Grid>
             
         </div>

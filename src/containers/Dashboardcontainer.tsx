@@ -72,9 +72,7 @@ export class DashboardContainer extends React.Component<
     const { client: clientState } = this.props;
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     const header_color: any = this.props.user && this.props.user.user.header_color
-    this.setState({ isLoading: true });
-
-    this.setState({ isLoading: false, accessToken: is_accessToken, headerColor: header_color });
+    this.setState({ isLoading: true, accessToken: is_accessToken, headerColor: header_color });
     try {
       await this.props.getDReferral(is_accessToken);
     } catch (error) {
