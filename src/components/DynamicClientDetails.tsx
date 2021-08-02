@@ -320,7 +320,7 @@ const locationOptions = suggested_locations
     }
     return date;   
       };
-     
+    
  return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>

@@ -29,6 +29,7 @@ import BillingDetailsContainer from './containers/BillingDetailsContainer'
 import NotificationsContainer from './containers/NotificationsContainer'
 import DashboardContainer from './containers/Dashboardcontainer'
 import {AppBar, Container, Toolbar, Typography  } from "@material-ui/core";
+import Footer from './components/Footer'
 
 export const { store } = configureStore(createHistory());
 const url = typeof window !== 'undefined' ? window.location.pathname : '';
@@ -40,7 +41,9 @@ const url = typeof window !== 'undefined' ? window.location.pathname : '';
     logout: (accessToken:any) => void;
     
   }
-  
+
+ 
+
 const App: React.FC<AppProps> = props => {
   const {  logout, appState } = props;
   const { user } = appState;
@@ -121,18 +124,7 @@ return (
            </Router>
         </SnackbarProvider>
       </Provider>
-      {/* <AppBar position="static" color="default">
-          <Container maxWidth="xs">
-            <Toolbar>
-              <Typography style={{textAlign:"left"}} color="primary"> 
-                © Copy right, All right reserved by FirstMatch - 2021
-              </Typography>
-              <Typography color="inherit"> 
-                Powered by: FirstMatch&reg;
-              </Typography>
-            </Toolbar>
-          </Container>
-        </AppBar> */}
+      <Footer/>
        </React.Fragment> 
     
      

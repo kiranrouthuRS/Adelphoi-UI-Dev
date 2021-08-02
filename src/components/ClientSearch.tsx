@@ -21,6 +21,7 @@ import {
   tableRow,
   dataTable
 } from "./styles";
+import React from "react";
 
 
 interface ClientSearchProps {
@@ -48,6 +49,8 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
   let { clientList } = props;
   clientList = clientList.map(sec=>sec.sections)
   const client = domainPath === "adelphoiDDD" ? [] : clientList.map(q => q[0].questions)
+  
+  
   return (
     <div css={wrap}>
       <div css={mainContent}>
@@ -156,10 +159,12 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
             <Table aria-label="clients table" css={dataTable}>
               <TableHead>
                 <TableRow css={tableHeader}>
-                  <TableCell>Client Code</TableCell>
-                  <TableCell>First Name</TableCell>
-                  <TableCell>Last Name</TableCell>
-                  {/* <TableCell>Gender</TableCell> */}
+                {client.length > 0 && client.flat().map((cl,i) => 
+                  // <React.Fragment>
+                  i < 3 && (
+                  <TableCell>{cl.question}</TableCell>
+                  
+                ))}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -170,7 +175,7 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
                     key={i}
                     onClick={() =>
                       history.push(
-                        `existing-client/client-details/${cl[0].answer}`
+                        `existing-client/client-details/${cl.find(id=> id.question === "Client Code").answer}`
                       )
                     }
                     css={tableRow}

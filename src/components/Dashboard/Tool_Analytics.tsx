@@ -107,10 +107,7 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                   enabled: true,
                   mode: 'single',
                   callbacks: {
-                      label: function(tooltipItems, index) { 
-                        console.log(tooltipItems)
-                        console.log(tooltipItems.index)  
-                        console.log(PCR_Count[tooltipItems.index])    
+                      label: function(tooltipItems, index) {
                          var multistringText = [`Percentage ${tooltipItems.yLabel}`];
                             multistringText.push(`Count ${PCR_Count[tooltipItems.index]}`);
                           return multistringText;
@@ -148,10 +145,7 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
                 enabled: true,
                 mode: 'single',
                 callbacks: {
-                    label: function(tooltipItems, index) { 
-                      console.log(tooltipItems)
-                      console.log(tooltipItems.index)  
-                      console.log(ROC_Count[tooltipItems.index])    
+                    label: function(tooltipItems, index) {  
                        var multistringText = [`Percentage ${tooltipItems.yLabel}`];
                           multistringText.push(`Count ${ROC_Count[tooltipItems.index]}`);
                         return multistringText;
