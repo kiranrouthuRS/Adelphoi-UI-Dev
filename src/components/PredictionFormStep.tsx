@@ -142,7 +142,7 @@ export class PredictionFormStep extends React.Component<
         client_form.push({
           [ques.question.replace(/ /g, "_")]:
             Array.isArray(ques.answer) ? ques.suggested_answers.map((q, j) => ques.answer.includes(q.value) &&
-              q.id.toString()).filter(item => item !== false) :
+              q.id.toString()).find(item => item !== false) : 
               ques.answer === 0 ? ques.answer.toString() :
                 ques.suggested_answers.length >= 1 ? ques.answer &&
                   ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id.toString()
@@ -472,7 +472,7 @@ export class PredictionFormStep extends React.Component<
   render() {
     
     const { DynamicQuestions, header_color } = this.state;
-     return (
+    return (
       <div css={wrap}>
 
         <div css={mainContent}>
@@ -621,7 +621,7 @@ export class PredictionFormStep extends React.Component<
                                       data-msg={ques.error_msg}
                                       data-idx={index}
                                       data-idy={ind}
-                                      readOnly={ques.field_type === 0 || this.state.reReffer === "true"}
+                                      readOnly={ques.field_type === 0 || ques.question === "Client Code" && this.state.reReffer === "true"}
                                       name={ques.question.replace(/ /g, "_")}
                                       value={ques.question === "Age" ? (
                                         this.state.client_form[ques.question.replace(/ /g, "_")] = this.getAge(this.state.client_form["Date_of_Birth"], this.state.client_form["Date_of_Referral"])
