@@ -236,8 +236,10 @@ export class PredictionFormStep extends React.Component<
         
       )
         :
-        this.state.prevJump[name.replace(/ /g, "_")] && this.state.prevJump[name.replace(/ /g, "_")].includes(sec.section) && (
-          DynamicQuestions[i].related = "true"
+        this.state.prevJump[name.replace(/ /g, "_")] && 
+        this.state.prevJump[name.replace(/ /g, "_")].includes(sec.section) && (
+          DynamicQuestions[i].related = "true",
+          this.formState()  
         )
       )
 
