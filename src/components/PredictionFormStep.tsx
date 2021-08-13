@@ -18,7 +18,7 @@ import {
   label1,
   fieldBox,
   selectField,
- 
+
 } from "./styles";
 import * as Types from "../api/definitions";
 import { Fragment } from "react";
@@ -127,14 +127,14 @@ export class PredictionFormStep extends React.Component<
   async componentDidMount() {
     await this.props.GetQuestions()
     await this.setState({
-       DynamicQuestions: this.props.DynamicQuestions,
+      DynamicQuestions: this.props.DynamicQuestions,
       isOpen: this.props.errors ? true : false,
       err_msg: this.props.errors,
       header_color: this.props.user && this.props.user.user.header_color
     })
-      this.formState();
+    this.formState();
   }
-  formState = async() => {
+  formState = async () => {
     let client_form = [] as any;
     let Required_List = [] as any;
     this.state.DynamicQuestions.map
@@ -142,7 +142,7 @@ export class PredictionFormStep extends React.Component<
         client_form.push({
           [ques.question.replace(/ /g, "_")]:
             Array.isArray(ques.answer) ? ques.suggested_answers.map((q, j) => ques.answer.includes(q.value) &&
-              q.id.toString()).find(item => item !== false) : 
+              q.id.toString()).find(item => item !== false) :
               ques.answer === 0 ? ques.answer.toString() :
                 ques.suggested_answers.length >= 1 ? ques.answer &&
                   ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id.toString()
@@ -233,13 +233,12 @@ export class PredictionFormStep extends React.Component<
             )))
       DynamicQuestions.map((sec, i) => jumpto.includes(sec.section) ? (
         DynamicQuestions[i].related = "false"
-        
+
       )
         :
-        this.state.prevJump[name.replace(/ /g, "_")] && 
+        this.state.prevJump[name.replace(/ /g, "_")] &&
         this.state.prevJump[name.replace(/ /g, "_")].includes(sec.section) && (
-          DynamicQuestions[i].related = "true",
-          this.formState()  
+          DynamicQuestions[i].related = "true"
         )
       )
 
@@ -270,14 +269,14 @@ export class PredictionFormStep extends React.Component<
         DynamicQuestions.map((sec, i) => jump.includes(sec.section) ? (
           DynamicQuestions[i].related = "false")
           :
-          this.state.prevJump[name.replace(/ /g, "_")] && 
+          this.state.prevJump[name.replace(/ /g, "_")] &&
           this.state.prevJump[name.replace(/ /g, "_")].includes(sec.section) && (
             DynamicQuestions[i].related = "true",
             this.formState()
           )
         )
       }
-     
+
     }
 
     if (val1 === "") {
@@ -301,10 +300,11 @@ export class PredictionFormStep extends React.Component<
           hasError: false,
         })
       }
-      
+
       if (jump.length > 0) {
         let client_form1 = [] as any;
         let Required_List1 = [] as any;
+        console.log(DynamicQuestions)
         DynamicQuestions.map
           (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
             client_form1.push({
@@ -312,7 +312,8 @@ export class PredictionFormStep extends React.Component<
                 Array.isArray(ques.answer) ? ques.answer :
                   ques.answer === 0 ?
                     ques.answer : ques.suggested_answers.length >= 1 ? ques.answer ?
-                      ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id : ques.answer ? ques.answer : "" : ""
+                      ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id :
+                      ques.answer ? ques.answer : "" : ""
             });
             Required_List1.push({
               [ques.question.replace(/ /g, "_")]: ques.required
@@ -329,7 +330,7 @@ export class PredictionFormStep extends React.Component<
           ...ReqData, ...Required_List
         }
         this.setState({
-         client_form,
+          client_form,
           Required_List
         })
       }
@@ -354,7 +355,7 @@ export class PredictionFormStep extends React.Component<
             }
           })
         }
-        
+
         this.setState({
           error: {
             ...this.state.error,
@@ -376,7 +377,7 @@ export class PredictionFormStep extends React.Component<
             ...this.state.error,
             [name]: textRegex.test(value) ? "" : error_msg,
           },
-          hasError: textRegex.test(value) ? false : true 
+          hasError: textRegex.test(value) ? false : true
         })
       }
     }
@@ -472,26 +473,28 @@ export class PredictionFormStep extends React.Component<
   }
 
   render() {
-    
+
     const { DynamicQuestions, header_color } = this.state;
     return (
       <div css={wrap}>
 
         <div css={mainContent}>
           {DynamicQuestions &&
-            <div css={fieldRow} style={{ justifyContent: "center" }}> 
+            <div css={fieldRow} style={{ justifyContent: "center" }}>
               <Button
                 type="submit"
                 size="small"
                 variant="contained"
-                style={{ marginRight: 10, 
+                style={{
+                  marginRight: 10,
                   backgroundColor: header_color,
-                  color: "#fff" }}
+                  color: "#fff"
+                }}
                 css={logout}
                 onClick={this.downloadCSV}
               >
                 Download CSV template
-            </Button>
+              </Button>
               <div css={profile}>
                 <input name="uploadfile" type="file" onChange={this.uploadCSV} />
                 <Button
@@ -499,10 +502,12 @@ export class PredictionFormStep extends React.Component<
                   size="small"
                   variant="contained"
                   onClick={this.uploadFile}
-                  style={{ marginRight: 10, 
-                           backgroundColor: header_color,
-                           color: "#fff" }}>
-                    Upload</Button>  
+                  style={{
+                    marginRight: 10,
+                    backgroundColor: header_color,
+                    color: "#fff"
+                  }}>
+                  Upload</Button>
               </div>
             </div>
           }
@@ -514,7 +519,7 @@ export class PredictionFormStep extends React.Component<
             contentLabel="Example Modal"
           >
             <div>
-              <h1 css={subHeading} style= {{color: header_color}}>Please correct the following errors and try again.</h1>
+              <h1 css={subHeading} style={{ color: header_color }}>Please correct the following errors and try again.</h1>
               {this.state.err_msg && this.state.err_msg.map((e, i) => <div style={{ color: "red" }}>{this.state.err_msg[i]}</div>)}
 
             </div>
@@ -525,7 +530,7 @@ export class PredictionFormStep extends React.Component<
             {DynamicQuestions.map((sections, index) =>
               sections.related === "true" ? "" :
                 <React.Fragment>
-                  <h1 css={subHeading} style= {{color: header_color}} key={index}>{sections.section}</h1>
+                  <h1 css={subHeading} style={{ color: header_color }} key={index}>{sections.section}</h1>
                   {
 
                     this.display(index).map((item, ind) => {
@@ -676,12 +681,14 @@ export class PredictionFormStep extends React.Component<
                 type="submit"
                 variant="contained"
                 size="large"
-                style={{ marginRight: 10, 
+                style={{
+                  marginRight: 10,
                   backgroundColor: header_color,
-                  color: "#fff" }}
+                  color: "#fff"
+                }}
               >
                 Submit
-                </Button>
+              </Button>
             </div>
           </form>
 
@@ -693,4 +700,3 @@ export class PredictionFormStep extends React.Component<
 };
 
 export default PredictionFormStep;
-
