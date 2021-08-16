@@ -62,7 +62,7 @@ ChangePasswordContainerState
     }
   });
   history.push(is_configured !== true ? (`/${domainPath}/welcomepage`) :
-      (`/${domainPath}/new-client`));
+      (`/${domainPath}/existing-client`));
     } catch (e) {
       const error = e.data.message;
       this.setState({

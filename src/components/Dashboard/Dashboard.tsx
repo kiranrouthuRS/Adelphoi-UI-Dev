@@ -9,6 +9,7 @@ import Link from "@material-ui/core/Link";
 import Market_Analysis from "./Market_Analysis";
 import Total_Analytics from "./Total_Analytics";
 import OtherParam_Analytics from "./Other_Analytics";
+import Avg_Length_Stay from "./Avg_Length_Stay"
 import Allocation_Analytics from "./Allocation_Analytics";
 import ProgramAnalytics from "./Program_Analytics";
 import Client_Demographics from "./Client_Demographics";
@@ -156,7 +157,7 @@ const Dashboard: React.FC<DashboardProps> = props => {
         await props.Program_Analytics(data);
 
     };
-    const Other_HandleChange = async (src) => {
+    const Replace_HandleChange = async (src) => {
         let filter = filters;
         await setFilters(prevState => {
             return {
@@ -173,7 +174,28 @@ const Dashboard: React.FC<DashboardProps> = props => {
             days_count: filter.days_count
         }
 
-        await props.Other_Analytics(data, "others");
+        await props.Other_Analytics(data, "replace");
+
+    };
+
+    const Avg_Stay_HandleChange = async (src) => {
+        let filter = filters;
+        await setFilters(prevState => {
+            return {
+                ...prevState, pgm_referral_source: src.referral_source,
+                pgm_location: src.location
+            }
+        });
+
+        let data = {
+            start_date: filter.start_date,
+            end_date: filter.end_date,
+            referral_source: src.referral_source,
+            location: src.location,
+            days_count: filter.days_count
+        }
+
+        await props.Other_Analytics(data, "avg_stay");
 
     };
 
@@ -403,18 +425,36 @@ const Dashboard: React.FC<DashboardProps> = props => {
                                 aria-controls="panel1a-content"
                             >
                                 <h1 css={panelHeading}>
-                                    Replacement rate and Average Length of stay – of referrals who are accepted and placed.
+                                    Replacement rate  – of referrals who are accepted and placed.
                                 </h1>
                             </AccordionSummary>
                             <AccordionDetails css={panel}>
                                 <OtherParam_Analytics
                                     Replace_analytics={props.Replace_analytics}
-                                    Stay_analytics={props.Stay_analytics}
-                                    Occupancy_analytics={props.Occupancy_analytics}
                                     filter={filters}
                                     Referral={Referral}
                                     Location={Location}
-                                    onSelectChange={Other_HandleChange}
+                                    onSelectChange={Replace_HandleChange}
+                                />
+                            </AccordionDetails>
+                        </Accordion>
+                        <Accordion >
+                            <AccordionSummary
+                                css={panelHeader}
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                            >
+                                <h1 css={panelHeading}>
+                                    Average Length of stay – of referrals who are accepted and placed.
+                                </h1>
+                            </AccordionSummary>
+                            <AccordionDetails css={panel}>
+                                <Avg_Length_Stay
+                                    Stay_analytics={props.Stay_analytics}
+                                    filter={filters}
+                                    Referral={Referral}
+                                    Location={Location}
+                                    onSelectChange={Avg_Stay_HandleChange}
                                 />
                             </AccordionDetails>
                         </Accordion>
@@ -431,8 +471,6 @@ const Dashboard: React.FC<DashboardProps> = props => {
                             </AccordionSummary>
                             <AccordionDetails css={panel}>
                                 <Occupancy_Analytics
-                                    Replace_analytics={props.Replace_analytics}
-                                    Stay_analytics={props.Stay_analytics}
                                     Occupancy_analytics={props.Occupancy_analytics}
                                     filter={filters}
                                     Referral={Referral}

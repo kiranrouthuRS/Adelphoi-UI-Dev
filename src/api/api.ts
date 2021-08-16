@@ -218,19 +218,12 @@ export const insertDClient = async (client_form, is_accessToken) => {
   var data = new FormData();
   var myJSON = JSON.stringify(client_form);
   data.append('client_form', myJSON);
-  console.log(myJSON)
   try {
     const response = await axios.post(`${baseApiUrl}/${domainPath}/clients`, data, {
       headers: {
         'Authorization': `Bearer ${is_accessToken}`
       }
     });
-    // if (response.data["ERROR"] && response.data["ERROR"].trim() !== "") {
-    //   throw new Error(response.data["ERROR"]);
-    // }
-    // if (response.data["Result"] && response.data["Result"].trim() !== "") {
-    //   return response.data;
-    // }
     const r = {
       ...response,
       program_type: response.data.response.program_type && response.data.response.program_type[0],
@@ -964,7 +957,6 @@ export const fetchROCAnalytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
@@ -995,7 +987,6 @@ export const fetchReplacementAnalytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
@@ -1004,6 +995,7 @@ export const fetchReplacementAnalytics = async (
     throwError(error);
   }
 };
+
 export const fetchStayAnalytics = async (
   analytics: any, accessToken: any
 ) => {
@@ -1025,7 +1017,6 @@ export const fetchStayAnalytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;
@@ -1055,7 +1046,7 @@ export const fetchOccupancyAnalytics = async (
         'Authorization': `Bearer ${accessToken}`
       }
     });
-
+   
     const data = (response.data.response as unknown) as Types.Analytics[];
 
     return data;

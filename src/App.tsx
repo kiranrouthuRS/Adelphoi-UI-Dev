@@ -78,7 +78,7 @@ return (
           
           <Switch>
              <Route exact path={`/${dom}`}>
-             <Redirect to={`/${dom}/new-client`} /> 
+             <Redirect to={`/${dom}/existing-client`} /> 
                   
                 </Route>
                 <Route
@@ -88,11 +88,11 @@ return (
                 </Switch>
                 <Switch>
                 <PrivateRoute path={`/${dom}/welcomepage`} component={Welcomepage} />
-                <PrivateRoute path={`/${dom}/new-client`} component={dom === "adelphoiDDD" ?NewClientContainer:DynamicNewClientContainer} />
+                <PrivateRoute path={`/${dom}/new-client`} component={DynamicNewClientContainer} />
                 {/* <PrivateRoute exact path={`/${dom}/new-client1`} component={DynamicNewClientContainer} /> */}
                 <PrivateRoute
                   path={`/${dom}/existing-client`}
-                  component={dom === "adelphoiDDD" ? ExistingClientContainer:DynamicExistingClientContainer}
+                  component={DynamicExistingClientContainer}
                 />
                 <PrivateRoute
                   path={`/${dom}/configuration`}

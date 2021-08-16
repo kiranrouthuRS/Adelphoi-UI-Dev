@@ -40,7 +40,7 @@ interface PredictionFormStepProps {
   reReffer: string;
   errors: any;
   user: any;
-  dynamicclient: any;
+  
 
 
 }
@@ -304,7 +304,6 @@ export class PredictionFormStep extends React.Component<
       if (jump.length > 0) {
         let client_form1 = [] as any;
         let Required_List1 = [] as any;
-        console.log(DynamicQuestions)
         DynamicQuestions.map
           (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
             client_form1.push({

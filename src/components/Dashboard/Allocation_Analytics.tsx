@@ -46,10 +46,10 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
             'Chosen'
         ],
         datasets: [{
-            data: [Object.keys(props.Allocation_List).length > 0 
-                && props.Allocation_List ? props.Allocation_List.tool 
-                && props.Allocation_List.tool.percentage.replace(/%/g, "") : 0, 
-                Object.keys(props.Allocation_List).length > 0 && props.Allocation_List ? 
+            data: [Object.keys(props.Allocation_List).length > 0
+                && props.Allocation_List ? props.Allocation_List.tool
+            && props.Allocation_List.tool.percentage.replace(/%/g, "") : 0,
+            Object.keys(props.Allocation_List).length > 0 && props.Allocation_List ?
                 props.Allocation_List.chosen && props.Allocation_List.chosen.percentage.replace(/%/g, "") : 0],
             backgroundColor: [
                 '#FF6384',
@@ -75,27 +75,29 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
         }],
 
     };
+
+    let  options: any = {
+        plugins: {
+            legend: {
+                display: true,
+                position: "right" 
+            },
+            datalabels: {
+                color: "white",
+                 font: {
+                   weight: "bold",
+                   size: "16px"
+                 },
+              },
+         }
+          };
     return (
         <div>
             <Grid container spacing={1} >
-                <Grid item xs={12}>
+                <Grid item xs={6}> 
                     <Pie data={allocation}
-                        options={{
-                            title: {
-                                display: true,
-                                text: 'Allocation of Program: Tool | Chosen'
-                            },
-                            legend: {
-                                display: true,
-                                position: 'right',
-                                labels: {
-                                    fontColor: 'black',
-                                    boxWidth: 15,
-                                }
-
-                            },
-
-                        }}
+                        options={options} height={120}
+                        width={150}
                     />
 
 
@@ -151,12 +153,12 @@ const Allocation_Analytics: React.FC<Allocation_AnalyticsProps> = props => {
                             </TableRow>
                         ))
                     ) : (
-                            <TableRow key={9999}>
-                                <TableCell colSpan={4} style={{ textAlign: "center" }}>
-                                    No results found
-                </TableCell>
-                            </TableRow>
-                        )}
+                        <TableRow key={9999}>
+                            <TableCell colSpan={4} style={{ textAlign: "center" }}>
+                                No results found
+                            </TableCell>
+                        </TableRow>
+                    )}
 
                 </TableBody>
             </Table>

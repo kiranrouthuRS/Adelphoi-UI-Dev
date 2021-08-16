@@ -41,8 +41,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 interface Occupancy_AnalyticsProps {
-    Replace_analytics: any;
-    Stay_analytics: any;
     Occupancy_analytics: any;
     Location: any;
     Referral: any;

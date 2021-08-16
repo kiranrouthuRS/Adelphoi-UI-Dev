@@ -40,18 +40,17 @@ const useStyles = makeStyles((theme) => ({
         width: 100,
     }
 }));
-interface Other_AnalyticsProps {
-    Replace_analytics: any;
+interface Avg_Length_StayProps {
+    Stay_analytics: any;
     Location: any;
     Referral: any;
     filter: any;
     onSelectChange: (src: any) => void;
 }
 
-const OtherParam_Analytics: React.FC<Other_AnalyticsProps> = props => {
+const Avg_Length_Stay: React.FC<Avg_Length_StayProps> = props => {
     const classes = useStyles();
     const [filters, setfilters] = useState({ referral_source: "", location: "" });
-
     useEffect(() => {
         props.onSelectChange(filters)
     }, [filters.referral_source]);
@@ -132,44 +131,42 @@ const OtherParam_Analytics: React.FC<Other_AnalyticsProps> = props => {
                         borderRadius: "4px",
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "center", 
-                        color: "lightblue",
-                        // padding: "20px",
-                        // marginBottom: "10px"
-
-                    }} >
-                        <strong> {props.Replace_analytics.replacement_rate ? props.Replace_analytics.replacement_rate : 0}</strong>
-                    </div>
-                    Total Discharges to Total Admissions
-
-                </div>
-                <div css={twoCol}>
-
-                    <div style={{
-                        background: "#ffffff",
-                        border: "3px solid lightblue",
-                        width: "150px",
-                        height: "150px",
-                        borderRadius: "4px",
-                        display: "flex",
-                        alignItems: "center",
                         justifyContent: "center",
                         color: "lightblue",
-                        // padding: "20px",
-                        // marginBottom: "10px"
+                        //padding: "20px",
+                        //marginBottom: "10px"
 
                     }} >
-                        <strong> {props.Replace_analytics.total_replacement_rate ? props.Replace_analytics.total_replacement_rate : 0}</strong>
+                        <strong> {props.Stay_analytics.avg_length_of_stay ? props.Stay_analytics.avg_length_of_stay : 0}</strong>
                     </div>
-                    Negative Discharges to Total Admissions
+                    Average Length of stay
 
                 </div>
+    
+            <div css={twoCol}>
 
+                <div style={{
+                    background: "#ffffff",
+                    border: "3px solid lightblue",
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "lightblue",
+                    }} >
+                    <strong> {props.Stay_analytics.neg_avg_length_of_stay ? props.Stay_analytics.neg_avg_length_of_stay : 0}</strong>
+                </div>
+               Negative Average Length of stay
 
             </div>
 
+
         </div>
+
+        </div >
     );
 };
 
-export default OtherParam_Analytics;
+export default Avg_Length_Stay;

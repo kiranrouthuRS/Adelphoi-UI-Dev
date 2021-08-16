@@ -197,7 +197,7 @@ export class DynamicNewClientContainer extends React.Component<
       this.setState({ isLoading: false });
       this.props.enqueueSnackbar("New Client Created Successfully.");
       {
-        is_role_type === "Contributor" ?
+        is_role_type === "" ?
           history.push(`/${domainPath}/new-client/`) :
           history.push(`/${domainPath}/new-client/program-selection`)
       }
@@ -263,8 +263,7 @@ export class DynamicNewClientContainer extends React.Component<
             onFormSubmit={this.saveClientStep1}
             GetQuestions={this.GetQuestions}
             errors={this.state.error}
-            dynamicclient= ""
-          />
+            />
         </Route>
       </Switch>
     );

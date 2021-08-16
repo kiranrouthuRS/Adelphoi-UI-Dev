@@ -83,6 +83,16 @@ const Market_Analytics: React.FC<Market_AnalyticsProps> = props => {
     useEffect(() => {
         props.referralChange(referral_source)
     }, [referral_source]);
+
+    let options: any = {
+        legend: {
+            display: false
+         },
+         title: {
+            display: true,
+            text: 'Performance Graph'
+        }
+    }
     return (
         <div>
             <Accordion>
@@ -154,15 +164,7 @@ const Market_Analytics: React.FC<Market_AnalyticsProps> = props => {
                 </select>
             </Grid>
             <Line data={Performance}
-                  options={{
-                    legend: {
-                        display: false
-                     },
-                     title: {
-                        display: true,
-                        text: 'Performance Graph'
-                    }
-                }}
+                  options={options}
                  />
             
         </div>

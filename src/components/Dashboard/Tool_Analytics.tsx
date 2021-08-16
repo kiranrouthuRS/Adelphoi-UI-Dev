@@ -94,7 +94,7 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
         ]
     };
    
-  let PCR_Options = {
+  let PCR_Options: any = {
           responsive: true,
           // title: {
           //     display: true,
@@ -132,7 +132,7 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
   
           }
       }
-      let ROC_Options = {
+      let ROC_Options: any = {
         responsive: true,
         // title: {
         //     display: true,
@@ -141,6 +141,7 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
         //     fontSize: 18,
         //     fontColor: "#111"
         // },
+        
         tooltips: {
                 enabled: true,
                 mode: 'single',
@@ -181,7 +182,7 @@ const Tool_Analytics: React.FC<Tool_AnalyticsProps> = props => {
               </Grid>
             </Grid>
             <Grid container spacing={3} >
-            
+             
             <Line data={ROC_Performance} options={ROC_Options}/>
                                     
                        

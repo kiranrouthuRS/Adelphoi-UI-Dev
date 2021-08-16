@@ -11,6 +11,7 @@ import {
     txtLabel,
     label
 } from "../styles";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -66,6 +67,25 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
         }],
 
     };
+    const options: any = {
+       
+        plugins: {
+            legend: {
+                display: true,
+                position: "right" 
+            },
+            datalabels: {
+                display: false, 
+                color: "white",
+                postion: "top", 
+                 font: {
+                   weight: "bold",
+                   size: "12px"
+                 },
+              },
+         }
+    };
+
     const [filters, setfilters] = useState({ referral_status: "", referral_source: "", location: "" });
     useEffect(() => {
         props.onSelectChange(filters)
@@ -76,12 +96,12 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
     useEffect(() => {
         props.onSelectChange(filters)
     }, [filters.location]);
-    useEffect(()=>{
+    useEffect(() => {
         setfilters(prevState => {
-            return { ...prevState, referral_status: "", referral_source: "", location: "" } 
+            return { ...prevState, referral_status: "", referral_source: "", location: "" }
         });
-    },[props.filter.days_count]) 
-     return (
+    }, [props.filter.days_count])
+    return (
         <div>
             <Grid container spacing={3} >
                 <Grid item xs={6} sm={3}>
@@ -89,7 +109,7 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                     //style={{ marginTop: 16 }}
                     >
                         Referral status:
-                  </label>
+                    </label>
 
                     <select
                         css={selectField}
@@ -98,9 +118,9 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                         onChange={e => {
                             const val = e.target.value;
                             setfilters(prevState => {
-                                return { ...prevState, referral_status: val}
+                                return { ...prevState, referral_status: val }
                             })
-                            }}
+                        }}
                     >
                         <option value="">Select</option>
                         <option value="placed">Accepted &amp; placed</option>
@@ -114,7 +134,7 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                     //style={{ marginTop: 16 }}
                     >
                         Referral sources:
-                  </label>
+                    </label>
 
                     <select
                         css={selectField}
@@ -128,11 +148,11 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                         onChange={e => {
                             const val = e.target.value;
                             setfilters(prevState => {
-                                return { ...prevState, referral_source: val}
+                                return { ...prevState, referral_source: val }
                             })
-                            
-                          }}
-                       
+
+                        }}
+
                     >
                         <option value="">Select</option>
                         {props.Referral.map(r => (
@@ -147,7 +167,7 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                     //style={{ marginTop: 16 }}
                     >
                         Locations:
-                  </label>
+                    </label>
 
                     <select
                         css={selectField}
@@ -159,10 +179,10 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                         onChange={e => {
                             const val = e.target.value;
                             setfilters(prevState => {
-                                return { ...prevState, location: val}
+                                return { ...prevState, location: val }
                             })
-                            
-                          }}
+
+                        }}
                     >
                         <option value="">Select</option>
                         {props.Location.map(l => (
@@ -174,12 +194,12 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                     </select>
                 </Grid>
             </Grid>
-            <div css={fieldRow} style={{ justifyContent: "center", marginTop: "10px" }}>
+            <div css={fieldRow} style={{ justifyContent: "center", marginTop: "10px" }} > 
                 <div css={twoCol}>
 
                     <div style={{
                         background: "#ffffff",
-                        border: "3px solid black", 
+                        border: "3px solid black",
                         width: "150px",
                         height: "150px",
                         borderRadius: "50%",
@@ -187,6 +207,7 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                         alignItems: "center",
                         justifyContent: "center",
                         color: "#000000",
+                        marginTop: "100px"
                         // padding: "20px",
                         // marginBottom: "10px"
 
@@ -198,30 +219,8 @@ const Total_Analytics: React.FC<Total_AnalysisProps> = props => {
                 </div>
                 <div css={twoCol}>
 
-                    <Pie data={data}
-                        options={{
-                            legend: {
-                                display: true,
-                                position: 'right',
-                                labels: {
-                                    fontColor: 'black',
-                                    boxWidth: 15,
-                                }
-
-                            },
-
-                            plugins: {
-                                datalabels: {
-                                    formatter: (data) => {
-
-                                        return data;
-
-
-                                    },
-                                    color: 'black',
-                                }
-                            }
-                        }}
+                    <Pie data={data} options={options} height={120}
+                        width={150}
                     />
 
 

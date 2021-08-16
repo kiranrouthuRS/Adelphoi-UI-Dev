@@ -152,20 +152,28 @@ export class DashboardContainer extends React.Component<
     this.setState({ isLoading: false });
   };
   getOtherAnalytics = async (filter: any, type) => {
-    const is_accessToken: any = this.state.accessToken
+    const is_accessToken: any = this.state.accessToken;
     switch(type) {
-      case 'others':
+      case 'replace':
         try {
           this.setState({ isLoading: true });
           await this.props.getReplacementAnalytics(filter,is_accessToken);
-          await this.props.getStayAnalytics(filter,is_accessToken);
           this.setState({ isLoading: false });
         } catch (error) {
           console.log(error);
           this.setState({ isLoading: false });
         } 
         break;
-      
+        case 'avg_stay':
+          try {
+            this.setState({ isLoading: true });
+            await this.props.getStayAnalytics(filter,is_accessToken);
+            this.setState({ isLoading: false });
+          } catch (error) {
+            console.log(error);
+            this.setState({ isLoading: false });
+          } 
+          break;
       case 'occupancy':
         try {
           this.setState({ isLoading: true });

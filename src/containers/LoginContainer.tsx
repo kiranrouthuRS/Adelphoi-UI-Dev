@@ -28,7 +28,7 @@ export class LoginContainer extends React.Component<
     super(props);
     // const isLoggedIn: any = props.user && props.user.user;
     if (localStorage.refreshToken) {
-      this.props.history.push(`/${domainPath}/new-client`)
+      this.props.history.push(`/${domainPath}/existing-client`)
       
     }
     this.state = this.getInitialState();
@@ -63,7 +63,7 @@ export class LoginContainer extends React.Component<
         await this.props.getConfiguredQuestions(is_accessToken);
         if(pwd_updated){
           history.push(is_configured !== true ? (`/${domainPath}/welcomepage`) :
-          (`/${domainPath}/new-client`));;
+          (`/${domainPath}/existing-client`));;
           
         }else{
           history.push(`/${domainPath}/changepassword`);

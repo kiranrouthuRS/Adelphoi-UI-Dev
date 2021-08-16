@@ -78,6 +78,68 @@ const Client_Demographics: React.FC<Client_DemographicsProps> = props => {
 
     };
 
+    let GenderOptions: any = {
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false,
+                position: "right" 
+            }, 
+            datalabels: {
+                color: "white",
+                 font: {
+                   weight: "bold",
+                   size: "10px"
+                 },
+              },
+         },
+        title: {
+            display: true,
+            text: 'Gender'
+        }
+    }
+
+    let AgeOptions: any = {
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false,
+                position: "right" 
+            },
+            datalabels: {
+                color: "white",
+                 font: {
+                   weight: "bold",
+                   size: "10px"
+                 },
+              },
+         },
+        title: {
+            display: true,
+            text: 'Age'
+        }
+    }
+
+    let options: any = {
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false,
+                position: "right" 
+            },
+            datalabels: {
+                color: "white",
+                 font: {
+                   weight: "bold",
+                   size: "10px"
+                 },
+              },
+         },
+        title: {
+            display: true,
+            text: filters.q === "lang" ? "Primary Language" : filters.q === "ls_type" ? "Legal Status" : "Secondary Involvement",
+        }
+    }
 
     useEffect(() => {
         props.onSelectChange(filters)
@@ -91,31 +153,13 @@ const Client_Demographics: React.FC<Client_DemographicsProps> = props => {
                         data={gender}
                         // width={100}
                         // height={50}
-                        options={{
-                            maintainAspectRatio: false,
-                            legend: {
-                                display: false
-                            },
-                            title: {
-                                display: true,
-                                text: 'Gender'
-                            }
-                        }}
+                        options={GenderOptions}
                     />
                 </Grid>
                 <Grid item xs={6}>
                     <Bar
                         data={age}
-                        options={{
-                            maintainAspectRatio: false,
-                            legend: {
-                                display: false
-                            },
-                            title: {
-                                display: true,
-                                text: 'Age'
-                            }
-                        }}
+                        options={AgeOptions}
                     />
                 </Grid>
             </Grid>
@@ -144,16 +188,7 @@ const Client_Demographics: React.FC<Client_DemographicsProps> = props => {
                         data={disc}
                         // width={100}
                         // height={50}
-                        options={{
-                            maintainAspectRatio: false,
-                            legend: {
-                                display: false
-                            },
-                            title: {
-                                display: true,
-                                text: filters.q === "lang" ? "Primary Language" : filters.q === "ls_type" ? "Legal Status" : "Secondary Involvement",
-                            }
-                        }}
+                        options={options}
                     />
                 </Grid>
             </Grid>

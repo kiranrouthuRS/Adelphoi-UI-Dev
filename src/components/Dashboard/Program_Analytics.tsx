@@ -12,8 +12,13 @@ import {
     innerCircle,
     smallcircleContent,
     txtLabel,
-   
+
 } from "../styles";
+import { Doughnut } from 'react-chartjs-2';
+import { Chart } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+Chart.register(ChartDataLabels);
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,35 +46,88 @@ interface Program_AnalyticsProps {
 }
 
 const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
-    
     const classes = useStyles();
-    const program = {
+    const PCR_Data = {
         labels: [
-            'Program completed',
-            'Remained out of care'
+            'Positive Program Completion',
+            'Negative Program Completion',
+            'Program Completion Not Available​'
         ],
         datasets: [{
-            data: [props.PCRList.pcr ? props.PCRList.pcr.percentage.replace(/%/g, "") : 0, props.ROCList.roc ? props.ROCList.roc.percentage.replace(/%/g, "") : 0],
+            data: [
+                props.PCRList.positive_pcr ? props.PCRList.positive_pcr.count : 0,
+                props.PCRList.negative_pcr ? props.PCRList.negative_pcr.count : 0,
+                props.PCRList.other_pcr ? props.PCRList.other_pcr.count : 0
+            ],
             backgroundColor: [
-                '#FF6384',
-                '#36A2EB'
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
             ],
             hoverBackgroundColor: [
-                '#FF6384',
-                '#36A2EB'
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
             ]
         }],
-
+        text: '23%'
     };
-    const [filters, setfilters] = useState({ referral_source: "", location: "" });
 
-    useEffect(() => {
+    const ROC_Data = {
+        labels: [
+            'Remained Out of Care',
+            'Returned to Care',
+            'Threshold for review not met (<1 year)',
+            'Record not available'
+        ],
+        datasets: [{
+            data: [
+                props.ROCList.positive_roc ? props.ROCList.positive_roc.count : 0,
+                props.ROCList.negative_roc ? props.ROCList.negative_roc.count : 0,
+                props.ROCList.less_than_1_year ? props.ROCList.less_than_1_year.count : 0,
+                props.ROCList.greater_than_1_year ? props.ROCList.greater_than_1_year.count : 0,
+            ],
+            backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56",
+                '#a3863b'
+            ],
+            hoverBackgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56",
+                '#a3863b'
+            ]
+        }],
+        text: '23%'
+    };
+
+     let  options: any = {
+       plugins: {
+            legend: {
+                display: true,
+                position: "top" 
+            },
+           
+              datalabels: {
+                color: "white",
+                 font: {
+                   weight: "bold",
+                   size: "16px"
+                 },
+              },
+         }
+          };
+
+    const [filters, setfilters] = useState({ referral_source: "", location: "" });
+useEffect(() => {
         props.onSelectChange(filters)
     }, [filters.referral_source]);
     useEffect(() => {
         props.onSelectChange(filters)
     }, [filters.location]);
-    
+
     useEffect(() => {
         setfilters(prevState => {
             return { ...prevState, referral_status: "", referral_source: "", location: "" }
@@ -89,12 +147,12 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
                         css={selectField}
                         name="referral_source"
                         value={filters.referral_source || ""}
-                       onChange={e => {
+                        onChange={e => {
                             const val = e.target.value;
                             setfilters(prevState => {
-                                return { ...prevState, referral_source: val}
+                                return { ...prevState, referral_source: val }
                             });
-                            }}
+                        }}
                     >
                         <option value="">Select</option>
                         {props.Referral.map(r => (
@@ -115,12 +173,12 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
                         css={selectField}
                         name="location"
                         value={filters.location || ""}
-                       onChange={e => {
+                        onChange={e => {
                             const val = e.target.value;
                             setfilters(prevState => {
-                                return { ...prevState, location: val}
+                                return { ...prevState, location: val }
                             });
-                            }}
+                        }}
                     >
                         <option value="">Select</option>
                         {props.Location.map(l => (
@@ -133,38 +191,35 @@ const ProgramAnalytics: React.FC<Program_AnalyticsProps> = props => {
 
                 </Grid>
             </Grid>
-            <div css={fieldRow} style={{ justifyContent: "center", marginTop: "10px" }}>
-                <div css={twoCol}>
-                    <div css={outerCircle}>
-                        <span css={circleContent}> 
-                            <strong >{props.PCRList.pcr ? props.PCRList.pcr.count : 0} <br /> PCR  </strong>
-                        </span>
-                        <div css={innerCircle}>
-                            <span css={smallcircleContent}>
-                                <strong>{props.ROCList.roc ? props.ROCList.roc.count : 0}  <br /> ROC 
-                                <br/>
-                                <small>
-                            {props.PCRList.pcr && props.ROCList.roc&&props.ROCList.roc.count ? ((props.ROCList.roc.count / props.PCRList.pcr.count)*100).toFixed(1): "0"}%
-                            </small>
-                                </strong>
-                               
-                            </span>
-                            
-                        </div>
+            <div css={fieldRow} >
+                <div css={twoCol} >
 
-                    </div>
-                    
+                    <Doughnut data={PCR_Data}  
+                    options={options}
+                          height={320}
+                          width={350} />    
+
+<div style={{marginLeft:"170px", transform:'translate(7%, -945%)'}}> <strong>{props.PCRList.total&& `Total - ${props.PCRList.total.count}`}</strong></div> 
                 </div>
-                <div css={twoCol}>
-                    <div style={{marginTop: "50px"}}>
-                    <strong >  PCR - </strong>Program Completion Rate <br />
-                    <strong >  ROC - </strong>Remained Out of Care
-                   </div>
-                   </div>
-                   <div css={twoCol}>
-                   &nbsp;
-                   </div>
-                   
+                <div css={twoCol} > 
+
+                    <Doughnut data={ROC_Data}    
+                        options={options}
+                        height={320}
+                        width={350} />
+
+             <div style={{marginLeft:"125px", 
+                          textAlign:"center",
+                          hyphens: "auto", 
+                          display:"flex", 
+                          wordWrap:"break-word", overflow:"inherit", 
+                          justifyContent:"center", 
+                           transform:'translate(-20%, -960%)'}}> 
+                           <strong >
+                               {props.ROCList.total&& `+ Program Completion - ${props.ROCList.total.count}`}
+                               </strong> </div>
+                </div>
+
             </div>
 
         </div>
