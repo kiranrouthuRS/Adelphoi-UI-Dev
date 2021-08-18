@@ -85,7 +85,7 @@ interface DynamicClientDetailsProps {
 }
 
 interface FormValues {
-  Program_Completion: string | number | null; 
+  Program_Completion: string | number | any; 
   Returned_to_Care: string | number | null;
   Remained_Out_of_Care: string | number | null;
   program_significantly_modified: number | string | null;
@@ -447,7 +447,7 @@ const locationOptions = suggested_locations
               }
               
             }
-            if (values.Program_Completion === "0" ||values.Program_Completion === "1" ) {
+            if (values.Program_Completion === "0" ||values.Program_Completion === "1" ||values.Program_Completion === "3" ) {
               if (!values.end_date) {
                 errors.end_date = "Required";
               }
@@ -692,7 +692,7 @@ const locationOptions = suggested_locations
                   <select
                     css={selectField} 
                     onChange={handleChange}
-                    disabled = {version_changed || [0,1,2].includes(props.client.Program_Completion)   ? true : values.referral_status !== "placed" } 
+                    disabled = {version_changed || [0,1,2,3].includes(props.client.Program_Completion)   ? true : values.referral_status !== "placed" } 
                     name="Program_Completion"
                     value={
                       values.Program_Completion !== null 
@@ -704,11 +704,12 @@ const locationOptions = suggested_locations
                     <option value="1">Yes</option> 
                     <option value="0">No</option>
                     <option value="2">Not Available</option>
+                    <option value="3">Neutral Transfer​</option>
                   </select>
                   <ErrorMessage component="span" name="Program_Completion" />
                 </div>
               </div>
-              {values.Program_Completion !== "" && values.Program_Completion !== "2" &&
+              {["0","1","3"].includes(values.Program_Completion) &&
                 <div css={fieldRow}>
                   <div css={twoCol}>
                     <label css={label}>End Date</label>
@@ -785,6 +786,7 @@ const locationOptions = suggested_locations
                     <option value="1">Yes</option>
                     <option value="0">No</option>
                     <option value="2">Not Available</option>
+                    <option value="3">Internal Transfer​</option>
                   </select>
                 </div>
 
