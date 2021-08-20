@@ -326,7 +326,7 @@ const locationOptions = suggested_locations
       <Backdrop css={backdrop} open={props.isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      {props.is_role_type === "Contributor" ? "" : (
+      {props.is_role_type === "Coordinator" ? "" : (
         <div css={fieldRow}>
           <div css={twoCol}>&nbsp;</div>
           <div
@@ -349,7 +349,7 @@ const locationOptions = suggested_locations
               </select>
             </div>
           </div>
-          {props.is_role_type === "Contributor" || !props.is_prediction_available ? "" :
+          {props.is_role_type === "Coordinator" || !props.is_prediction_available ? "" :
           <div
             css={twoCol}
             style={{
@@ -424,7 +424,7 @@ const locationOptions = suggested_locations
           }
      
 
-      {props.is_role_type === "Contributor" || !props.is_prediction_available? "" : (
+      {props.is_role_type === "Coordinator" || !props.is_prediction_available? "" : (
         <Formik
           initialValues={getInitialValues()}
           enableReinitialize

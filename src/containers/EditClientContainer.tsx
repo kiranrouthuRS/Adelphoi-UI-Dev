@@ -197,7 +197,7 @@ export class EditClientContainer extends React.Component<
       await this.props.updateClient(client);
       this.setState({ isLoading: false });
       this.props.enqueueSnackbar("Client Updated Successfully.");
-      {is_role_type === "Contributor" ?
+      {is_role_type === "Coordinator" ?
         history.push(`/${domainPath}/new-client/`) :
         history.push(`/${domainPath}/existing-client/edit-details/${index}/program-selection`)
       }

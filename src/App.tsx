@@ -30,7 +30,7 @@ import NotificationsContainer from './containers/NotificationsContainer'
 import DashboardContainer from './containers/Dashboardcontainer'
 import {AppBar, Container, Toolbar, Typography  } from "@material-ui/core";
 import Footer from './components/Footer'
-
+import PageNotFound from './components/PageNotFound'
 export const { store } = configureStore(createHistory());
 const url = typeof window !== 'undefined' ? window.location.pathname : '';
   let str1 = url.split('/');
@@ -55,6 +55,7 @@ const App: React.FC<AppProps> = props => {
     if(action[0] !== "reload"){
       if(localStorage.refreshToken){
         localStorage.removeItem("refreshToken")
+        localStorage.removeItem("user_role")
          //logout(accessToken);
         //  localStorage.clear()
         //history.push(`/${domainPath}/new-client`);
@@ -83,40 +84,49 @@ return (
                 </Route>
                 <Route
                   path={`/${dom}/login`}
-                  component={LoginContainer}
+                  component={LoginContainer} 
                 />
                 </Switch>
                 <Switch>
-                <PrivateRoute path={`/${dom}/welcomepage`} component={Welcomepage} />
-                <PrivateRoute path={`/${dom}/new-client`} component={DynamicNewClientContainer} />
+                  <PrivateRoute path={`/${dom}/access_denied`} component={PageNotFound} roles={["Super Admin","Admin","Coordinator"]} />
+                <PrivateRoute path={`/${dom}/welcomepage`} component={Welcomepage} roles={["Super Admin","Admin","Coordinator"]} />
+                <PrivateRoute path={`/${dom}/new-client`} component={DynamicNewClientContainer} 
+                              roles={["Super Admin","Admin","Coordinator"]} />
                 {/* <PrivateRoute exact path={`/${dom}/new-client1`} component={DynamicNewClientContainer} /> */}
                 <PrivateRoute
                   path={`/${dom}/existing-client`}
                   component={DynamicExistingClientContainer}
+                  roles={["Super Admin","Admin","Coordinator"]}
                 />
                 <PrivateRoute
                   path={`/${dom}/configuration`}
                   component={ConfigurationContainer} 
+                  roles={["Super Admin","Admin","Coordinator"]}
                 />
                 <PrivateRoute
                   path={`/${dom}/logout`}
                   component={LOGOUT}
+                  roles={["Super Admin","Admin","Coordinator"]}
                 />
                 <PrivateRoute
                   path={`/${dom}/changepassword`}
                   component={ChangePasswordContainer}
+                  roles={["Super Admin","Admin","Coordinator"]}
                 />
                 <PrivateRoute
                   path={`/${dom}/dashboard`}
                   component={DashboardContainer}
+                  roles={["Super Admin","Admin","Coordinator"]}
                 />
                 <PrivateRoute
                   path={`/${dom}/billing`}
                   component={BillingDetailsContainer} 
+                  roles={["Super Admin","Admin"]}
                 />
                  <PrivateRoute
                   path={`/${dom}/notifications`}
                   component={NotificationsContainer} 
+                  roles={["Super Admin","Admin","Coordinator"]}
                 />
               </Switch>
               

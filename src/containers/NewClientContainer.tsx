@@ -164,7 +164,7 @@ export class NewClientContainer extends React.Component<
       await this.props.insertClient(client);
       this.setState({ isLoading: false });
       this.props.enqueueSnackbar("New Client Created Successfully.");
-      {is_role_type === "Contributor" ?
+      {is_role_type === "Coordinator" ?
         history.push(`/${domainPath}/new-client/`) :
         history.push(`/${domainPath}/new-client/program-selection`)
       }

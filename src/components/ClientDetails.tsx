@@ -203,7 +203,7 @@ const RefSource  = Referral.map(d =>{
       <Backdrop css={backdrop} open={props.isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      {props.is_role_type ==="Contributor" ?"":( 
+      {props.is_role_type ==="Coordinator" ?"":( 
           <div
           style={{
             display: "flex",
@@ -714,7 +714,7 @@ const RefSource  = Referral.map(d =>{
                       )
                     }><u style={{color: "red"}}>here</u></a> to Edit Client details Or update below details.</h3> 
 
-{props.is_role_type === "Contributor" ?"":( <Formik
+{props.is_role_type === "Coordinator" ?"":( <Formik
         initialValues={getInitialValues()}
         enableReinitialize
         validate={values => {

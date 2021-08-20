@@ -18,6 +18,7 @@ import ProgramList from "../components/ProgramList";
 import UsersList from "../components/UsersList";
 import ReferralList from "../components/ReferralList";
 import LocationList from "../components/LocationList";
+import PageNotFound from "../components/PageNotFound"
 import ConfigurationForm from "../components/ConfigurationForm";
 import { updateConfiguration } from "../api/api";
 import { domainPath } from "../App"
@@ -138,7 +139,7 @@ export class ConfigurationContainer extends React.Component<
           <React.Fragment>
             <Paper style={{ flexGrow: 1, marginTop: 30 }}>  
               <Tabs value={location.pathname} centered>
-                {role_type === "Consultant" || role_type === "Contributor" ? "":
+                {role_type === "Coordinator" ? "":
                 <Tab
                   label="Users"
                   component={Link}
@@ -146,7 +147,7 @@ export class ConfigurationContainer extends React.Component<
                   value={`${match.url}/users`}
                 />
                 }
-                {role_type === "Consultant"  || role_type === "Contributor" ? "":
+                {role_type === "Coordinator" ? "":
                 domainPath !== "adelphoiDDD" ?"":
                 <Tab
                   label="Referral Sources"
@@ -179,7 +180,9 @@ export class ConfigurationContainer extends React.Component<
             </Paper>
             <Switch>
               <Route path={`${match.url}/users`}>
-              {role_type === "Consultant"  || role_type === "Contributor" ? "":
+              {role_type === "Consultant"  || role_type === "Coordinator" ? 
+              <PageNotFound/>
+              :
                 <UsersList
                   usersList={usersList}
                   headerColor={header_color}
@@ -195,7 +198,7 @@ export class ConfigurationContainer extends React.Component<
                 />}
               </Route>
               <Route path={`${match.url}/referral`}>
-              {role_type === "Consultant"  || role_type === "Contributor" ? "":
+              {role_type === "Consultant"  || role_type === "Coordinator" ? "":
                 domainPath !== "adelphoiDDD" ?"":
                 <ReferralList
                   referralList={referralList}

@@ -110,7 +110,7 @@ export class DynamicNewClientContainer extends React.Component<
       this.setState({ isSuccess: true })
       this.props.enqueueSnackbar(index ? "Client details updated Successfully." : "New Client Created Successfully.");
       {
-        is_role_type === "Contributor" || client["Exclusionary Criteria Exists/Referral Rejected"] === "0" || !is_prediction_available ?
+        is_role_type === "Coordinator" || client["Exclusionary Criteria Exists/Referral Rejected"] === "0" || !is_prediction_available ?
           history.push(`/${domainPath}/new-client/`) :
           history.push(`/${domainPath}/new-client/program-selection`)
 

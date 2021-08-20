@@ -63,7 +63,9 @@ export const login = async (email: string, password: string, domain: string) => 
       username: email,
       password: password
     });
+    console.log(response)
     localStorage.setItem("refreshToken", response.data.response.token);
+    localStorage.setItem("user_role", response.data.response.role_type)
     return response.data;
   } catch (error) {
     console.error("api function login error");
@@ -90,7 +92,7 @@ export const Logout = async (accessToken) => {
       .then(result => console.log(result))
       .catch(error => console.log('error', error));
      localStorage.removeItem("refreshToken")
-     
+     localStorage.removeItem("user_role")
 
   } catch (error) {
     console.error("api function fetchLocationsList error");

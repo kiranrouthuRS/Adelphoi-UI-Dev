@@ -196,6 +196,7 @@ export class UsersList extends React.Component<
       isEdit: true
     });
     this.setState({ isLoading: false });
+    window.scrollTo(0, 0);
   }
   handleDelete = async (e: any) => {
     e.preventDefault();
@@ -214,7 +215,8 @@ export class UsersList extends React.Component<
   }
 
   render() {
-    const { usersList, rolesList } = this.props;
+    const { usersList, rolesList, user } = this.props;
+    let user_role = user.user.role_type
     const isEdit = this.state.isEdit
     return (
       <form name="UsersForm" onSubmit={this.handleSubmit}>
@@ -375,14 +377,22 @@ export class UsersList extends React.Component<
             {usersList.length > 0 ? (
               usersList.map((p, id) => (
                 <TableRow key={id} css={tableRow}>
-                  <TableCell>{p.full_name}</TableCell> 
+                  <TableCell>{p.full_name}</TableCell>  
                   <TableCell>{p.email_id}</TableCell>
                   <TableCell>{p.role_type}</TableCell>
                   <TableCell>
-                    <a href="" data-id={p.id} onClick={this.handleEdit}>Edit</a>
+                  {(  user_role === "Coordinator" ? "-" :
+              user_role === "Admin" && (p.role_type === "Super Admin" || p.role_type === "Admin" )) ? "-" :
+              <a href="" data-id={p.id} onClick={this.handleEdit}>Edit</a>
+                                }
+                   
                   </TableCell>
                   <TableCell>
-                    <a href="" data-id={p.id} onClick={this.handleDelete}>Delete</a>
+                  {(  user_role === "Coordinator" ? "-" :
+              user_role === "Admin" && (p.role_type === "Super Admin" || p.role_type === "Admin" )) ? "-" :
+              <a href="" data-id={p.id} onClick={this.handleDelete}>Delete</a>
+                                }
+                   
                   </TableCell>
                 </TableRow>
               ))
