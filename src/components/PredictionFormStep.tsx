@@ -6,7 +6,11 @@ import Modal from "react-modal";
 import Button from "@material-ui/core/Button";
 import FormData from "form-data"
 import { searchDClient } from "../api/api";
-import * as dynamicclient from "../redux-modules/dynamicclient";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 // import {header_color} from "./configure" 
 import {
   wrap,
@@ -18,6 +22,9 @@ import {
   label1,
   fieldBox,
   selectField,
+  tableHeader,
+    tableRow,
+    dataTable,
 
 } from "./styles";
 import * as Types from "../api/definitions";
@@ -530,12 +537,16 @@ export class PredictionFormStep extends React.Component<
               sections.related === "true" ? "" :
                 <React.Fragment>
                   <h1 css={subHeading} style={{ color: header_color }} key={index}>{sections.section}</h1>
-                  {
-
+                  <Table aria-label="users table" css={dataTable}>
+                  { 
                     this.display(index).map((item, ind) => {
-                      return <div css={fieldRow} key={ind}>{item.map((ques, index_1) =>
+                      return ( 
+                      // <div css={fieldRow} key={ind}>
+                      <TableRow key={ind} css={tableRow} >
+                        {item.map((ques, index_1) =>
                         ques.related !== "yes" &&
-                        (<div css={twoCol} key={index_1}>
+                        (
+                        <div css={twoCol} key={index_1}> 
                           <label css={label1} >{ques.question}</label>
                           {ques.description &&
                             <label >
@@ -669,10 +680,12 @@ export class PredictionFormStep extends React.Component<
                               : ""
                           }
                         </div>
-                        ))}</div>
+                        ))}
+                        </TableRow>
 
-                    })
+                   )})
                   }
+                  </Table>
                 </React.Fragment>
             )}
             <div css={fieldRow} style={{ justifyContent: "flex-end" }}>

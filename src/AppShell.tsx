@@ -45,7 +45,7 @@ const nav = css`
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  margin-top: 50px;
+  margin-top: 100px;
   @media all and (min-width: 520px) {
     flex-direction: row;
     align-items: flex-start;
@@ -94,9 +94,11 @@ const logo = css`
 
 const firstMatchLogo = css`
   position: absolute;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -30%);
   left: 50%;
   top: -0px;
+  height: 120px;
+  width:  250px;
   @media all and (max-width: 520px) {
     width: 80px;
   }
