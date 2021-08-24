@@ -43,7 +43,7 @@ function Footer(props) {
                     <TableRow>
                         <TableCell >
                         <Typography variant="h6" >
-                        © Copy right, All right reserved by FirstMatch - 2021
+                        © Copyright, All right reserved by FirstMatch - 2021
                         </Typography>
         </TableCell>
                         <TableCell >
