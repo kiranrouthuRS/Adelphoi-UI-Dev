@@ -5,6 +5,10 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import Button from "@material-ui/core/Button";
 import FormData from "form-data"
+import { searchDClient } from "../api/api";
+import Table from "@material-ui/core/Table";
+import TableRow from "@material-ui/core/TableRow";
+// import {header_color} from "./configure" 
 import {
   wrap,
   subHeading,
@@ -14,16 +18,15 @@ import {
   inputField,
   label1,
   fieldBox,
-  fieldBox1,
   selectField,
-  datePicker
+  tableHeader,
+    tableRow,
+    dataTable,
+
 } from "./styles";
 import * as Types from "../api/definitions";
-import ErrorMessage from "./ErrorMessage";
 import { Fragment } from "react";
-import { store } from "../index";
 import { AppState } from "../redux-modules/root";
-import { AnyARecord } from "dns";
 import { uploadcsvfile, downloadcsvfile } from "../api/api"
 
 
@@ -33,12 +36,15 @@ interface PredictionFormStepProps {
   DynamicQuestions: any;
   client: Types.Client;
   onFormSubmit: (client: Types.Client) => void;
+  GetQuestions: () => void;
   isLoading: boolean;
   hasError: boolean;
   error: string;
   isEdit: string;
+  reReffer: string;
   errors: any;
   user: any;
+  
 
 
 }
@@ -48,37 +54,41 @@ export interface PredictionFormStepState {
   errors: any;
   hasError: boolean;
   isSubmitted: boolean;
+  ClientCode: any;
   client_form: any;
   Required_List: any;
   DynamicQuestions: any;
   prevJump: any;
+  prevQuestionJump: any;
   csvfile: any;
   isOpen: boolean;
   err_msg: any;
   isEdit: string;
+  reReffer: string;
+  header_color: string;
 
 }
 const logout = css`
-  position: relative;
-  top: -25px;
-  right: 25px;
-  radius: 2px;
-  
-  @media all and (max-width: 520px) {
-    top: 0;
-    right: 0;
-  }
-`;
+                position: relative;
+                top: -25px;
+                right: 25px;
+                radius: 2px;
+                
+                @media all and (max-width: 520px) {
+                  top: 0;
+                  right: 0;
+                }
+              `;
 const profile = css`
-  position: relative;
-  top: -25px;
-  right: -1 0px; 
-  radius: 2px;
-  @media all and (max-width: 520px) {
-    top: 0;
-    right: 25;
-  }
-`;
+                position: relative;
+                top: -25px;
+                right: -1 0px; 
+                radius: 2px;
+                @media all and (max-width: 520px) {
+                  top: 0;
+                  right: 25;
+                }
+              `;
 const customStyles = {
   content: {
     top: '50%',
@@ -92,7 +102,7 @@ const customStyles = {
 export class PredictionFormStep extends React.Component<
   PredictionFormStepProps,
   PredictionFormStepState
-  > {
+> {
   constructor(props: PredictionFormStepProps) {
     super(props);
     this.state = this.getInitialState();
@@ -100,6 +110,7 @@ export class PredictionFormStep extends React.Component<
   getInitialState() {
     return {
       isLoading: false,
+      ClientCode: "",
       hasError: true,
       isSubmitted: false,
       DynamicQuestions: [],
@@ -108,47 +119,56 @@ export class PredictionFormStep extends React.Component<
       client_form: [],
       Required_List: [],
       prevJump: [],
+      prevQuestionJump: [],
       csvfile: "",
       err_msg: [],
       isOpen: false,
-      isEdit: this.props.isEdit
+      isEdit: this.props.isEdit,
+      reReffer: this.props.reReffer,
+      header_color: ""
     };
   }
   async componentDidMount() {
-    this.formState();
-    this.setState({
+    await this.props.GetQuestions()
+    await this.setState({
+      DynamicQuestions: this.props.DynamicQuestions,
       isOpen: this.props.errors ? true : false,
       err_msg: this.props.errors,
+      header_color: this.props.user && this.props.user.user.header_color
     })
-    // console.log(
-    //   this.props.DynamicQuestions.map
-    //   (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
-    //     client_form.push({ [ques.question.replace(/ /g,"_")]: ques.answer === 0 ? ques.answer :ques.suggested_answers.length   });
-
-    //   }))
-    // )
- }
-  formState = () => {
-      let client_form = [] as any;
-      let Required_List = [] as any;
-      this.props.DynamicQuestions.map
-        (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
-          client_form.push({
-            [ques.question.replace(/ /g, "_")]: 
-               ques.answer === 0 ? ques.answer.toString() : 
+    this.formState();
+  }
+  formState = async () => {
+    let client_form = [] as any;
+    let Required_List = [] as any;
+    console.log(this.state.DynamicQuestions)
+    this.state.DynamicQuestions.map
+      (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
+        ques.related === "no" &&
+        client_form.push({
+          [ques.question.replace(/ /g, "_")]:  
+            Array.isArray(ques.answer) ? ques.suggested_answers.map((q, j) => ques.answer.includes(q.value) &&
+              q.id.toString()).find(item => item !== false) :
+              ques.answer === 0 ? ques.answer.toString() :
                 ques.suggested_answers.length >= 1 ? ques.answer &&
-                ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id.toString() 
-                : ques.answer ? ques.answer.toString() : ""
-          });
-          Required_List.push({
-            [ques.question.replace(/ /g, "_")]: ques.required});
-        })) 
-        this.setState({
-          DynamicQuestions: this.props.DynamicQuestions,
-          client_form: Object.assign({}, ...client_form),
-          Required_List: Object.assign({}, ...Required_List), 
-        })
-     }
+                  ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id.toString()
+                  : ques.answer ? ques.answer.toString() : ""
+        });
+        ques.related === "no" &&
+        Required_List.push({
+          [ques.question.replace(/ /g, "_")]: ques.required
+        });
+      }))
+    let form_data = Object.assign({}, ...client_form)
+    console.log(form_data)
+    await this.setState({
+      // DynamicQuestions: this.props.DynamicQuestions,
+      client_form: form_data,
+      ClientCode: form_data["Client_Code"],
+      Required_List: Object.assign({}, ...Required_List),
+    })
+  }
+
   handleClose = () => {
     this.setState({
       isOpen: false
@@ -156,8 +176,6 @@ export class PredictionFormStep extends React.Component<
   }
 
   getAge = (date, fromDate) => {
-    // const date = value;
-    // const fromDate = value;
     if (!date) {
       return "";
     }
@@ -175,64 +193,113 @@ export class PredictionFormStep extends React.Component<
     }
     return age.toString();
   }
-
-  handleChange = (e) => {
+  keyUp = async (e) => {
+    let { name, value } = e.target
+    if (name === "Client_Code") {
+      const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
+      let response = await searchDClient(value, "", is_accessToken);
+      response.response &&
+        response.response.length > 0 &&
+        (alert("Client Code already exists. Do you want to continue?"))
+    }
+  }
+  handleChange = async (e) => {
     const { name, value } = e.target;
     let DynamicQuestions = this.state.DynamicQuestions;
-    
-    let ref_date = this.state.client_form.Date_of_Referral ? this.state.client_form.Date_of_Referral : ""
-    const val1: any = e.target.dataset.val1 ? e.target.dataset.val1 : "";
-      const val2: any = e.target.dataset.val2 ? e.target.dataset.val2 : "";
-      const type = e.target.dataset.type;
-      const error_msg = e.target.dataset.msg;
-      let jump = ""
-      if (type === "select") {
-        const length = e.target.dataset.length;
-        var optionElement = e.target.childNodes[e.target.selectedIndex]
-        let idx = optionElement.getAttribute('data-idx');
-        jump = optionElement.getAttribute('data-jump');
-        let idy = optionElement.getAttribute('data-idy');
-        let jumpto = jump && jump.replace(/,/g, '')
+    let val1: any = e.target.dataset.val1 ? e.target.dataset.val1 : "";
+    const val2: any = e.target.dataset.val2 ? e.target.dataset.val2 : "";
+    const type = e.target.dataset.type;
+    const error_msg = e.target.dataset.msg;
+    let jump = "";
+    let ques_jump = "";
+    if (type === "select") {
+      let optionElement = e.target.childNodes[e.target.selectedIndex]
+      let idx = optionElement.getAttribute('data-idx');
+      jump = optionElement.getAttribute('data-jump');
+      ques_jump = optionElement.getAttribute('data-quesjump');
+      let jumpto = jump.split(',').filter(j => j)
+      let ques_jumpto = ques_jump.split(',').filter(j => j)
+      this.setState({
+        prevJump: {
+          ...this.state.prevJump,
+          [name.replace(/ /g, "_")]: jumpto,
+          hasError: false,
+        },
+        prevQuestionJump: {
+          ...this.state.prevQuestionJump,
+          [name.replace(/ /g, "_")]: ques_jumpto,
+          hasError: false,
+        }
+
+      })
+      DynamicQuestions[idx].questions.map((que, i) =>
+        ques_jumpto.includes(que.question)
+          ? (DynamicQuestions[idx].questions[i].related = "no")
+          : (this.state.prevQuestionJump[name.replace(/ /g, "_")] &&
+            this.state.prevQuestionJump[name.replace(/ /g, "_")].includes(que.question) && (
+              DynamicQuestions[idx].questions[i].related = "yes"
+            )))
+      DynamicQuestions.map((sec, i) => jumpto.includes(sec.section) ? (
+        DynamicQuestions[i].related = "false"
+
+      )
+        :
+        this.state.prevJump[name.replace(/ /g, "_")] &&
+        this.state.prevJump[name.replace(/ /g, "_")].includes(sec.section) && (
+          DynamicQuestions[i].related = "true"
+        )
+      )
+
+    } else {
+      if (type === "radio") {
+        jump = e.target.dataset.jump.split(',').filter(j => j);
+        ques_jump = e.target.dataset.quesjump.split(',').filter(j => j);
+        const idx = e.target.dataset.idx;
         this.setState({
           prevJump: {
             ...this.state.prevJump,
-            [name.replace(/ /g, "_")]: jumpto,
+            [name.replace(/ /g, "_")]: jump,
+            hasError: false,
+          },
+          prevQuestionJump: {
+            ...this.state.prevQuestionJump,
+            [name.replace(/ /g, "_")]: ques_jump,
             hasError: false,
           }
-
         })
-        DynamicQuestions.map((sec, i) => sec.section === jumpto ? (
-          DynamicQuestions[i].related = "false"
-        )
+        DynamicQuestions[idx].questions.map((que, i) =>
+          ques_jump.includes(que.question)
+            ? (DynamicQuestions[idx].questions[i].related = "no")
+            : (this.state.prevQuestionJump[name.replace(/ /g, "_")] &&
+              this.state.prevQuestionJump[name.replace(/ /g, "_")].includes(que.question) && (
+                DynamicQuestions[idx].questions[i].related = "yes"
+              )))
+        DynamicQuestions.map((sec, i) => jump.includes(sec.section) ? (
+          DynamicQuestions[i].related = "false")
           :
-          sec.section === this.state.prevJump[name.replace(/ /g, "_")] && (
-            DynamicQuestions[i].related = "true"
+          this.state.prevJump[name.replace(/ /g, "_")] &&
+          this.state.prevJump[name.replace(/ /g, "_")].includes(sec.section) && (
+            DynamicQuestions[i].related = "true",
+            this.formState()
           )
         )
-
-      } else {
-        if (type === "radio") {
-          jump = e.target.dataset.jump.replace(/,/g, '');
-          const idx = e.target.dataset.idx;
-          this.setState({
-            prevJump: {
-              ...this.state.prevJump,
-              [name.replace(/ /g, "_")]: jump,
-              hasError: false,
-            }
-          })
-          DynamicQuestions.map((sec, i) => sec.section === `${jump}` ? (
-            DynamicQuestions[i].related = "false"
-          )
-            :
-            sec.section == this.state.prevJump[name.replace(/ /g, "_")] && (
-              DynamicQuestions[i].related = "true"
-            )
-          )
-        }
       }
 
-      if (val1 === "") {
+    }
+
+    if (val1 === "") {
+      if (type === "checkbox") {
+        const checked = e.target.checked;
+        this.setState({
+          client_form: {
+            ...this.state.client_form,
+            [name]: this.state.client_form[name] ?
+              checked ? this.state.client_form[name].concat([value]) :
+                this.state.client_form[name].filter(idy => idy !== value) : [value]
+          },
+          hasError: false,
+        })
+      } else {
         this.setState({
           client_form: {
             ...this.state.client_form,
@@ -240,94 +307,127 @@ export class PredictionFormStep extends React.Component<
           },
           hasError: false,
         })
-        if (jump) {
-          let client_form1 = [] as any;
-          let Required_List1 = [] as any;
-          DynamicQuestions.map
-            (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
-              client_form1.push({
-                [ques.question.replace(/ /g, "_")]: ques.answer === 0 ?
-                  ques.answer : ques.suggested_answers.length >= 1 ? ques.answer ?
-                    ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id : ques.answer ? ques.answer : "" : ""
-              });
-              Required_List1.push({
-                [ques.question.replace(/ /g, "_")]: ques.required});
-            }))
-          let formData = Object.assign({}, ...client_form1)
-          let ReqData = Object.assign({}, ...Required_List1)
-          let client_form = this.state.client_form;
-          let Required_List = this.state.Required_List;
-          client_form = {
-            ...formData, ...client_form, [name]: value
-          }
-          Required_List = {
-            ...ReqData, ...Required_List
-          }
+      }
+
+      if (jump.length > 0) {
+        let client_form1 = [] as any;
+        let Required_List1 = [] as any;
+        DynamicQuestions.map
+          (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
+            ques.related === "no" &&
+            client_form1.push({
+              [ques.question.replace(/ /g, "_")]:
+                Array.isArray(ques.answer) ? ques.answer :
+                  ques.answer === 0 ?
+                    ques.answer : ques.suggested_answers.length >= 1 ? ques.answer ?
+                      ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id :
+                      ques.answer ? ques.answer : "" : ""
+            });
+            ques.related === "no" &&
+            Required_List1.push({
+              [ques.question.replace(/ /g, "_")]: ques.required
+            });
+          }))
+        let formData = Object.assign({}, ...client_form1)
+        let ReqData = Object.assign({}, ...Required_List1)
+        let client_form = this.state.client_form;
+        let Required_List = this.state.Required_List;
+        client_form = {
+          ...formData, ...client_form, [name]: value
+        }
+        Required_List = {
+          ...ReqData, ...Required_List
+        }
+        this.setState({
+          client_form,
+          Required_List
+        })
+      }
+    }
+    else {
+      if (type === "number") {
+        const err = parseInt(value) < parseInt(val1)
+        const err1 = parseInt(value) > parseInt(val2)
+        if (this.state.isEdit === "true" && name === "Client_Code") {
+          this.setState(prevState => ({
+            client_form: {
+              ...prevState.client_form,
+              [name]: value,
+              ["Client_Code1"]: this.state.ClientCode
+            }
+          }))
+        } else {
           this.setState({
-            client_form,
-            Required_List
+            client_form: {
+              ...this.state.client_form,
+              [name]: value,
+            }
           })
-        } else if(this.state.prevJump[name]){
-              this.formState();
         }
 
+        this.setState({
+          error: {
+            ...this.state.error,
+            [name]: err === true ? error_msg : err1 === true ? error_msg : "",
+          },
+          hasError: err === true ? true : err1 === true ? true : false
+        })
+      } else {
+        const regex = val2 === "Both" ? "^[A-Za-z ]+$" :
+          val2 === "Numbers" ? "^[ A-Za-z_@./#&+-]*$" :
+            val2 === "Special characters" ? "^[A-Za-z0-9 ]+$" : ""
+        const textRegex = new RegExp(regex);
+        this.setState({
+          client_form: {
+            ...this.state.client_form,
+            [name]: value,
+          },
+          error: {
+            ...this.state.error,
+            [name]: textRegex.test(value) ? "" : error_msg,
+          },
+          hasError: textRegex.test(value) ? false : true
+        })
       }
-      else {
-        if (type === "number") {
-          const err = parseInt(value) < parseInt(val1)
-          const err1 = parseInt(value) > parseInt(val2)
-          this.setState({
-            client_form: {
-              ...this.state.client_form,
-              [name]: value,
-            },
-            error: {
-              ...this.state.error,
-              [name]: err === true ? error_msg : err1 === true ? error_msg : "",
-            },
-            hasError: err === true ? true : err1 === true ? true : false
-          })
-        } else {
-          const regex = val2 === "Both" ? "^[A-Za-z ]+$" : val2 === "Numbers" ? "^[ A-Za-z_@./#&+-]*$" : val2 === "Special characters" ? "^[A-Za-z0-9 ]+$" : ""
-          const textRegex = new RegExp(regex);
-          this.setState({
-            client_form: {
-              ...this.state.client_form,
-              [name]: value,
-            },
-            error: {
-              ...this.state.error,
-              [name]: textRegex.test(value) ? "" : error_msg,
-            },
-            hasError: textRegex.test(value) ? false : true
-          })
-        }
-      }
+    }
 
   }
+
   handleSubmit = async (e) => {
     e.preventDefault();
     const client_form = this.state.client_form;
     let Required_List = this.state.Required_List;
+    console.log(client_form)
+    console.log(Required_List)
     this.setState({
-      isSubmitted: true
+      isSubmitted: true,
+      err_msg: [],
+      isOpen: false,
     })
-     let data = [] as any;
+    let data = [] as any;
     let isValid_Data = true as any;
     Object.keys(client_form).map((ele, i) =>
-        (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] }),
-        isValid_Data = !client_form[ele] && Required_List[ele] === "yes" ? false : true
-        ),
-        
-    )
-    const formData = Object.assign({}, ...data)
-    if (isValid_Data) {
+    (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] }),
+      !client_form[ele] && Required_List[ele] === "yes" && (isValid_Data = false)
+    ))
+    let formData = Object.assign({}, ...data)
+    if (Object.keys(formData).includes("Client Code1")) {
+      formData["New Client Code"] = formData["Client Code"];
+      formData["Client Code"] = formData["Client Code1"];
+      delete formData["Client Code1"];
+    }
+    console.log(isValid_Data)
+    console.log(this.state.hasError)
+   
+    if (isValid_Data === true) {
+      console.log(this.state.isEdit)
       if (this.state.isEdit === "true" || !this.state.hasError) {
         await this.props.onFormSubmit(formData);
-       this.setState({
+        this.setState({
           isSubmitted: false,
           err_msg: this.props.errors,
           isOpen: this.props.errors ? true : false
+          // isSuccess: true
         })
       } else {
 
@@ -337,7 +437,6 @@ export class PredictionFormStep extends React.Component<
 
   uploadCSV = async (e) => {
     e.preventDefault()
-    let { name } = e.target;
     let file = e.target.files[0]
     this.setState({
       csvfile: file
@@ -363,7 +462,7 @@ export class PredictionFormStep extends React.Component<
 
   downloadCSV = async (e) => {
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
-    const res = await downloadcsvfile(is_accessToken)
+    await downloadcsvfile(is_accessToken)
   }
 
   display = (id) => {
@@ -379,7 +478,7 @@ export class PredictionFormStep extends React.Component<
         }
       }
       else {
-        tempArray1.push(questions[i]); 
+        tempArray1.push(questions[i]);
         tempArray.push(tempArray1)
       }
 
@@ -389,8 +488,8 @@ export class PredictionFormStep extends React.Component<
   }
 
   render() {
-    const { DynamicQuestions } = this.state;
-    const { errors } = this.props;
+
+    const { DynamicQuestions, header_color } = this.state;
     return (
       <div css={wrap}>
 
@@ -401,22 +500,29 @@ export class PredictionFormStep extends React.Component<
                 type="submit"
                 size="small"
                 variant="contained"
-                color="primary"
-                style={{ marginRight: 10 }}
+                style={{
+                  marginRight: 10,
+                  backgroundColor: header_color,
+                  color: "#fff"
+                }}
                 css={logout}
                 onClick={this.downloadCSV}
               >
                 Download CSV template
-            </Button>
+              </Button>
               <div css={profile}>
                 <input name="uploadfile" type="file" onChange={this.uploadCSV} />
                 <Button
                   type="submit"
                   size="small"
                   variant="contained"
-                  color="primary"
                   onClick={this.uploadFile}
-                  style={{ marginRight: 10 }}>Upload</Button>
+                  style={{
+                    marginRight: 10,
+                    backgroundColor: header_color,
+                    color: "#fff"
+                  }}>
+                  Upload</Button>
               </div>
             </div>
           }
@@ -428,7 +534,7 @@ export class PredictionFormStep extends React.Component<
             contentLabel="Example Modal"
           >
             <div>
-              <h1 css={subHeading}>Please correct the following errors and try again.</h1>
+              <h1 css={subHeading} style={{ color: header_color }}>Please correct the following errors and try again.</h1>
               {this.state.err_msg && this.state.err_msg.map((e, i) => <div style={{ color: "red" }}>{this.state.err_msg[i]}</div>)}
 
             </div>
@@ -439,155 +545,171 @@ export class PredictionFormStep extends React.Component<
             {DynamicQuestions.map((sections, index) =>
               sections.related === "true" ? "" :
                 <React.Fragment>
+                  <h1 css={subHeading} style={{ color: header_color }} key={index}>{sections.section}</h1>
+                  <Table aria-label="users table" css={dataTable}>
+                  { 
+                    this.display(index).map((item, ind) => {
+                      return ( 
+                      // <div css={fieldRow} key={ind}>
+                      <TableRow key={ind} css={tableRow} >
+                        {item.map((ques, index_1) =>
+                        ques.related !== "yes" &&
+                        (
+                        <div css={twoCol} key={index_1}> 
+                          <label css={label1} >{ques.question}</label>
+                          {ques.description &&
+                            <label >
+                              <small>({ques.description})</small>
+                            </label>
+                          } <br />
+                          {ques.answer_type === "SELECT" ?
+                            <select
+                              css={selectField}
+                              name={ques.question.replace(/ /g, "_")}
+                              data-type={ques.answer_type.toLowerCase()}
+                              data-length={ques.suggested_jump.length}
 
-                  <h1 css={subHeading}>{sections.section}</h1>
-                  {this.display(index).map((item, ind) => {
-                    return <div css={fieldRow}>{item.map((ques, index_1) =>
-                      ques.flag === "0" &&
-                      (<div css={twoCol}>
-                        <label css={label1} >{ques.question}</label>
-                        {ques.description &&
-                          <label style={{ fontSize: "16px" }}> ({ques.description})</label>
-                        } <br />
-
-                        {ques.answer_type === "SELECT" ?
-                          <select
-                            css={selectField}
-                            name={ques.question.replace(/ /g, "_")}
-                            data-type={ques.answer_type.toLowerCase()}
-                            data-length={ques.suggested_jump.length}
-
-                          >
-                            <option value="">Select</option>
-                            {ques.suggested_answers.map((ans, i) =>
-
-                              <option key={i}
-                                value={ans.id}
-                                data-idx={index}
-                                data-idy={ind}
-                                data-jump={ques.suggested_jump.map(sj => ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
-                                selected={this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id.toString()}>{ans.value}</option>
-                            )}
-                          </select>
-                          :
-                          ques.answer_type === "RADIO" ?
-                            <React.Fragment>
+                            >
+                              <option value="">Select</option>
                               {ques.suggested_answers.map((ans, i) =>
-                                <div
-                                  css={fieldBox}
-                                  style={{ width: "47.8%", display: "inline-block" }}
-                                >
-                                  <React.Fragment>
-                                    <input
-                                      type="radio"
-                                      data-jump={ques.suggested_jump.map(sj => ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
-                                      data-idx={index}
-                                      data-idy={ind}
-                                      name={ques.question.replace(/ /g, "_")} value={ans.id}
-                                      checked={this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id.toString() ? true :
-                                        this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id}
-                                      data-type={ques.answer_type.toLowerCase()}
-                                    />{" "}
-                                    <label htmlFor={i}>{ans.value}</label>
-                                  </React.Fragment>
 
-                                </div>
-
+                                <option key={i}
+                                  value={ans.id}
+                                  data-idx={index}
+                                  data-idy={ind}
+                                  data-jump={ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
+                                  data-quesjump={ques.suggested_jump.length > 0 ? ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.question_jumpto ? sj.question_jumpto : "" : "") : ""}
+                                  selected={this.state.client_form[ques.question.replace(/ /g, "_")] && this.state.client_form[ques.question.replace(/ /g, "_")].toString() === ans.id.toString()}>{ans.value}</option>
                               )}
-                            </React.Fragment>
+                            </select>
                             :
-                            ques.answer_type === "CHECKBOX" ?
+                            ques.answer_type === "RADIO" ?
+                              <React.Fragment>
+                                {ques.suggested_answers.map((ans, i) =>
+                                  <div key={i}
+                                    css={fieldBox}
+                                    style={{ width: "47.8%", display: "inline-block" }}
+                                  >
+                                    <React.Fragment>
+                                      <input
+                                        type="radio"
+                                        data-jump={ques.suggested_jump.length > 0 ? ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "") : ""}
+                                        data-quesjump={ques.suggested_jump.length > 0 ? ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.question_jumpto ? sj.question_jumpto : "" : "") : ""}
+                                        //data-jump = {ques.suggested_jump.length > 0 ?ques.suggested_jump.jumpto:""} 
+                                        data-idx={index}
+                                        data-idy={ind}
+                                        name={ques.question.replace(/ /g, "_")} value={ans.id}
+                                        checked={this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id.toString() ? true :
+                                          this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id}
+                                        data-type={ques.answer_type.toLowerCase()}
+                                      />{" "}
+                                      <label htmlFor={i}>{ans.value}</label>
+                                    </React.Fragment>
 
-                              ques.suggested_answers.map(ans =>
-                                <div
-                                  css={fieldBox}
-                                  style={{ width: "47.8%", display: "inline-block" }}
-                                >
-                                  <React.Fragment>
+                                  </div>
+
+                                )}
+                              </React.Fragment>
+                              :
+                              ques.answer_type === "CHECKBOX" ?
+
+                                ques.suggested_answers.map((ans, i) =>
+                                  <div
+                                    css={fieldBox}
+                                    style={{ width: "47.8%", display: "inline-block" }}
+                                  >
+                                    <React.Fragment>
+                                      <input
+                                        type="checkbox"
+                                        name={ques.question.replace(/ /g, "_")}
+                                        value={ans.id}
+                                        //required={ques.required === "yes" ? true : false} 
+                                        data-type={ques.answer_type.toLowerCase()}
+                                        data-idx={index}
+                                        data-idy={ans.id}
+                                        data-idz={ques.id}
+                                        checked={this.state.client_form[ques.question.replace(/ /g, "_")] && this.state.client_form[ques.question.replace(/ /g, "_")].includes(ans.id.toString())
+                                          || this.state.client_form[ques.question.replace(/ /g, "_")] && this.state.client_form[ques.question.replace(/ /g, "_")].includes(ans.value)}
+                                      />{" "}
+
+                                      <label htmlFor={ans}>{ans.value}</label>
+                                    </React.Fragment>
+                                  </div>
+                                )
+                                :
+                                ques.answer_type === "NUMBER" ?
+                                  <Fragment>
                                     <input
-                                      type="checkbox"
-                                      name={ques.question.replace(/ /g, "_")}
-                                      value={this.state.client_form[ques.question]}
-                                      required={ques.required === "yes" ? true : false}
+                                      css={inputField}
+                                      data-val1={ques.validation1}
+                                      data-val2={ques.validation2}
                                       data-type={ques.answer_type.toLowerCase()}
+                                      data-msg={ques.error_msg}
                                       data-idx={index}
                                       data-idy={ind}
-                                      checked={this.state.client_form[ques.question.replace(/ /g, "_")] === ans.id.toString()}
-                                    />{" "}
-                                    <label htmlFor={ans}>{ans.value}</label>
-                                  </React.Fragment>
-                                </div>
-                              )
-                              :
-                              ques.answer_type === "NUMBER" ?
-                                <Fragment>
-                                  <input
-                                    css={inputField}
-                                    data-val1={ques.validation1}
-                                    data-val2={ques.validation2}
-                                    data-type={ques.answer_type.toLowerCase()}
-                                    data-msg={ques.error_msg}
-                                    data-idx={index}
-                                    data-idy={ind}
-                                    name={ques.question.replace(/ /g, "_")}
-                                    value={ques.question === "Age" ? (
-                                      this.state.client_form[ques.question.replace(/ /g, "_")] = this.getAge(this.state.client_form["Date_of_Birth"],this.state.client_form["Date_of_Referral"])
-                                    )
-                                     :this.state.client_form[ques.question.replace(/ /g, "_")]}
-                                    type={ques.answer_type.toLowerCase()}
-                                  //  min={ques.validation1}
-                                  //  max={ques.validation2}
-                                  //  required = {ques.required === "yes" ? true: false}
-                                  />
+                                      readOnly={ques.field_type === 0 || ques.question === "Client Code" && this.state.reReffer === "true"}
+                                      name={ques.question.replace(/ /g, "_")}
+                                      value={ques.question === "Age" ? (
+                                        this.state.client_form[ques.question.replace(/ /g, "_")] = this.getAge(this.state.client_form["Date_of_Birth"], this.state.client_form["Date_of_Referral"])
+                                      )
+                                        : this.state.client_form[ques.question.replace(/ /g, "_")]}
+                                      type={ques.answer_type.toLowerCase()}
+                                      onBlur={this.keyUp}
+                                    />
 
-                                </Fragment>
+                                  </Fragment>
 
-                                :
-                                <Fragment>
-                                  <input
-                                    css={inputField}
-                                    data-val1={ques.validation1}
-                                    data-val2={ques.validation2}
-                                    data-type={ques.answer_type.toLowerCase()}
-                                    data-msg={ques.error_msg}
-                                    data-idx={index}
-                                    data-idy={ind}
-                                    name={ques.question.replace(/ /g, "_")}
-                                    value={this.state.client_form[ques.question.replace(/ /g, "_")]}
-                                    type={ques.answer_type.toLowerCase()}
-                                  />
+                                  :
+                                  <Fragment>
+                                    <input
+                                      css={inputField}
+                                      data-val1={ques.validation1}
+                                      data-val2={ques.validation2}
+                                      data-type={ques.answer_type.toLowerCase()}
+                                      data-msg={ques.error_msg}
+                                      data-idx={index}
+                                      data-idy={ind}
+                                      name={ques.question.replace(/ /g, "_")}
+                                      value={this.state.client_form[ques.question.replace(/ /g, "_")]}
+                                      type={ques.answer_type.toLowerCase()}
 
-                                </Fragment>
-                        }
-                        {this.state.isSubmitted === true ? this.state.error[ques.question.replace(/ /g, "_")] ?
-                          <div style={{ color: "red" }}>{this.state.error[ques.question.replace(/ /g, "_")]}</div> : this.state.client_form[ques.question.replace(/ /g, "_")] ? "" :
-                            ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : "" : ""}
-                      </div>
-                      ))}</div>
+                                    />
 
-                  })
+                                  </Fragment>
+                          }
+
+                          {
+                            this.state.error[ques.question.replace(/ /g, "_")] &&
+                            <div style={{ color: "red" }}>{this.state.error[ques.question.replace(/ /g, "_")]}</div>
+                          }
+                          {
+                            this.state.isSubmitted ?
+                              this.state.client_form[ques.question.replace(/ /g, "_")] ? "" :
+                                ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : ""
+                              : ""
+                          }
+                        </div>
+                        ))}
+                        </TableRow>
+
+                   )})
                   }
+                  </Table>
                 </React.Fragment>
             )}
-            {/* <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  style={{ marginRight: 10 }}
-                >
-                  {values.Exclusionary_Criteria ? "Submit" : "Next"}
-                </Button>
-              </div> */}
             <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
               <Button
                 type="submit"
                 variant="contained"
                 size="large"
-                style={{ marginRight: 10 }}
+                style={{
+                  marginRight: 10,
+                  backgroundColor: header_color,
+                  color: "#fff"
+                }}
               >
                 Submit
-                </Button>
+              </Button>
             </div>
           </form>
 
@@ -598,11 +720,4 @@ export class PredictionFormStep extends React.Component<
   }
 };
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    dynamicclient: state.dynamicclient
-  };
-};
-export default connect( mapStateToProps,
-  null)( PredictionFormStep);
-
+export default PredictionFormStep;
