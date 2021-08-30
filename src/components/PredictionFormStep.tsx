@@ -7,9 +7,6 @@ import Button from "@material-ui/core/Button";
 import FormData from "form-data"
 import { searchDClient } from "../api/api";
 import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 // import {header_color} from "./configure" 
 import {
@@ -144,10 +141,12 @@ export class PredictionFormStep extends React.Component<
   formState = async () => {
     let client_form = [] as any;
     let Required_List = [] as any;
+    console.log(this.state.DynamicQuestions)
     this.state.DynamicQuestions.map
       (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
+        ques.related === "no" &&
         client_form.push({
-          [ques.question.replace(/ /g, "_")]:
+          [ques.question.replace(/ /g, "_")]:  
             Array.isArray(ques.answer) ? ques.suggested_answers.map((q, j) => ques.answer.includes(q.value) &&
               q.id.toString()).find(item => item !== false) :
               ques.answer === 0 ? ques.answer.toString() :
@@ -155,11 +154,13 @@ export class PredictionFormStep extends React.Component<
                   ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id.toString()
                   : ques.answer ? ques.answer.toString() : ""
         });
+        ques.related === "no" &&
         Required_List.push({
           [ques.question.replace(/ /g, "_")]: ques.required
         });
       }))
     let form_data = Object.assign({}, ...client_form)
+    console.log(form_data)
     await this.setState({
       // DynamicQuestions: this.props.DynamicQuestions,
       client_form: form_data,
@@ -313,6 +314,7 @@ export class PredictionFormStep extends React.Component<
         let Required_List1 = [] as any;
         DynamicQuestions.map
           (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
+            ques.related === "no" &&
             client_form1.push({
               [ques.question.replace(/ /g, "_")]:
                 Array.isArray(ques.answer) ? ques.answer :
@@ -321,6 +323,7 @@ export class PredictionFormStep extends React.Component<
                       ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id :
                       ques.answer ? ques.answer : "" : ""
             });
+            ques.related === "no" &&
             Required_List1.push({
               [ques.question.replace(/ /g, "_")]: ques.required
             });
@@ -394,6 +397,8 @@ export class PredictionFormStep extends React.Component<
     e.preventDefault();
     const client_form = this.state.client_form;
     let Required_List = this.state.Required_List;
+    console.log(client_form)
+    console.log(Required_List)
     this.setState({
       isSubmitted: true,
       err_msg: [],
@@ -411,7 +416,11 @@ export class PredictionFormStep extends React.Component<
       formData["Client Code"] = formData["Client Code1"];
       delete formData["Client Code1"];
     }
-    if (isValid_Data) {
+    console.log(isValid_Data)
+    console.log(this.state.hasError)
+   
+    if (isValid_Data === true) {
+      console.log(this.state.isEdit)
       if (this.state.isEdit === "true" || !this.state.hasError) {
         await this.props.onFormSubmit(formData);
         this.setState({
