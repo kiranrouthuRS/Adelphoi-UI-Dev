@@ -7,7 +7,7 @@ export const Persues_House_Score =
 [
   {
  Question: "Number of Prior Treatment Placements",
- values : [0,1,1,4]
+ values : [0,1,1,1]
   },
    {
     Question: "Number of Prior RTF Placements",
