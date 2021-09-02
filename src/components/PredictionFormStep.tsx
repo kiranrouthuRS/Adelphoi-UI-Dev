@@ -8,6 +8,7 @@ import FormData from "form-data"
 import { searchDClient } from "../api/api";
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
+import {Persues_House_Score} from "./TramaQuestion"
 // import {header_color} from "./configure" 
 import {
   wrap,
@@ -66,6 +67,7 @@ export interface PredictionFormStepState {
   isEdit: string;
   reReffer: string;
   header_color: string;
+  trauma_score: number; 
 
 }
 const logout = css`
@@ -125,7 +127,8 @@ export class PredictionFormStep extends React.Component<
       isOpen: false,
       isEdit: this.props.isEdit,
       reReffer: this.props.reReffer,
-      header_color: ""
+      header_color: "",
+      trauma_score: 0
     };
   }
   async componentDidMount() {
@@ -137,6 +140,7 @@ export class PredictionFormStep extends React.Component<
       header_color: this.props.user && this.props.user.user.header_color
     })
     this.formState();
+    console.log(Persues_House_Score )
   }
   formState = async () => {
     let client_form = [] as any;
@@ -203,22 +207,44 @@ export class PredictionFormStep extends React.Component<
         (alert("Client Code already exists. Do you want to continue?"))
     }
   }
+
+   AddTraumaScore = async(question,id,type) => {
+     console.log(question.replace(/_/g, ' '),id)
+   let TScore = Persues_House_Score.find(score =>  score.Question === question.replace(/_/g, ' ')) 
+   let score = TScore ? TScore.values[id]  : 0 
+   console.log(score)    
+   await this.setState(prevstate => ({ trauma_score: type === "checkbox" ? Number(score) : prevstate.trauma_score + Number(score)}));  
+  console.log(this.state.client_form)
+  this.setState({
+    client_form: {
+      ...this.state.client_form,
+      ["Trauma_Score"]: this.state.trauma_score,
+    }
+  })
+   return this.state.trauma_score
+   } 
+
   handleChange = async (e) => {
     const { name, value } = e.target;
     let DynamicQuestions = this.state.DynamicQuestions;
+    console.log(e.target.dataset)
     let val1: any = e.target.dataset.val1 ? e.target.dataset.val1 : "";
     const val2: any = e.target.dataset.val2 ? e.target.dataset.val2 : "";
     const type = e.target.dataset.type;
     const error_msg = e.target.dataset.msg;
+    
     let jump = "";
     let ques_jump = "";
     if (type === "select") {
       let optionElement = e.target.childNodes[e.target.selectedIndex]
       let idx = optionElement.getAttribute('data-idx');
+      let id = optionElement.getAttribute('data-id');
       jump = optionElement.getAttribute('data-jump');
       ques_jump = optionElement.getAttribute('data-quesjump');
       let jumpto = jump.split(',').filter(j => j)
       let ques_jumpto = ques_jump.split(',').filter(j => j)
+    let  trauma_final_score = Persues_House_Score.length > 0 && this.AddTraumaScore(name,id,"select")
+    console.log(trauma_final_score)
       this.setState({
         prevJump: {
           ...this.state.prevJump,
@@ -255,6 +281,9 @@ export class PredictionFormStep extends React.Component<
         jump = e.target.dataset.jump.split(',').filter(j => j);
         ques_jump = e.target.dataset.quesjump.split(',').filter(j => j);
         const idx = e.target.dataset.idx;
+        const id = e.target.dataset.id;
+        let  trauma_final_score = Persues_House_Score.length > 0 && this.AddTraumaScore(name,id,"radio")
+        console.log("Radio")
         this.setState({
           prevJump: {
             ...this.state.prevJump,
@@ -289,13 +318,17 @@ export class PredictionFormStep extends React.Component<
 
     if (val1 === "") {
       if (type === "checkbox") {
+        const id = e.target.dataset.id;
+        let  trauma_final_score = Persues_House_Score.length > 0 && this.AddTraumaScore(name,id,"checkbox")
         const checked = e.target.checked;
+        let checkedvalue = this.state.client_form[name] ?
+        checked ? this.state.client_form[name].concat([value]) :
+          this.state.client_form[name].filter(idy => idy !== value) : [value]
+         
         this.setState({
           client_form: {
             ...this.state.client_form,
-            [name]: this.state.client_form[name] ?
-              checked ? this.state.client_form[name].concat([value]) :
-                this.state.client_form[name].filter(idy => idy !== value) : [value]
+            [name]: checkedvalue
           },
           hasError: false,
         })
@@ -418,21 +451,19 @@ export class PredictionFormStep extends React.Component<
     }
     console.log(isValid_Data)
     console.log(this.state.hasError)
-   
-    if (isValid_Data === true) {
-      console.log(this.state.isEdit)
-      if (this.state.isEdit === "true" || !this.state.hasError) {
-        await this.props.onFormSubmit(formData);
-        this.setState({
-          isSubmitted: false,
-          err_msg: this.props.errors,
-          isOpen: this.props.errors ? true : false
-          // isSuccess: true
-        })
-      } else {
-
-      }
-    }
+    if (this.state.isEdit === "true" || !this.state.hasError) {
+      await this.props.onFormSubmit(formData);
+      this.setState({
+        isSubmitted: false,
+        err_msg: this.props.errors,
+        isOpen: this.props.errors ? true : false
+        // isSuccess: true
+      })
+    } 
+    // if (isValid_Data === true) {
+    //   console.log(this.state.isEdit)
+     
+    // }
   }
 
   uploadCSV = async (e) => {
@@ -490,6 +521,7 @@ export class PredictionFormStep extends React.Component<
   render() {
 
     const { DynamicQuestions, header_color } = this.state;
+    console.log(this.state.client_form) 
     return (
       <div css={wrap}>
 
@@ -572,11 +604,11 @@ export class PredictionFormStep extends React.Component<
                             >
                               <option value="">Select</option>
                               {ques.suggested_answers.map((ans, i) =>
-
-                                <option key={i}
+                                  <option key={i}
                                   value={ans.id}
                                   data-idx={index}
                                   data-idy={ind}
+                                  data-id = {i}
                                   data-jump={ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
                                   data-quesjump={ques.suggested_jump.length > 0 ? ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.question_jumpto ? sj.question_jumpto : "" : "") : ""}
                                   selected={this.state.client_form[ques.question.replace(/ /g, "_")] && this.state.client_form[ques.question.replace(/ /g, "_")]?.toString() === ans.id?.toString()}>{ans.value}</option>
@@ -596,6 +628,7 @@ export class PredictionFormStep extends React.Component<
                                         data-jump={ques.suggested_jump.length > 0 ? ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "") : ""}
                                         data-quesjump={ques.suggested_jump.length > 0 ? ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.question_jumpto ? sj.question_jumpto : "" : "") : ""}
                                         //data-jump = {ques.suggested_jump.length > 0 ?ques.suggested_jump.jumpto:""} 
+                                        data-id={i}
                                         data-idx={index}
                                         data-idy={ind}
                                         name={ques.question.replace(/ /g, "_")} value={ans.id}
@@ -624,6 +657,7 @@ export class PredictionFormStep extends React.Component<
                                         name={ques.question.replace(/ /g, "_")}
                                         value={ans.id}
                                         //required={ques.required === "yes" ? true : false} 
+                                        data-id={i}
                                         data-type={ques.answer_type.toLowerCase()}
                                         data-idx={index}
                                         data-idy={ans.id}
@@ -647,7 +681,7 @@ export class PredictionFormStep extends React.Component<
                                       data-msg={ques.error_msg}
                                       data-idx={index}
                                       data-idy={ind}
-                                      readOnly={ques.field_type === 0 || ques.question === "Client Code" && this.state.reReffer === "true"}
+                                      readOnly={ques.field_type === 0 || ques.question === "Trauma Score" || ques.question === "Client Code" && this.state.reReffer === "true"}
                                       name={ques.question.replace(/ /g, "_")}
                                       value={ques.question === "Age" ? (
                                         this.state.client_form[ques.question.replace(/ /g, "_")] = this.getAge(this.state.client_form["Date_of_Birth"], this.state.client_form["Date_of_Referral"])
@@ -689,15 +723,21 @@ export class PredictionFormStep extends React.Component<
                               : ""
                           }
                         </div>
+                        
                         ))}
+                        
                         </TableRow>
-
+                        
                    )})
                   }
+                  
+                         
+                           
+                          
                   </Table>
                 </React.Fragment>
             )}
-            <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
+                <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
               <Button
                 type="submit"
                 variant="contained"
