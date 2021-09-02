@@ -579,7 +579,7 @@ export class PredictionFormStep extends React.Component<
                                   data-idy={ind}
                                   data-jump={ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
                                   data-quesjump={ques.suggested_jump.length > 0 ? ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.question_jumpto ? sj.question_jumpto : "" : "") : ""}
-                                  selected={this.state.client_form[ques.question.replace(/ /g, "_")] && this.state.client_form[ques.question.replace(/ /g, "_")].toString() === ans.id.toString()}>{ans.value}</option>
+                                  selected={this.state.client_form[ques.question.replace(/ /g, "_")] && this.state.client_form[ques.question.replace(/ /g, "_")]?.toString() === ans.id?.toString()}>{ans.value}</option>
                               )}
                             </select>
                             :
