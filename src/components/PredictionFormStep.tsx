@@ -68,6 +68,7 @@ export interface PredictionFormStepState {
   reReffer: string;
   header_color: string;
   trauma_score: number; 
+  visitedQuestion: any;
 
 }
 const logout = css`
@@ -128,7 +129,8 @@ export class PredictionFormStep extends React.Component<
       isEdit: this.props.isEdit,
       reReffer: this.props.reReffer,
       header_color: "",
-      trauma_score: 0
+      trauma_score: 0,
+      visitedQuestion: []
     };
   }
   async componentDidMount() {
@@ -140,12 +142,11 @@ export class PredictionFormStep extends React.Component<
       header_color: this.props.user && this.props.user.user.header_color
     })
     this.formState();
-    console.log(Persues_House_Score )
+   
   }
   formState = async () => {
     let client_form = [] as any;
     let Required_List = [] as any;
-    console.log(this.state.DynamicQuestions)
     this.state.DynamicQuestions.map
       (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
         ques.related === "no" &&
@@ -164,7 +165,6 @@ export class PredictionFormStep extends React.Component<
         });
       }))
     let form_data = Object.assign({}, ...client_form)
-    console.log(form_data)
     await this.setState({
       // DynamicQuestions: this.props.DynamicQuestions,
       client_form: form_data,
@@ -208,26 +208,28 @@ export class PredictionFormStep extends React.Component<
     }
   }
 
-   AddTraumaScore = async(question,id,type) => {
-     console.log(question.replace(/_/g, ' '),id)
+   AddTraumaScore = async(question,id) => {
    let TScore = Persues_House_Score.find(score =>  score.Question === question.replace(/_/g, ' ')) 
    let score = TScore ? TScore.values[id]  : 0 
-   console.log(score)    
-   await this.setState(prevstate => ({ trauma_score: type === "checkbox" ? Number(score) : prevstate.trauma_score + Number(score)}));  
-  console.log(this.state.client_form)
+   await this.setState(prevstate => ({ trauma_score: TScore?.addValues ? prevstate.trauma_score + Number(score) : 
+                                                    this.state.visitedQuestion[question]?prevstate.trauma_score: prevstate.trauma_score + Number(score)
+                                       }));  
   this.setState({
     client_form: {
       ...this.state.client_form,
       ["Trauma_Score"]: this.state.trauma_score,
-    }
+    },
+    visitedQuestion : {
+            ...this.state.visitedQuestion,
+            [question]: true
+    } 
   })
-   return this.state.trauma_score
+   return this.state.trauma_score  
    } 
 
   handleChange = async (e) => {
     const { name, value } = e.target;
     let DynamicQuestions = this.state.DynamicQuestions;
-    console.log(e.target.dataset)
     let val1: any = e.target.dataset.val1 ? e.target.dataset.val1 : "";
     const val2: any = e.target.dataset.val2 ? e.target.dataset.val2 : "";
     const type = e.target.dataset.type;
@@ -243,9 +245,8 @@ export class PredictionFormStep extends React.Component<
       ques_jump = optionElement.getAttribute('data-quesjump');
       let jumpto = jump.split(',').filter(j => j)
       let ques_jumpto = ques_jump.split(',').filter(j => j)
-    let  trauma_final_score = Persues_House_Score.length > 0 && this.AddTraumaScore(name,id,"select")
-    console.log(trauma_final_score)
-      this.setState({
+    let  trauma_final_score = Persues_House_Score.length > 0 && this.AddTraumaScore(name,id)
+     this.setState({
         prevJump: {
           ...this.state.prevJump,
           [name.replace(/ /g, "_")]: jumpto,
@@ -282,8 +283,7 @@ export class PredictionFormStep extends React.Component<
         ques_jump = e.target.dataset.quesjump.split(',').filter(j => j);
         const idx = e.target.dataset.idx;
         const id = e.target.dataset.id;
-        let  trauma_final_score = Persues_House_Score.length > 0 && this.AddTraumaScore(name,id,"radio")
-        console.log("Radio")
+        let  trauma_final_score = Persues_House_Score.length > 0 && this.AddTraumaScore(name,id)
         this.setState({
           prevJump: {
             ...this.state.prevJump,
@@ -319,7 +319,7 @@ export class PredictionFormStep extends React.Component<
     if (val1 === "") {
       if (type === "checkbox") {
         const id = e.target.dataset.id;
-        let  trauma_final_score = Persues_House_Score.length > 0 && this.AddTraumaScore(name,id,"checkbox")
+        let  trauma_final_score = Persues_House_Score.length > 0 && this.AddTraumaScore(name,id)
         const checked = e.target.checked;
         let checkedvalue = this.state.client_form[name] ?
         checked ? this.state.client_form[name].concat([value]) :
@@ -430,8 +430,6 @@ export class PredictionFormStep extends React.Component<
     e.preventDefault();
     const client_form = this.state.client_form;
     let Required_List = this.state.Required_List;
-    console.log(client_form)
-    console.log(Required_List)
     this.setState({
       isSubmitted: true,
       err_msg: [],
@@ -449,8 +447,6 @@ export class PredictionFormStep extends React.Component<
       formData["Client Code"] = formData["Client Code1"];
       delete formData["Client Code1"];
     }
-    console.log(isValid_Data)
-    console.log(this.state.hasError)
     if (this.state.isEdit === "true" || !this.state.hasError) {
       await this.props.onFormSubmit(formData);
       this.setState({
@@ -521,8 +517,7 @@ export class PredictionFormStep extends React.Component<
   render() {
 
     const { DynamicQuestions, header_color } = this.state;
-    console.log(this.state.client_form) 
-    return (
+     return (
       <div css={wrap}>
 
         <div css={mainContent}>
