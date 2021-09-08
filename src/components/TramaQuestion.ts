@@ -5,75 +5,89 @@ const url = typeof window !== 'undefined' ? window.location.pathname : '';
 export const Persues_House_Score = 
    domainPath === "persues-house" ?
 [
-  {
- Question: "Number of Prior Treatment Placements",
- values : [0,1,1,1],
- addValues: true
-  },
+    {
+    Question: "Number of Prior Treatment Placements",
+    values : [0,1,1,1],
+    addValues: true,
+    multiselect: false
+    },
    {
     Question: "Number of Prior RTF Placements",
     values : [0,1,1,1],
-    addValues: true
+    addValues: true,
+    multiselect: false
    },
    {
     Question: "Number of Prior Foster Homes",
     values : [0,1,1,1],
-    addValues: true
+    addValues: true,
+    multiselect: false
    },
    {
     Question: "Total Prior Unsuccessful Treatment Placements",
     values : [0,1,1,1],
-    addValues: true
+    addValues: true,
+    multiselect: false
    },
    {
     Question: "Suicidality",
     values : [0,1,1,1,1],
-    addValues: false
+    addValues: false,
+    multiselect: true
    },
    {
     Question: "Number of Previous Inpatient Hospitalizations",
     values : [0,1,1,1],
-    addValues: true
+    addValues: true,
+    multiselect: false
    },
    {
     Question: "History of Abuse",
     values : [1,0],
-    addValues: true
+    addValues: true,
+    multiselect: false
    },
    {
     Question: "History of Neglect",
     values : [1,0,0],
-    addValues: true
+    addValues: true,
+    multiselect: false
    },
    {
     Question: "Family Involvement",
     values : [0,1,1,1],
-    addValues: true
+    addValues: true,
+    multiselect: false
    },
    {
     Question: "Adopted",
     values : [1,0],
-    addValues: true
+    addValues: true,
+    multiselect: false
    },
    {
     Question: "Deceased Cargegiver",
     values : [1,0],
-    addValues: true
+    addValues: true,
+    multiselect: false
    },
    {
     Question: "Family Suicide History",
-    values : [0,1,1,1,1],
-    addValues: false
+    values : [0,0,1,1,1], 
+    addValues: false,
+    multiselect: true
    },
    {
     Question: "Incarcerated Caregiver",
     values : [1,0,0],
-    addValues: true
+    addValues: true,
+    multiselect: false
    },
    {
     Question: "Additional Traumatic Experiences",
-    values : [0,0,0,1],
-    addValues: true
+    values : [1,1,1,0], 
+    addValues: true,
+    multiselect: true
    }
    ]
    : []
