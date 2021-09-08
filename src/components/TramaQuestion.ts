@@ -57,7 +57,7 @@ export const Persues_House_Score =
     Question: "Family Involvement",
     values : [0,1,1,1],
     addValues: true,
-    multiselect: true
+    multiselect: false
    },
    {
     Question: "Adopted",
