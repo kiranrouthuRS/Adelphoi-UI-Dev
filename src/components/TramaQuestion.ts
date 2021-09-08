@@ -49,7 +49,7 @@ export const Persues_House_Score =
    },
    {
     Question: "History of Neglect",
-    values : [1,0,0],
+    values : [0,1,0],
     addValues: true,
     multiselect: false
    },
@@ -57,7 +57,7 @@ export const Persues_House_Score =
     Question: "Family Involvement",
     values : [0,1,1,1],
     addValues: true,
-    multiselect: false
+    multiselect: true
    },
    {
     Question: "Adopted",
