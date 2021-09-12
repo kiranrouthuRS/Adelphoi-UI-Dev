@@ -11,6 +11,7 @@ import * as client from "../redux-modules/client";
 import * as dynamicclient from "../redux-modules/dynamicclient";
 import * as Types from "../api/definitions";
 import DynamicClientDetails from "../components/DynamicClientDetails";
+import DynamicClientDetails_Persues from "../components/DynamicClientDetails_Persues";
 import { domainPath } from "../App"
 interface MatchParams {
   index: string;
@@ -26,7 +27,7 @@ export interface DynamicClientDetailsContainerState {
 export interface DynamicClientDetailsContainerProps
   extends ContainerProps<MatchParams>,
   WithSnackbarProps {
-  searchClient: (client_code: string, client_name: string) => Promise<void>;
+  searchDClient: (client_code: string, client_name: string, is_accessToken: any) => Promise<void>; 
   updateProgramCompletion: (
     client_code: string,
     program_completion: number | null,
@@ -40,6 +41,21 @@ export interface DynamicClientDetailsContainerProps
     referral_status: string | null,
     confidence: number, 
     roc_confidence: number
+  ) => Promise<string>;
+  updateProgramCompletion1: (
+    client_code: string,
+    program_completion: number | null,
+    Remained_Out_of_Care: number | null,
+    program_significantly_modified: number,
+    program: string | null,
+    discharge_location: string | null,
+    start_date: string | null,
+    end_date: string | null,
+    referral_status: string | null,
+    length_of_stay: number ,
+    Reason_not_accepted: string | null,
+    Reason_for_rejected: string | null,
+    client_recidivate: string | null,
   ) => Promise<string>;
   // getAvailablePrograms: () => Promise<void>;
   submitPrediction: (client: Types.Client) => Promise<void>;
@@ -93,7 +109,9 @@ export class DynamicClientDetailsContainer extends React.Component<
       await this.searchClient(index, "");
     }
     // fetch program for this client
-    await this.props.getProgramsForClient(index, version);
+    if(domainPath !== "persues-house"){
+      await this.props.getProgramsForClient(index, version);
+    }
     this.setState({ isLoading: false });
     this.props.closeSnackbar();
     // this.props.getAvailablePrograms();
@@ -101,7 +119,8 @@ export class DynamicClientDetailsContainer extends React.Component<
   }
 
   searchClient = async (client_code: string, client_name: string) => {
-    await this.props.searchClient(client_code, client_name);
+    const is_accessToken: any = this.props.user && this.props.user.user.accessToken
+    await this.props.searchDClient(client_code, client_name, is_accessToken);
   };
 
   updateProgramCompletion = async (
@@ -133,6 +152,55 @@ export class DynamicClientDetailsContainer extends React.Component<
         referral_status,
         confidence,
         roc_confidence
+      );
+      this.setState({
+        isLoading: false
+        // program_completion_response: response
+      });
+      this.props.enqueueSnackbar("Data saved successfully.");
+      
+    } catch (error) {
+      console.log(error)
+      this.setState({
+        isLoading: false
+        // program_completion_response: "An error occured. Please try again."
+      });
+      this.props.enqueueSnackbar("An error occured. Please try again.");
+    }
+  };
+
+  updateProgramCompletion1 = async (
+    client_code: string,
+    program_completion: number | null,
+    Remained_Out_of_Care: number | null,
+    program_significantly_modified: number,
+    program: string | null,
+    discharge_location: string | null,
+    start_date: string | null,
+    end_date: string | null,
+    referral_status: string | null,
+    length_of_stay: number ,
+    Reason_not_accepted: string | null,
+    Reason_for_rejected: string | null,
+    client_recidivate: string | null,
+
+  ) => {
+    try {
+      this.setState({ isLoading: true });
+      const response = await this.props.updateProgramCompletion1(
+        client_code,
+        program_completion,
+        Remained_Out_of_Care,
+        program_significantly_modified,
+        program,
+        discharge_location,
+        start_date,
+        end_date,
+        referral_status,
+        length_of_stay,
+        Reason_not_accepted,
+        Reason_for_rejected,
+        client_recidivate
       );
       this.setState({
         isLoading: false
@@ -203,30 +271,58 @@ export class DynamicClientDetailsContainer extends React.Component<
     const { is_prediction_available }: any = this.props.user && this.props.user.user;
     const is_role_type: any = this.props.user && this.props.user.user.role_type
      const searchData: any = this.props && this.props.client && this.props.client.searchData && this.props.client.searchData
-    return (
-      <div css={wrap}>
-        <div css={mainContent}>
-          {!clientList[index] ? null : (
-            <DynamicClientDetails
-              is_role_type={is_role_type}
-              is_prediction_available={is_prediction_available}
-              client={clientList[index]}
-              index={index}
-              searchData={searchData.filter(s => s.client_code == index)}
-              onProgramSelect={this.getLocationsAndPcr}
-              onVersionSelect={this.getVersionDetails}
-              // onLocationSelect={this.saveProgramAndLocation}
-              {...this.state}
-              Referral={referralList}
-              onFormSubmit={this.updateProgramCompletion}
-              program_completion_response={
-                this.state.program_completion_response
-              }
-            />
-          )}
+    if(domainPath === "persues-house"){
+      return (
+        <div css={wrap}>
+          <div css={mainContent}>
+            {!clientList[index] ? null : (
+              <DynamicClientDetails_Persues
+                is_role_type={is_role_type}
+                is_prediction_available={is_prediction_available}
+                client={clientList[index]}
+                index={index}
+                searchData={searchData.filter(s => s.client_code == index)}
+                onProgramSelect={this.getLocationsAndPcr}
+                onVersionSelect={this.getVersionDetails}
+                // onLocationSelect={this.saveProgramAndLocation}
+                {...this.state}
+                Referral={referralList}
+                onFormSubmit={this.updateProgramCompletion1}
+                program_completion_response={
+                  this.state.program_completion_response
+                }
+              />
+            )}
+          </div>
         </div>
-      </div>
-    );
+      );
+    }else{
+      return (
+        <div css={wrap}>
+          <div css={mainContent}>
+            {!clientList[index] ? null : (
+              <DynamicClientDetails
+                is_role_type={is_role_type}
+                is_prediction_available={is_prediction_available}
+                client={clientList[index]}
+                index={index}
+                searchData={searchData.filter(s => s.client_code == index)}
+                onProgramSelect={this.getLocationsAndPcr}
+                onVersionSelect={this.getVersionDetails}
+                // onLocationSelect={this.saveProgramAndLocation}
+                {...this.state}
+                Referral={referralList}
+                onFormSubmit={this.updateProgramCompletion}
+                program_completion_response={
+                  this.state.program_completion_response
+                }
+              />
+            )}
+          </div>
+        </div>
+      );
+    }
+     
   }
 }
 
@@ -241,8 +337,9 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
   // getReferral: referral.actions.getReferral,
-  searchClient: client.actions.searchClient,
+  searchDClient: dynamicclient.actions.searchDClient,
   updateProgramCompletion: dynamicclient.actions.updateProgramCompletion,
+  updateProgramCompletion1: dynamicclient.actions.updateProgramCompletion1, 
   // getAvailablePrograms: program.actions.getAvailablePrograms,
   submitPrediction: client.actions.submitPrediction,
   getLocations: dynamicclient.actions.getLocations,

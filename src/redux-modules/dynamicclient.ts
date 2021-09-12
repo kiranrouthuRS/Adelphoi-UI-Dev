@@ -14,6 +14,7 @@ import {
   saveLocationAndProgram,
   searchDClient,
   updateProgramCompletion,
+  updateProgramCompletion1,
   fetchPcr,
   fetchProgramsForClient,
   fetchConfiguredQuestions
@@ -123,6 +124,88 @@ export const actions = {
           program_significantly_modified,
           // selected_location: location
                 };
+        if (!updatedCl["Client Code"]) {
+          return (response as unknown) as string;
+        }
+        const updatedClList = {
+          ...clientList,
+          [updatedCl["Client Code"]]: updatedCl
+        };
+        dispatch(update({ clientList: updatedClList }));
+      }
+      // dispatch(update({ client: clresult }));
+      return (response as unknown) as string;
+    };
+  },
+
+  updateProgramCompletion1(
+    client_code: string,
+    Program_Completion: number | null,
+    Remained_Out_of_Care: number | null,
+    program_significantly_modified: number,
+    program: string | null,
+    discharge_location: string | null,
+    start_date: string | null,
+    end_date: string | null,
+    referral_status: string | null,
+    length_of_stay: number ,
+    Reason_not_accepted: string | null,
+    Reason_for_rejected: string | null,
+    client_recidivate: string | null, 
+      ): ThunkAction<Promise<string>, AppState, null, AnyAction> {
+    return async (dispatch, getState) => {
+      const currentUser = getState().user?.user.accessToken;
+      // if (program && location) {
+      //   await saveLocationAndProgram(client_code, program, location, currentUser);
+      // }
+      const response = await updateProgramCompletion1(
+        client_code,
+        Program_Completion,
+        Remained_Out_of_Care,
+        program_significantly_modified,
+        program,
+        discharge_location,
+        start_date,
+        end_date,
+        referral_status,
+        length_of_stay, 
+        Reason_not_accepted,
+        Reason_for_rejected,
+        client_recidivate,
+        currentUser
+      );
+      if (!response) {
+        throw Error("something went wrong while submitting");
+      }
+      // return (response as unknown) as string;
+      const clientState = getState().client;
+      const clientList = clientState ? clientState.clientList : {};
+      if (Object.keys(clientList).length > 0) {
+        let cl:any = clientList[client_code];
+        if (!cl) {
+          return (response as unknown) as string;
+        }
+        cl.referral_status = referral_status ? referral_status : null;
+         cl.start_date = start_date ? start_date : null;
+         cl.end_date = end_date ? end_date : null;
+         cl.Program = program ? program : null;
+         cl.discharge_location = discharge_location ? discharge_location : null;
+         cl.length_of_stay = length_of_stay ? length_of_stay : null;
+         cl.Reason_for_rejected = Reason_for_rejected ? Reason_for_rejected : null;
+         cl.Reason_not_accepted = Reason_not_accepted ? Reason_not_accepted : null;
+         cl.client_recidivate = client_recidivate ? client_recidivate : null;
+         cl.Program_Completion = Program_Completion ? Program_Completion : Program_Completion === 0 ? 0 : null;
+         cl.Remained_Out_of_Care = Remained_Out_of_Care ? Remained_Out_of_Care : Remained_Out_of_Care === 0 ? 0 :null;
+         cl.program_significantly_modified = program_significantly_modified ? program_significantly_modified : null; 
+         cl.selected_location = discharge_location ? discharge_location : null
+         const updatedCl = {
+          ...cl,
+          Program_Completion,
+          Remained_Out_of_Care, 
+          program_significantly_modified,
+          // selected_location: location
+                };
+                
         if (!updatedCl["Client Code"]) {
           return (response as unknown) as string;
         }
@@ -257,17 +340,10 @@ export const actions = {
           Returned_to_Care: sData[latestVersion].Returned_to_Care,
           Remained_Out_of_Care: sData[latestVersion]["Remained Out of Care"],
           ageAtEpisodeStart: sData[latestVersion].ageAtEpisodeStart,
-          // client_selected_facility: sData[0].client_selected_facility,
-          // client_selected_level: sData[0].client_selected_level,
           client_selected_locations: sData[latestVersion].client_selected_locations,
           client_selected_program: sData[latestVersion].client_selected_program,
-          // condition_program: sData[0].condition_program,
-          confidence: sData[latestVersion].confidence,
-          // facility_type: sData[0].facility_type,
-          // level_of_care: sData[0].level_of_care,
-          // model_pred: sData[0].model_pred,
+           confidence: sData[latestVersion].confidence,
           model_program: sData[latestVersion].model_program,
-          // program: sData[0].program,
           program_significantly_modified: sData[latestVersion].program_significantly_modified,
           referred_program: sData[latestVersion].referred_program,
           roc_confidence: sData[latestVersion].roc_confidence
@@ -356,6 +432,31 @@ export const actions = {
       });
       dispatch(update({ clientList, searchData: response.response }));
       let locations = arr ? arr[0]["Suggested Locations"]? arr[0]["Suggested Locations"] :[] : [];
+      let model_program = arr ? arr[0].model_program? arr[0].model_program :[] : [];
+      if(model_program.length === 0){
+        let program = ["Andromeda House RTF","Andromeda House ITU",
+                       "Brighter Horizons","Girls Enhanced RTF",
+                       "Boys Enhanced RTF","Perseus House",
+                       "7th Street"];
+          const cl: Types.Client = {
+          ...getState().client!.client,
+          SuggestedPrograms: program,
+         
+        };
+        dispatch(update({ client: cl }));
+        const clientList = getState().client?.clientList;
+        if (clientList && clientList[Number(client_code)]) {
+          const client = clientList[client_code];
+          const cl: Types.Client = {
+            ...client,
+            SuggestedPrograms: program,
+            
+          };
+         clientList[client_code] = cl;
+          dispatch(update({ clientList}));
+        }
+      }
+
       if (locations.length > 0) {
         const cl: Types.Client = {
           ...getState().client!.client,

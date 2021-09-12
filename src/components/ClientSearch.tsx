@@ -49,8 +49,12 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
   let { clientList } = props;
   clientList = clientList.map(sec=>sec.sections)
   const client = domainPath === "adelphoiDDD" ? [] : clientList.map(q => q[0].questions)
-  
-  
+  const getlabel = () => {
+    let label = domainPath === "persues-house" ? "Client Code / SSN Number" : "Client Code";
+    return label;
+   }
+  const ClientLableName = getlabel()
+ 
   return (
     <div css={wrap}>
       <div css={mainContent}>
@@ -78,7 +82,7 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
                     type="text"
                     name="client_code"
                     css={inputField}
-                    placeholder="Client Code"
+                    placeholder={ClientLableName}
                     value={values.client_code || ""}
                     onChange={handleChange}
                   />

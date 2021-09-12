@@ -59,8 +59,9 @@ export class LoginContainer extends React.Component<
       const pwd_updated = this.props.user && this.props.user.user && this.props.user.user.is_pwd_updated;
       const is_configured:any = this.props.user && this.props.user.user && this.props.user.user.is_fully_configured;
       const is_accessToken: any = this.props.user && this.props.user.user.accessToken
-      if(res.status === "success"){
-        await this.props.getConfiguredQuestions(is_accessToken);
+      try{
+        
+        await this.props.getConfiguredQuestions(is_accessToken) 
         if(pwd_updated){
           history.push(is_configured !== true ? (`/${domainPath}/welcomepage`) :
           (`/${domainPath}/existing-client`));;
@@ -68,14 +69,17 @@ export class LoginContainer extends React.Component<
         }else{
           history.push(`/${domainPath}/changepassword`);
         } 
-      }else{
-        this.setState({
-          error: res.data.message,
-          hasLoginError: true,
-          isLoading: false
-        });
+      } catch (e) {
+        console.log(e,"error");
+      const error = e.data.message ? e.data.message: "Invalid Credentials"; 
+      this.setState({
+        error,
+        hasLoginError: true,
+        isLoading: false
+      });
+      return;
       }
-      
+     
      
     } catch (e) {
       console.log(e,"error");

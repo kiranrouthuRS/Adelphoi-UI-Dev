@@ -44,7 +44,7 @@ export const actions = {
       let user: Types.User;
       return await login(email, password, domain)
         .then(response => {
-          if (response.status === "success") {
+          if (response&&response.status === "success") {
             const { token, role_type,
               user_id, is_pwd_updated,
               logo_path, is_fully_configured,header_color,

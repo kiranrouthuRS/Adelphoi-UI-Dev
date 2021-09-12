@@ -63,11 +63,11 @@ export const login = async (email: string, password: string, domain: string) => 
       username: email,
       password: password
     });
-    console.log(response)
     localStorage.setItem("refreshToken", response.data.response.token);
     localStorage.setItem("user_role", response.data.response.role_type)
     return response.data;
   } catch (error) {
+    console.log(error)
     console.error("api function login error");
     throwError(error);
   }
@@ -1426,6 +1426,52 @@ export const updateProgramCompletion = async (
   }
 };
 
+export const updateProgramCompletion1 = async (
+  client_code: string,
+  Program_Completion: number | null,
+  Remained_Out_of_Care: number | null,
+  program_significantly_modified: number,
+  program: any,
+  discharge_location: any,
+  start_date: any,
+  end_date: any,
+  referral_status: any,
+  length_of_stay: any,
+  Reason_not_accepted: string | null,
+  Reason_for_rejected: string | null,
+  client_recidivate: string | null, 
+  currentUser: any
+) => {
+  try {
+    const data = {
+      Program_Completion : Program_Completion,
+      Remained_Out_of_Care : Remained_Out_of_Care,
+      program_significantly_modified : program_significantly_modified,
+      Program: program,
+      discharge_location: discharge_location,
+      start_date : start_date,
+      end_date : end_date,
+      referral_status : referral_status,
+      length_of_stay: length_of_stay,
+      Reason_not_accepted: Reason_not_accepted,
+      Reason_for_rejected: Reason_for_rejected,
+      client_recidivate: client_recidivate
+    }
+    const response = await axios.put(
+      `${baseApiUrl}/${domainPath}/program_complete/${client_code}/`,
+      data, {
+      headers: {
+        'Authorization': `Bearer ${currentUser}`
+      }
+    }
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("api function updateProgramCompletion error");
+    throwError(error);
+  }
+};
+
 export const searchClient = async (
   client_code: string,
   client_name: string = ""
@@ -1446,14 +1492,14 @@ export const searchClient = async (
 export const searchDClient = async (
   client_code: string,
   client_name: string = "",
-  is_accessToken: any
+  is_accessToken: any 
 ) => {
   const currentUser = store.getState().user.user.accessToken;
   try {
     // const code : any = parseInt(client_code)
     let config: any = {
       method: 'get',
-      url: `${baseApiUrl}/${domainPath}/clients?client_name=${client_name}&client_code=${client_code}`,
+      url: `${baseApiUrl}/${domainPath}/clients?client_name=${client_name}&client_code=${client_code}`, 
       headers: {
         'Authorization': `Bearer ${is_accessToken}`
       }

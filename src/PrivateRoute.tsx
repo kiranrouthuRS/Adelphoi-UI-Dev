@@ -22,8 +22,7 @@ const PRoute: React.FC<PrivateRouteProps> = (props) => {
   let role = localStorage.user_role ? 
  localStorage.user_role === undefined ? "" : 
  localStorage.user_role === "undefined" ? "" : localStorage.user_role: ""
- console.log(role) 
-  if (localStorage.refreshToken === undefined) {
+ if (localStorage.refreshToken === undefined) {
     return (
       <React.Fragment>
         

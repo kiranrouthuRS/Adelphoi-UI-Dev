@@ -131,6 +131,7 @@ export interface Client {
   client_selected_program: string | null;
   client_selected_locations: string | null;
   SuggestedPrograms: string[] | null;
+  Reason_not_accepted: string[] | null;
   SuggestedReferral: string[] | null;
   program_model_suggested: string[] | null;
   selected_program: string | null;
@@ -289,6 +290,7 @@ export const emptyClient: Client = {
   Level_of_care: null,
   SuggestedLocations: null,
   SuggestedPrograms: null,
+  Reason_not_accepted: null,
   SuggestedReferral: null,
   model_program: null,
   selected_program: null,
