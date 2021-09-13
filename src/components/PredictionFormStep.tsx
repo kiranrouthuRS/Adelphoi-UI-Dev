@@ -170,7 +170,7 @@ export class PredictionFormStep extends React.Component<
       client_form: form_data,
       ClientCode: form_data["Client_Code"],
       Required_List: Object.assign({}, ...Required_List),
-      trauma_score: form_data.Trauma_Score ? Number(form_data.Trauma_Score) : 0
+      // trauma_score: form_data.Trauma_Score ? Number(form_data.Trauma_Score) : 0
     })
   }
 
@@ -214,9 +214,9 @@ export class PredictionFormStep extends React.Component<
    let selectedID = Array.isArray(id) ? id[0] : id;
    let isChecked = Array.isArray(id) ? id[1] : "";
    let score = TScore ? TScore.values[selectedID]  : 0; 
-  if(score){
-  await this.setState( 
-    prevstate => ({ 
+   if(TScore !== undefined){
+       await this.setState( 
+          prevstate => ({ 
                  trauma_score: TScore?.multiselect ?  
                  isChecked ? TScore?.addValues ? 
                  prevstate.trauma_score + Number(score) :  
@@ -227,10 +227,10 @@ export class PredictionFormStep extends React.Component<
                  TScore?.addValues ? prevstate.trauma_score - Number(score)
                  :
                  this.state.client_form[question] && Number(score) === 0 ? prevstate.trauma_score : this.state.client_form[question].length === 2 ? prevstate.trauma_score - this.state.visitedQuestion[question] : prevstate.trauma_score 
-              :
+              : 
               score === undefined ? prevstate.trauma_score  - this.state.visitedQuestion[question] :
               this.state.visitedQuestion[question] ? (prevstate.trauma_score - this.state.visitedQuestion[question]) + Number(score): 
-                         prevstate.trauma_score + Number(score),
+                         prevstate.trauma_score + Number(score)
                   }));     
                        this.setState({
                               client_form: {
@@ -242,7 +242,7 @@ export class PredictionFormStep extends React.Component<
                                 [question]:   Number(score) 
                         }  
                             })
-                          }
+             }            
         } 
 
   handleChange = async (e) => {
