@@ -544,17 +544,17 @@ const locationOptions = suggested_locations
               values.referral_status === ""
                 ? null
                 : values.referral_status;
-            const program_significantly_modified =
-                values.program_significantly_modified === ""
+            const program =
+                values.Program ? values.Program.length === 0
                  ? null
-                 : Number(values.program_significantly_modified)
+                 : values.Program!.value! : null
             setIsOpen(false)
             await props.onFormSubmit(
               searchData[0].client_code,
               Program_Completion,
               Remained_Out_of_Care,
               Number(values.program_significantly_modified),
-              values.Program!.value!,
+              program,
               discharge_location,
               start_date,
               end_date,
@@ -682,6 +682,7 @@ const locationOptions = suggested_locations
                     <select
                       css={selectField} 
                       onChange={handleChange}
+                      disabled={version_changed ? version_changed : props.client.referral_status !== "pending" }
                       name="Reason_not_accepted"
                       value={
                         values.Reason_not_accepted !== null 
@@ -711,6 +712,7 @@ const locationOptions = suggested_locations
                       css={selectField} 
                       onChange={handleChange}
                       name="Reason_for_rejected"
+                      disabled={version_changed ? version_changed : props.client.referral_status !== "pending" }
                       value={
                         values.Reason_for_rejected !== null 
                           ? values.Reason_for_rejected && values.Reason_for_rejected.toString()
