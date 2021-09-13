@@ -184,6 +184,7 @@ const DynamicClientDetails_Persues: React.FC<DynamicClientDetails_PersuesProps> 
     return <h1 css={subHeading} >No client found</h1>;
   }
   const { client, Referral, searchData } = props;
+  console.log(props)
   let suggested_locations : any = props.client.SuggestedLocations?.length > 0 ? 
                                                props.client.SuggestedLocations : 
                                                props.client["Suggested Locations"]
@@ -429,7 +430,7 @@ const locationOptions = suggested_locations
       
        { props.client.referral_status === "not_placed" || 
           props.client.referral_status === "rejected" || 
-          (props.client.Remained_Out_of_Care?.toString()) ? 
+          (props.client.Program_Completion?.toString()||props.client.Remained_Out_of_Care?.toString()) ? 
          (<h3> Click <a href="#" onClick={() =>
           history.push(
             `/${domainPath}/existing-client/edit-details/${index}&true&true`  
@@ -660,13 +661,13 @@ const locationOptions = suggested_locations
                     <div css={twoCol}>
                       <Dropdown 
                         name="Program" 
-                        disabled={version_changed ? version_changed : props.client.referral_status !== "pending" ? true : values.Program_Completion !== ""} 
+                        disabled={version_changed ? version_changed : props.client.referral_status !== "pending" } 
                         options={programOptions}
                         // onChange={(p: any) => onProgramChange(p, values)}
                         defaultValue={programOptions.find(
                           p => p.value === predicted_program
                         )}
-                        value={values.Program || null}
+                        value={values.Program || null} 
                       />
                     </div>
                   </div>
@@ -807,9 +808,7 @@ const locationOptions = suggested_locations
                   <div css={fieldBox}>
                     <input
                       type="checkbox"
-                      disabled={ props.client.Remained_Out_of_Care?.toString() ? true :
-                        version_changed ? version_changed : values.Program_Completion?.toString()
-                      }
+                      disabled={ version_changed }
                       onChange={handleChange}
                       name="program_significantly_modified"
                       id="program_significantly_modified"
@@ -829,7 +828,8 @@ const locationOptions = suggested_locations
               </div>
               <div css={fieldRow}>
                 <div css={twoCol}>
-                  <label css={label}>Length of Stay</label>
+                  <label css={label}>Length of Stay<small>(Weeks)</small></label>
+                  
                 </div>
                 <div css={twoCol}> 
                   <input
@@ -876,6 +876,8 @@ const locationOptions = suggested_locations
                   </div>
                 </div>
               }
+              {props.client.discharge_location?.toString() !== "8" &&
+              (
               <div css={fieldRow}>
                 <div css={twoCol}>
                   <label css={label}>Remained Out of Care</label>
@@ -900,9 +902,10 @@ const locationOptions = suggested_locations
                     <option value="2">Internal Transfer​</option>
                   </select>
                 </div>
-
+               
                 <ErrorMessage component="span" name="Remained_Out_of_Care" />
               </div>
+               ) }
               {(values.Remained_Out_of_Care?.toString()) &&
                 <div css={fieldRow}>
                 <div css={twoCol}>
@@ -913,6 +916,9 @@ const locationOptions = suggested_locations
                     css={selectField}
                     onChange={handleChange}
                     name="client_recidivate"
+                    disabled={ props.client.Remained_Out_of_Care?.toString() ? true :
+                      version_changed 
+                     }
                     value={
                       values.client_recidivate !== null 
                         ? values.client_recidivate && values.client_recidivate.toString()
@@ -936,7 +942,7 @@ const locationOptions = suggested_locations
                   color="primary" 
                   disabled = {version_changed || values.referral_status === "pending" ||
                     ["not_placed","rejected"].includes(props.client.referral_status) 
-                    || props.client.Remained_Out_of_Care?.toString() || props.client.Program_Completion === 0 ? true : false}
+                    || (props.client.Remained_Out_of_Care?.toString() || props.client.discharge_location?.toString() === "8")}
                   
                 >
                   Submit
