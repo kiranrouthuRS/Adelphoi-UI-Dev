@@ -153,7 +153,7 @@ export class PredictionFormStep extends React.Component<
         client_form.push({
           [ques.question.replace(/ /g, "_")]:  
             Array.isArray(ques.answer) ? ques.suggested_answers.map((q, j) => ques.answer.includes(q.value) &&
-              q.id.toString()).find(item => item !== false) :
+              q.id.toString()).filter(item => item !== false) :
               ques.answer === 0 ? ques.answer.toString() :
                 ques.suggested_answers.length >= 1 ? ques.answer &&
                   ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id.toString()
@@ -170,6 +170,7 @@ export class PredictionFormStep extends React.Component<
       client_form: form_data,
       ClientCode: form_data["Client_Code"],
       Required_List: Object.assign({}, ...Required_List),
+      trauma_score: form_data.Trauma_Score ? Number(form_data.Trauma_Score) : 0
     })
   }
 
@@ -230,9 +231,7 @@ export class PredictionFormStep extends React.Component<
               score === undefined ? prevstate.trauma_score  - this.state.visitedQuestion[question] :
               this.state.visitedQuestion[question] ? (prevstate.trauma_score - this.state.visitedQuestion[question]) + Number(score): 
                          prevstate.trauma_score + Number(score),
-                    
-                   
-                 }));     
+                  }));     
                        this.setState({
                               client_form: {
                                 ...this.state.client_form,
@@ -343,7 +342,6 @@ export class PredictionFormStep extends React.Component<
         let checkedvalue = this.state.client_form[name] ?
         checked ? this.state.client_form[name].concat([value]) :
           this.state.client_form[name].filter(idy => idy !== value) : [value]
-         
         this.setState({
           client_form: {
             ...this.state.client_form,
@@ -475,10 +473,7 @@ export class PredictionFormStep extends React.Component<
         // isSuccess: true
       })
     } 
-    // if (isValid_Data === true) {
-    //   console.log(this.state.isEdit)
-     
-    // }
+   
   }
 
   uploadCSV = async (e) => {
@@ -535,7 +530,7 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions, header_color } = this.state;
-     return (
+    return (
       <div css={wrap}>
 
         <div css={mainContent}>
