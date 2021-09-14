@@ -165,12 +165,18 @@ export class PredictionFormStep extends React.Component<
         });
       }))
     let form_data = Object.assign({}, ...client_form)
+    let visitedQuestion = [] as any;
+    Persues_House_Score.length > 0 && Persues_House_Score.map((question) => 
+         (Object.keys(form_data).includes(question.Question.replace(/ /g, '_')))
+         && form_data[question.Question.replace(/ /g, '_')] && visitedQuestion.push({
+           [question.Question.replace(/ /g, '_')]:parseInt(form_data[question.Question.replace(/ /g, '_')])}))  
     await this.setState({
       // DynamicQuestions: this.props.DynamicQuestions,
       client_form: form_data,
       ClientCode: form_data["Client_Code"],
       Required_List: Object.assign({}, ...Required_List),
-      // trauma_score: form_data.Trauma_Score ? Number(form_data.Trauma_Score) : 0
+      visitedQuestion: Object.assign({}, ...visitedQuestion),
+      trauma_score: form_data.Trauma_Score ? Number(form_data.Trauma_Score) : 0
     })
   }
 
