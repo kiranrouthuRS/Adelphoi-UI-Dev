@@ -1,14 +1,12 @@
 /** @jsx jsx */
-import React from "react";
+import React, {useState,useEffect} from "react";
 import { jsx, css } from "@emotion/core";
 import { withRouter, Route } from "react-router-dom";
 import { Link as RouterLink, useHistory, Switch } from "react-router-dom";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
-import * as user from "./redux-modules/user";
-import { AppState } from "./redux-modules/root";
-import { Global } from "@emotion/core";
+import Modal from "react-modal";
 import { domainPath } from "./App"
 import { loginApiUrl } from "./api/api"
 import MenuIcon from '@material-ui/icons/Menu';
@@ -16,13 +14,26 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Sidemenu from './Sidemenu'
 import { store } from "./index";
+import { sendTicket } from "./api/api"
 import IdleTimerContainer from './containers/IdleTimerContainer'
 import {
   ConfigIcon,
   NewClientIcon,
   ExistingClientIcon
 } from "./components/icons";
-
+import {
+  subHeading,
+   fieldRow,
+   fieldBox,
+   twoCol,
+   inputField,
+   tableHeader,
+   tableRow,
+   dataTable,
+   label,
+   selectField,
+   backdrop
+ } from "./components/styles";
 const App = css`
   margin: 50px auto;
   width: 100%;
@@ -45,7 +56,7 @@ const nav = css`
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  margin-top: 185px;
+  margin-top: 30px;
   margin-bottom: 30px;
   @media all and (min-width: 520px) {
     flex-direction: row;
@@ -91,16 +102,21 @@ const menuIcon = css`
 
 const logo = css`
   position: relative;
+  height: 100px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const firstMatchLogo = css`
-  position: absolute;
+  //position: absolute;
   // transform: translate(-50%, -30%);
   left: 35%;
   top: -25px;
   // height: auto; 
-  width:  250px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   @media all and (max-width: 520px) {
     width: 80px;
   }
@@ -147,12 +163,76 @@ const billing = css`
     right: 15;
   }
 `;
+const btn_container = css`
+  transform: translate(930px, 20px);
+  position: fixed;
+`;
 
+const fixed_button = css`
+  transform: rotate(-90deg);
+ height: 40px;
+ width: 180px;
+ font-size: 24px;
+ background-color: #8F00FF;
+ color: #fff;
+ border: 2px solid #8F00FF;
+ border-radius: 3px;
+`;
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    height: '50%',
+    width: '50%',
+    transform: 'translate(-20%, -50%)'
+  }
+};
 
 const AppShell: React.FC = ({ children }, props) => {
   const is_configured = children && children[1].props.appState.user.user.is_fully_configured
   const logopath = children && children[1].props.appState.user.user.logo_path;
   const headerColor = children && children[1].props.appState.user.user.header_color;
+  const [isOpen, setisOpen] = useState(false);
+const [selectedFile, setselectedFile] = useState();
+const [subject, setSubject] = useState("");
+const [description, setDescription] = useState("");
+
+    const handleClose = () => {
+      setisOpen(false)
+    }
+
+    const isOpenModal = () => {
+      setisOpen(true)
+    }
+   const onFileChange = event => {
+    console.log(event.target.files)
+    let file = event.target.files[0]
+    console.log(file)
+    setselectedFile( selectedFile ? selectedFile.concat(event.target.files[0]) : [event.target.files[0]] );
+    
+    };
+   const onSubmitTicket = async() => {
+        let file: any = selectedFile
+        console.log(file)
+        const formData = new FormData(); 
+        formData.append('subject', subject)
+        formData.append('description', description)
+        if(file&&file.length>0){
+          file.map(data=> (formData.append('attachments', data)))
+        }
+        
+        const res = await sendTicket(formData);
+        console.log(res)
+          if (res.message === "your ticket raised") {
+            setisOpen(false)
+            alert(res.message)
+          } else{
+            alert(res.message ? res.message : "Something went wrong")
+          }
+  }
  return (
     <Paper css={App} elevation={3}>
       <IdleTimerContainer />
@@ -161,9 +241,7 @@ const AppShell: React.FC = ({ children }, props) => {
           css={firstMatchLogo}
           alt={`${domainPath} Logo`}
           src={`${loginApiUrl}/${logopath}`}
-          // height= "100%"
-          // width= "100%"
-        />
+         />
         {/* <img
           css={adelphoiLogo}
           alt={`${domainPath} Logo`}
@@ -338,8 +416,68 @@ const AppShell: React.FC = ({ children }, props) => {
             />
       </div>
 
-      {/* <div css={nav}>
-      </div> */}
+      <div css={btn_container}>
+        <button onClick={isOpenModal} css={fixed_button} style={{position: "fixed"}}>
+          Need Help? 
+          </button> 
+          </div>
+          <Modal
+            isOpen={isOpen}
+            ariaHideApp={false}
+            onRequestClose={handleClose}
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+           <div css={fieldRow}>
+          <div css={twoCol}>
+            <label css={label}>Subject:</label>
+            <input
+              type="text"
+              name="first_name"
+              css={inputField}
+              placeholder=""
+              value={subject}
+              onChange={(e)=> setSubject(e.target.value)}
+              required
+            />
+            {/* <ErrorMessage component="span" name="first_name" /> */}
+          </div>
+          </div>
+          <div css={fieldRow}>
+          <div css={twoCol}>
+            <label css={label}>Description:</label>
+            <textarea
+              name="first_name"
+              css={inputField}
+              placeholder="Please provide as many details as you can, like the client code, page you are on, actions you took and the problemy you faced. Please attach a file or multiple files."
+              style={{height:"150px"}} 
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
+            {/* <ErrorMessage component="span" name="first_name" /> */}
+          </div>
+            </div>
+            <div css={fieldRow}>
+            <div css={twoCol}>
+            <input type="file" name="uploadfiles" multiple  onChange={onFileChange} />  
+            </div>
+            <div css={twoCol}>  
+           <strong style={{color: "#3f51b5",fontSize:"24px"}}> Attched {selectedFile && selectedFile.length > 0 ? selectedFile.length  : 0} Files. </strong>
+            </div>
+          <div css={twoCol}>
+          <Button
+              type="submit"
+              size="large"
+              variant="contained"
+              color="primary"
+              onClick={onSubmitTicket}
+            >
+              Submit
+            </Button>
+          </div>
+          </div>
+          </Modal>
         
       {children}
 
