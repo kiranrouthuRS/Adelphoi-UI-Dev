@@ -168,7 +168,7 @@ export const updateClient = async (client: Types.Client) => {
   }
 };
 
-export const uploadcsvfile = async (data, is_accessToken) => {
+export const uploadcsvfile = async (data,is_accessToken) => {
   try {
     return await axios.post(`${baseApiUrl}/${domainPath}/clients`, data, {
       headers: {
@@ -176,6 +176,27 @@ export const uploadcsvfile = async (data, is_accessToken) => {
       }
     })
       .then(response => {
+        const bill = response.data
+        const path = response.data.response
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+
+    throwError(error)
+
+  }
+};
+
+export const sendTicket = async (data) => {
+  console.log(data)
+  try {
+    return await axios.post(`${baseApiUrl}/tickets`, data, )
+      .then(response => {
+        console.log(response)
         const bill = response.data
         const path = response.data.response
         return response.data;
@@ -398,10 +419,13 @@ export const updateUsers = async (users: Types.Users, is_accessToken: any) => {
   }
 };
 
-export const deleteUsers = async (userID: any, is_accessToken: any) => {
+export const deleteUsers = async (users: any, is_accessToken: any) => {
   const currentUser = store.getState().user.user.accessToken;
+  console.log(users)
+  let u_id = users.id;
+  let email = users.adminEmail && `?email_id=${users.adminEmail}` 
   try {
-    const response = await axios.delete(`${loginApiUrl}/organizations/${domainPath}/users/${userID}/`, {
+    const response = await axios.delete(`${loginApiUrl}/organizations/${domainPath}/users/${u_id}/${email}`, {
       headers: {
         'Authorization': `Bearer ${is_accessToken}`
       }

@@ -21,6 +21,7 @@ export interface Users {
   mobile: string;
   gender: string;
   role_type: string;
+  
 }
 
 export interface Billing {

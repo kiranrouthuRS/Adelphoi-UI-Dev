@@ -2,6 +2,7 @@
 import { jsx } from "@emotion/core";
 import React from "react";
 import Button from "@material-ui/core/Button";
+import Modal from "react-modal";
 import Grid from "@material-ui/core/Grid";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -42,6 +43,9 @@ export interface UsersListState {
   message: string;
   accessToken: string[];
   isLoading: boolean;
+  adminList: string[];
+  isOpen: boolean;
+  adminEmail: string;
 }
 
 export interface UsersListProps {
@@ -58,7 +62,16 @@ export interface UsersListProps {
   getRoles: (is_accessToken:any) => Promise<void>;  
 }
 
-
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)'
+  }
+};
 export class UsersList extends React.Component<
   UsersListProps,
   UsersListState
@@ -80,7 +93,10 @@ export class UsersList extends React.Component<
       isEdit: false,
       message: "",
       accessToken: [],
-      isLoading: this.props.isLoading
+      adminList:[],
+      isLoading: this.props.isLoading,
+      isOpen: false,
+      adminEmail: "" 
     
     };
   }
@@ -126,7 +142,8 @@ export class UsersList extends React.Component<
       gender: "",
       role_type: "",
       role_type_text: "",
-      isEdit: false
+      isEdit: false,
+      adminList: []
 
     })
 
@@ -169,6 +186,11 @@ export class UsersList extends React.Component<
       role_type: e.target.value
     });
   }
+  handleClose = () => {
+    this.setState({
+      isOpen: false
+    })
+  }
   handleEdit = async (e: any) => {
     e.preventDefault();
     this.setState({
@@ -191,7 +213,7 @@ export class UsersList extends React.Component<
       email_id: singleuser[0].email_id,
       mobile: singleuser[0].mobile,
       gender: singleuser[0].gender?.toString(),  
-      role_type: roleID[0].id, 
+      role_type: roleID[0]?.id, 
       role_type_text: singleuser[0].role_type,
       isEdit: true
     });
@@ -200,18 +222,32 @@ export class UsersList extends React.Component<
   }
   handleDelete = async (e: any) => {
     e.preventDefault();
+    console.log(this.state)
     let userID: any = this.state.id;
+    let adminEmail: any = this.state.adminEmail;
     if (e.currentTarget.dataset.id === 0 || e.currentTarget.dataset.id) {
       userID = e.currentTarget.dataset.id;
+      this.setState({id: userID})
     }
+    console.log(userID)
+    const data: any = {
+           id: userID,
+           adminEmail: adminEmail
 
+    }
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     this.setState({ isLoading: true });
-    await this.props.deleteUsers(userID,is_accessToken)
+    const response: any =  await this.props.deleteUsers(data,is_accessToken)
+    console.log(response)
     this.setState({ isLoading: false });
+    if(response.message === "select any one to make default"){
+          this.setState({adminList: response.response, isOpen: true})
+    }else{
     this.setState({
-      message: "User deleted successfully"
+      message: response.message,
+      isOpen: false
     })
+  }
   }
 
   render() {
@@ -405,6 +441,55 @@ export class UsersList extends React.Component<
               )}
           </TableBody>
         </Table>
+        <Modal
+            isOpen={this.state.isOpen}
+            ariaHideApp={false}
+            onRequestClose={this.handleClose}
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+            <div>
+              <h1 css={subHeading} style={{ color: this.props.headerColor }}>Please choose one of the below to be a default SUPER ADMIN​</h1>
+              
+              {this.state.adminList.map(list => (
+                <div css={fieldRow}>
+                  <div
+                  css={fieldBox}
+                  style={{ width: "47.8%", display: "inline-block" }}
+                >
+    
+                  <input
+                    type="radio"
+                    onChange={(e) => this.setState({adminEmail: e.target.value})}
+                    name="adminemail"
+                    id="adminemail"
+                    value={list}
+                    required
+                    checked={this.state.adminEmail === list}
+                  />{" "}
+                  <label htmlFor="adminemail">{list}</label>
+                </div>
+                </div> 
+              ) )}
+              
+            </div>
+            <Grid item xs={4} >
+
+            <Button
+              type="submit"
+              size="large"
+              variant="contained"
+              color="primary"
+              style={{ marginRight: 10, 
+                backgroundColor: this.props.headerColor,
+                color: "#fff" }}
+              onClick = {this.handleDelete}
+            >
+              Delete USER
+            </Button>
+
+</Grid>
+          </Modal>
       </form>
     );
   }

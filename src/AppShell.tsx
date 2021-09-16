@@ -24,7 +24,7 @@ import {
 } from "./components/icons";
 
 const App = css`
-  margin: 80px auto;
+  margin: 50px auto;
   width: 100%;
   background-color: #fff;
   padding: 16px;
@@ -45,7 +45,8 @@ const nav = css`
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  margin-top: 100px;
+  margin-top: 185px;
+  margin-bottom: 30px;
   @media all and (min-width: 520px) {
     flex-direction: row;
     align-items: flex-start;
@@ -94,11 +95,12 @@ const logo = css`
 
 const firstMatchLogo = css`
   position: absolute;
-  transform: translate(-50%, -30%);
-  left: 50%;
-  top: -0px;
-  height: 120px;
+  // transform: translate(-50%, -30%);
+  left: 35%;
+  top: -25px;
+  // height: auto; 
   width:  250px;
+  height: 200px;
   @media all and (max-width: 520px) {
     width: 80px;
   }
@@ -159,6 +161,8 @@ const AppShell: React.FC = ({ children }, props) => {
           css={firstMatchLogo}
           alt={`${domainPath} Logo`}
           src={`${loginApiUrl}/${logopath}`}
+          // height= "100%"
+          // width= "100%"
         />
         {/* <img
           css={adelphoiLogo}
@@ -334,9 +338,9 @@ const AppShell: React.FC = ({ children }, props) => {
             />
       </div>
 
-      <div css={nav}>
-      </div>
-
+      {/* <div css={nav}>
+      </div> */}
+        
       {children}
 
     </Paper>

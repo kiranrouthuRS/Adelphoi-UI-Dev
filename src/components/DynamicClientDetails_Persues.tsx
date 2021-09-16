@@ -427,11 +427,11 @@ const locationOptions = suggested_locations
 
         )
       }
-      
-       { props.client.referral_status === "not_placed" || 
+     
+       {( props.client.referral_status === "not_placed" || 
           props.client.referral_status === "rejected" || 
-          (props.client.Program_Completion?.toString()||props.client.Remained_Out_of_Care?.toString()) ? 
-         (<h3> Click <a href="#" onClick={() =>
+          props.client.discharge_location?.toString() === "8" || props.client.Remained_Out_of_Care?.toString()) ? 
+         (<h3> Click <a href="#" onClick={() =>  
           history.push(
             `/${domainPath}/existing-client/edit-details/${index}&true&true`  
           )
@@ -563,10 +563,7 @@ const locationOptions = suggested_locations
               Reason_not_accepted,
               Reason_for_rejected,
               client_recidivate
-              
-
-              // values.Referral!.value!,
-              //values.roc_confidence!.value!
+             
             );
             helpers.resetForm();
             }

@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
 import React from "react";
-import { connect } from "react-redux";
 import Modal from "react-modal";
 import Button from "@material-ui/core/Button";
 import FormData from "form-data"
@@ -9,7 +8,7 @@ import { searchDClient } from "../api/api";
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import {Persues_House_Score} from "./TramaQuestion"
-// import {header_color} from "./configure" 
+
 import {
   wrap,
   subHeading,
@@ -165,11 +164,12 @@ export class PredictionFormStep extends React.Component<
         });
       }))
     let form_data = Object.assign({}, ...client_form)
+    console.log(form_data)
     let visitedQuestion = [] as any;
     Persues_House_Score.length > 0 && Persues_House_Score.map((question) => 
          (Object.keys(form_data).includes(question.Question.replace(/ /g, '_')))
          && form_data[question.Question.replace(/ /g, '_')] && visitedQuestion.push({
-           [question.Question.replace(/ /g, '_')]:parseInt(form_data[question.Question.replace(/ /g, '_')])}))  
+           [question.Question.replace(/ /g, '_')]: form_data[question.Question.replace(/ /g, '_')][0]== 0 ? 0 : 1}))  
     await this.setState({
       // DynamicQuestions: this.props.DynamicQuestions,
       client_form: form_data,
@@ -209,13 +209,13 @@ export class PredictionFormStep extends React.Component<
     if (name === "Client_Code") {
       const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
       let response = await searchDClient(value, "", is_accessToken);
-      response.response &&
+      response.response && 
         response.response.length > 0 &&
         (alert("Client Code already exists. Do you want to continue?"))
     }
   }
 
-   AddTraumaScore = async(question,id) => {
+   AddTraumaScore = async(question,id) => { 
    let TScore = Persues_House_Score.find(score =>  score.Question === question.replace(/_/g, ' ')) 
    let selectedID = Array.isArray(id) ? id[0] : id;
    let isChecked = Array.isArray(id) ? id[1] : "";
@@ -536,6 +536,7 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions, header_color } = this.state;
+    console.log(this.state)
     return (
       <div css={wrap}>
 
@@ -619,10 +620,11 @@ export class PredictionFormStep extends React.Component<
                               <option value="">Select</option>
                               {ques.suggested_answers.map((ans, i) =>
                                   <option key={i}
+                                  // value={Object.keys(Persues_House_Score1).length>0?[[Persues_House_Score1[ques.question]?.values],Persues_House_Score1[ques.question]?.addValues,Persues_House_Score1[ques.question]?.multiselect]:ans.id}
                                   value={ans.id}
-                                  data-idx={index}
+                                  data-idx={index} 
                                   data-idy={ind}
-                                  data-id = {i}
+                                  data-id = {i} 
                                   data-jump={ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.jumpto ? sj.jumpto : "" : "")}
                                   data-quesjump={ques.suggested_jump.length > 0 ? ques.suggested_jump.map(sj => sj !== null && ans.value === sj.answer ? sj.question_jumpto ? sj.question_jumpto : "" : "") : ""}
                                   selected={this.state.client_form[ques.question.replace(/ /g, "_")] && this.state.client_form[ques.question.replace(/ /g, "_")]?.toString() === ans.id?.toString()}>{ans.value}</option>
@@ -632,7 +634,7 @@ export class PredictionFormStep extends React.Component<
                             ques.answer_type === "RADIO" ?
                               <React.Fragment>
                                 {ques.suggested_answers.map((ans, i) =>
-                                  <div key={i}
+                                  <div key={i} 
                                     css={fieldBox}
                                     style={{ width: "47.8%", display: "inline-block" }}
                                   >

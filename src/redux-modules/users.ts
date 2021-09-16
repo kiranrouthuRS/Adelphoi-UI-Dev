@@ -114,7 +114,7 @@ export const actions = {
   },
 
   updateUsers(
-    users: Types.Users,
+    users: any,
     is_accessToken:any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
@@ -163,6 +163,7 @@ export const actions = {
         throw Error("something went wrong getting list of users");
       }
       dispatch(update({ usersList: response1 }));
+      return response
     };
   },
   clear(): ThunkAction<Promise<void>, AppState, null, AnyAction> {

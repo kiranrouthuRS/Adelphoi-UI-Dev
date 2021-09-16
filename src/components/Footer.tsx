@@ -53,12 +53,12 @@ function Footer(props) {
         </TableCell>
                         <TableCell >
                         <img
-           css={firstMatchLogo}
-           height="40px"
-           width="100px"
-          alt="FirstMatch Logo"
-          src="/img/logo_stroke.png"
-        />
+                            css={firstMatchLogo}
+                            height="40px"
+                            width="100px"
+                            alt="FirstMatch Logo"
+                            src="/img/logo_stroke.png"
+                         />
         </TableCell>
 
                     </TableRow>
