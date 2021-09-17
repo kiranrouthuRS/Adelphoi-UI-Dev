@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { format, getMonth } from "date-fns";
 import Modal from "react-modal";
@@ -184,7 +184,6 @@ const DynamicClientDetails_Persues: React.FC<DynamicClientDetails_PersuesProps> 
     return <h1 css={subHeading} >No client found</h1>;
   }
   const { client, Referral, searchData } = props;
-  console.log(props)
   let suggested_locations : any = props.client.SuggestedLocations?.length > 0 ? 
                                                props.client.SuggestedLocations : 
                                                props.client["Suggested Locations"]
@@ -279,7 +278,7 @@ const locationOptions = suggested_locations
     
   };
   
-   const handleChange = (e) => {
+   const versionChange = (e) => {
     const { name, value } = e.target;
     var optionElement = e.target.childNodes[e.target.selectedIndex]
     let version_id = optionElement.getAttribute('data-id');
@@ -331,7 +330,7 @@ const locationOptions = suggested_locations
     return date;   
       };
 
-      const get_length_of_stay = async(startDate,endDate) => {
+      function get_length_of_stay (startDate,endDate)  {
        let ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
         // Convert both dates to milliseconds
         let date1_ms: any = new Date(startDate);
@@ -340,6 +339,7 @@ const locationOptions = suggested_locations
         let difference_ms = Math.round(date2_ms - date1_ms);
         // Convert back to weeks and return hole weeks
         return Math.floor(difference_ms / ONE_WEEK);
+        
       }
     
  return (
@@ -347,7 +347,7 @@ const locationOptions = suggested_locations
       <Backdrop css={backdrop} open={props.isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      {props.is_role_type === "Coordinator" ? "" : (
+      
         <div css={fieldRow}>
           <div css={twoCol}>&nbsp;</div>
           <div
@@ -356,7 +356,7 @@ const locationOptions = suggested_locations
               <select
                 css={selectField}
                 name="versions"
-                onChange={handleChange}
+                onChange={versionChange}
               >
                 <option value="">Select Version</option>
                 {searchData.map((data, i) =>
@@ -370,7 +370,7 @@ const locationOptions = suggested_locations
               </select>
             </div>
           </div>
-          {props.is_role_type === "Coordinator" || !props.is_prediction_available ? "" :
+          {!props.is_prediction_available ? "" :
           <div
             css={twoCol}
             style={{
@@ -392,7 +392,7 @@ const locationOptions = suggested_locations
           </div>
 }
         </div>
-      )}
+      
       {
         SelectedVersion && SelectedVersion[0].sections.map((ques, id) =>
           <Accordion defaultExpanded={id === 0 ? true : false} key={id}> 
@@ -423,9 +423,7 @@ const locationOptions = suggested_locations
 
             </AccordionDetails>
           </Accordion>
-
-
-        )
+           )
       }
      
        {( props.client.referral_status === "not_placed" || 
@@ -446,14 +444,12 @@ const locationOptions = suggested_locations
           }
      
 
-      {props.is_role_type === "Coordinator"   ? "" : (
-        <Formik
+       <Formik
           initialValues={getInitialValues()}
           enableReinitialize 
           
           validate={ async(values) => {
             const errors: FormikErrors<FormValues> = {};
-            console.log(values)
            if (!values.referral_status) {
               errors.referral_status = "Required";
             }
@@ -496,7 +492,6 @@ const locationOptions = suggested_locations
             return errors;
           }}
           onSubmit={async (values, helpers) => { 
-            console.log(values)
             if(values.referral_status !== "pending" && !modalIsOpen){
               await openModal()
              
@@ -650,8 +645,8 @@ const locationOptions = suggested_locations
                 </div>
                 
               </div>
-              {values.referral_status === "placed" &&
-                  <div css={fieldRow}>
+              {values.referral_status === "placed" && 
+                 <div css={fieldRow}>
                     <div css={twoCol}>
                       <label css={label}>Program</label>
                     </div>
@@ -668,7 +663,8 @@ const locationOptions = suggested_locations
                       />
                     </div>
                   </div>
-               } 
+                
+              }
                {values.referral_status === "not_placed" && 
                  (
                   <div css={fieldRow}>
@@ -753,6 +749,8 @@ const locationOptions = suggested_locations
                 </div>
               </div>
                }
+          {values.referral_status === "placed" &&
+          (<React.Fragment>
               <div css={fieldRow}>
                 <div css={twoCol}>
                   <label css={label}>Program Completion</label>
@@ -790,9 +788,9 @@ const locationOptions = suggested_locations
                       // disabled={Number(values.Program_Completion) === 0}
                       placeholder=""
                       value={values.end_date || ""}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
+                      onChange={(e) => {values.length_of_stay = get_length_of_stay(values.start_date,e.target.value);
+                                       handleChange(e)}}   
+                      />
                     <ErrorMessage component="span" name="end_date" />
                   </div>
                 </div>
@@ -947,6 +945,8 @@ const locationOptions = suggested_locations
                   Submit
               </Button>
               </div>
+              </React.Fragment>
+              )}
         <Modal
             isOpen={modalIsOpen}
             ariaHideApp={false}
@@ -993,7 +993,7 @@ const locationOptions = suggested_locations
           )}
           
         </Formik>
-        )} 
+        
       {props.program_completion_response && (
         <div css={subHeading}>{props.program_completion_response}</div>
       )}

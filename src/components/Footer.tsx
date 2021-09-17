@@ -31,12 +31,27 @@ top: -0px;
   width: 80px;
 }
 `;
+const App = css`
+  margin: 50px auto;
+  width: 100%;
+  background-color: #fff;
+  padding: 16px;
+  position: relative;
+  @media all and (min-width: 520px) { 
+    padding: 40px;
+    margin: 100px auto;
+    width: 60vw;
+  }
+  @media all and (min-width: 520px) and (max-width: 1024px) {
+    width: 90vw;
+  }
+`;
 function Footer(props) {
     const { classes } = props;
 
     return (
         <footer >
-            <Paper  elevation={1}>
+            <Paper css={App} elevation={1}>
             <Table aria-label="users table" >
 
                 <TableHead>

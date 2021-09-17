@@ -90,6 +90,7 @@ DynamicExistingClientContainerState
             clientList={is_Searched ? Object.values(clientList):[]}
             {...this.state}
             headerColor= {headerColor} 
+            user= {this.props && this.props.user}
             onFormSubmit={this.searchDClient}
           />
         </Route>

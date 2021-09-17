@@ -7,7 +7,7 @@ import FormData from "form-data"
 import { searchDClient } from "../api/api";
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
-import {Persues_House_Score} from "./TramaQuestion"
+import {Persues_House_Score,Persues_House_Score1} from "./TramaQuestion"
 
 import {
   wrap,
@@ -164,7 +164,6 @@ export class PredictionFormStep extends React.Component<
         });
       }))
     let form_data = Object.assign({}, ...client_form)
-    console.log(form_data)
     let visitedQuestion = [] as any;
     Persues_House_Score.length > 0 && Persues_House_Score.map((question) => 
          (Object.keys(form_data).includes(question.Question.replace(/ /g, '_')))
@@ -471,13 +470,22 @@ export class PredictionFormStep extends React.Component<
       delete formData["Client Code1"];
     }
     if (this.state.isEdit === "true" || !this.state.hasError) {
-      await this.props.onFormSubmit(formData);
+      
       this.setState({
         isSubmitted: false,
         err_msg: this.props.errors,
-        isOpen: this.props.errors ? true : false
-        // isSuccess: true
+        isOpen: this.props.errors ? true : false,
+           // isSuccess: true
       })
+      await this.props.onFormSubmit(formData);
+      await this.props.GetQuestions()
+    await this.setState({
+      DynamicQuestions: this.props.DynamicQuestions,
+      isOpen: this.props.errors ? true : false,
+      err_msg: this.props.errors,
+      header_color: this.props.user && this.props.user.user.header_color
+    })
+    this.formState();
     } 
    
   }
@@ -536,7 +544,6 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions, header_color } = this.state;
-    console.log(this.state)
     return (
       <div css={wrap}>
 

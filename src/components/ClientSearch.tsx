@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
+import { jsx, css } from "@emotion/core";
 import { useHistory } from "react-router-dom";
 import { Formik, ErrorMessage, FormikErrors } from "formik";
 import Button from "@material-ui/core/Button";
@@ -10,6 +10,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { domainPath } from "../App"
+import { downloadDataReport } from "../api/api"
+import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import {
   wrap,
   subHeading,
@@ -19,11 +21,22 @@ import {
   inputField,
   tableHeader,
   tableRow,
-  dataTable
+  dataTable,
+  txtDetail
 } from "./styles";
 import React from "react";
 
-
+const logout = css`
+                position: relative;
+                top: -25px;
+                right: 25px;
+                radius: 2px;
+                
+                @media all and (max-width: 520px) {
+                  top: 0;
+                  right: 0;
+                }
+              `;
 interface ClientSearchProps {
   clientList: any;
   onFormSubmit: (client_code: string, client_name: string) => void;
@@ -31,6 +44,7 @@ interface ClientSearchProps {
   hasError: boolean;
   error: string;
   headerColor: string;
+  user: any;
 }
 
 interface FormValues {
@@ -54,10 +68,30 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
     return label;
    }
   const ClientLableName = getlabel()
+  const downloadDump = async (e) => {
+    const is_accessToken: any = props.user && props.user.user.accessToken; 
+    await downloadDataReport(is_accessToken)  
+  }
  
   return (
     <div css={wrap}>
       <div css={mainContent}>
+      <div css={fieldRow} style={{ justifyContent: "center" }}>
+      <Button
+                type="submit"
+                size="small"
+                variant="contained"
+                style={{
+                  marginRight: 10,
+                  backgroundColor: props.headerColor,
+                  color: "#fff"
+                }}
+                css={txtDetail}
+                onClick={downloadDump}
+              >
+                Download FirstMatch Data Report
+              </Button>
+            </div>
         <Formik
           initialValues={initialValues}
           enableReinitialize

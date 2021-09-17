@@ -164,8 +164,14 @@ const billing = css`
   }
 `;
 const btn_container = css`
-  transform: translate(930px, 20px);
+   transform: translate(800px, 20px);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   position: fixed;
+  @media all and (max-width: 520px) {
+    transform: translate(600px, 20px);
+  }
 `;
 
 const fixed_button = css`
@@ -202,32 +208,36 @@ const [description, setDescription] = useState("");
 
     const handleClose = () => {
       setisOpen(false)
+      setSubject("")
+      setDescription("")
     }
 
     const isOpenModal = () => {
       setisOpen(true)
     }
    const onFileChange = event => {
-    console.log(event.target.files)
     let file = event.target.files[0]
-    console.log(file)
-    setselectedFile( selectedFile ? selectedFile.concat(event.target.files[0]) : [event.target.files[0]] );
+    setselectedFile(event.target.files );
     
     };
    const onSubmitTicket = async() => {
-        let file: any = selectedFile
-        console.log(file)
+        let files: any = selectedFile
         const formData = new FormData(); 
         formData.append('subject', subject)
         formData.append('description', description)
-        if(file&&file.length>0){
-          file.map(data=> (formData.append('attachments', data)))
+        
+
+        if(files){
+          for (let i = 0; i < files.length; i++) {
+            formData.append(`attachments`, files[i])
+        }
         }
         
         const res = await sendTicket(formData);
-        console.log(res)
-          if (res.message === "your ticket raised") {
+        if (res.message === "your ticket raised") {
             setisOpen(false)
+            setSubject("")
+            setDescription("")
             alert(res.message)
           } else{
             alert(res.message ? res.message : "Something went wrong")
@@ -236,6 +246,7 @@ const [description, setDescription] = useState("");
  return (
     <Paper css={App} elevation={3}>
       <IdleTimerContainer />
+      
       <div css={logo}>
         <img
           css={firstMatchLogo}
@@ -415,11 +426,12 @@ const [description, setDescription] = useState("");
               )}
             />
       </div>
-
+      <div style={{position: "absolute"}}>
       <div css={btn_container}>
         <button onClick={isOpenModal} css={fixed_button} style={{position: "fixed"}}>
           Need Help? 
           </button> 
+          </div>
           </div>
           <Modal
             isOpen={isOpen}
@@ -463,7 +475,7 @@ const [description, setDescription] = useState("");
             <input type="file" name="uploadfiles" multiple  onChange={onFileChange} />  
             </div>
             <div css={twoCol}>  
-           <strong style={{color: "#3f51b5",fontSize:"24px"}}> Attched {selectedFile && selectedFile.length > 0 ? selectedFile.length  : 0} Files. </strong>
+           &nbsp;
             </div>
           <div css={twoCol}>
           <Button

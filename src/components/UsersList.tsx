@@ -222,14 +222,12 @@ export class UsersList extends React.Component<
   }
   handleDelete = async (e: any) => {
     e.preventDefault();
-    console.log(this.state)
     let userID: any = this.state.id;
     let adminEmail: any = this.state.adminEmail;
     if (e.currentTarget.dataset.id === 0 || e.currentTarget.dataset.id) {
       userID = e.currentTarget.dataset.id;
       this.setState({id: userID})
     }
-    console.log(userID)
     const data: any = {
            id: userID,
            adminEmail: adminEmail
@@ -238,7 +236,6 @@ export class UsersList extends React.Component<
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     this.setState({ isLoading: true });
     const response: any =  await this.props.deleteUsers(data,is_accessToken)
-    console.log(response)
     this.setState({ isLoading: false });
     if(response.message === "select any one to make default"){
           this.setState({adminList: response.response, isOpen: true})

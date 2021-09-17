@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { format, getMonth } from "date-fns";
 import Modal from "react-modal";
@@ -326,7 +326,7 @@ const locationOptions = suggested_locations
       <Backdrop css={backdrop} open={props.isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      {props.is_role_type === "Coordinator" ? "" : (
+     
         <div css={fieldRow}>
           <div css={twoCol}>&nbsp;</div>
           <div
@@ -349,7 +349,7 @@ const locationOptions = suggested_locations
               </select>
             </div>
           </div>
-          {props.is_role_type === "Coordinator" || !props.is_prediction_available ? "" :
+          {!props.is_prediction_available ? "" :
           <div
             css={twoCol}
             style={{
@@ -371,7 +371,7 @@ const locationOptions = suggested_locations
           </div>
 }
         </div>
-      )}
+      
       {
         SelectedVersion && SelectedVersion[0].sections.map((ques, id) =>
           <Accordion defaultExpanded={id === 0 ? true : false} key={id}> 
@@ -424,8 +424,7 @@ const locationOptions = suggested_locations
           }
      
 
-      {props.is_role_type === "Coordinator" || !props.is_prediction_available? "" : (
-        <Formik
+      <Formik
           initialValues={getInitialValues()}
           enableReinitialize
           validate={values => {
@@ -853,7 +852,7 @@ const locationOptions = suggested_locations
           )}
           
         </Formik>
-        )} 
+        
       {props.program_completion_response && (
         <div css={subHeading}>{props.program_completion_response}</div>
       )}

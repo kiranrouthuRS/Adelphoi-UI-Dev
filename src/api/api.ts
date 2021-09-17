@@ -196,7 +196,6 @@ export const sendTicket = async (data) => {
   try {
     return await axios.post(`${baseApiUrl}/tickets`, data, )
       .then(response => {
-        console.log(response)
         const bill = response.data
         const path = response.data.response
         return response.data;
@@ -222,6 +221,30 @@ export const downloadcsvfile = async (is_accessToken) => {
       .then(response => {
         const bill = response.data
         const path = response.data.response.csv
+        window.open(`${loginApiUrl}/${path}`);
+        return response.data;
+      })
+
+  }
+
+  catch (error) {
+    console.log('error')
+
+    throwError(error)
+
+  }
+};
+
+export const downloadDataReport = async (is_accessToken) => {
+  try {
+    return await axios.get(`${baseApiUrl}/${domainPath}/client-config?download=dump`, {
+      headers: {
+        'Authorization': `Bearer ${is_accessToken}`
+      }
+    })
+      .then(response => {
+        const bill = response.data
+        const path = response.data.response
         window.open(`${loginApiUrl}/${path}`);
         return response.data;
       })
@@ -1529,6 +1552,7 @@ export const searchDClient = async (
       }
     };
     const response = await axios(config)
+    console.log(response)
     return response.data;
   } catch (error) {
     console.error("api function searchClient error");

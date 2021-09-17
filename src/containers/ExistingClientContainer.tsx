@@ -75,7 +75,8 @@ export class ExistingClientContainer extends React.Component<
             clientList={Object.values(clientList)}
             {...this.state}
             headerColor= "#fff" 
-            onFormSubmit={this.searchClient}
+            user= "" 
+            onFormSubmit={this.searchClient} 
           />
         </Route>
         <Route
