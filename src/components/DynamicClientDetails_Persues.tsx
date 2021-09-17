@@ -931,6 +931,9 @@ const locationOptions = suggested_locations
                    
               </div>
              }
+              
+              </React.Fragment>
+              )}
               <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
                 <Button
                   type="submit"
@@ -945,8 +948,6 @@ const locationOptions = suggested_locations
                   Submit
               </Button>
               </div>
-              </React.Fragment>
-              )}
         <Modal
             isOpen={modalIsOpen}
             ariaHideApp={false}
