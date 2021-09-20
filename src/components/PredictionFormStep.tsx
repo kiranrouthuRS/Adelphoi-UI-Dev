@@ -134,6 +134,7 @@ export class PredictionFormStep extends React.Component<
   }
   async componentDidMount() {
     await this.props.GetQuestions()
+    console.log(this.props.DynamicQuestions)
     await this.setState({
       DynamicQuestions: this.props.DynamicQuestions,
       isOpen: this.props.errors ? true : false,
@@ -146,6 +147,7 @@ export class PredictionFormStep extends React.Component<
   formState = async () => {
     let client_form = [] as any;
     let Required_List = [] as any;
+    console.log(this.state.DynamicQuestions)
     this.state.DynamicQuestions.map
       (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
         ques.related === "no" &&
@@ -208,13 +210,15 @@ export class PredictionFormStep extends React.Component<
     
     
     if(domainPath === "persues-house"){
+      console.log(name,value)
       if (name === "Date_of_Birth") {
         let {First_Name,Last_Name} = this.state.client_form
+        console.log(First_Name,Last_Name)
         const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
         let response = await searchDClient("","",First_Name,Last_Name,value, is_accessToken);
         response.response && 
           response.response.length > 0 &&
-          (alert("Client Code already exists. Do you want to continue?"))
+          (alert("Client already exists. Do you want to continue?"))
       }
     }else{
       if (name === "Client_Code") {
@@ -321,7 +325,7 @@ export class PredictionFormStep extends React.Component<
         ques_jump = e.target.dataset.quesjump.split(',').filter(j => j);
         const idx = e.target.dataset.idx;
         const id = e.target.dataset.id;
-        let  trauma_final_score = Persues_House_Score.length > 0 && this.AddTraumaScore(name,id)
+        Persues_House_Score.length > 0 && this.AddTraumaScore(name,id)
         this.setState({
           prevJump: {
             ...this.state.prevJump,
@@ -334,6 +338,11 @@ export class PredictionFormStep extends React.Component<
             hasError: false,
           }
         })
+        console.log(ques_jump)
+        console.log( idx && DynamicQuestions[idx].questions.map((que, i) =>
+           ques_jump.includes(que.question) ? (`${!DynamicQuestions[idx].questions[i].related}`):"hello"
+            ))
+            console.log(DynamicQuestions[idx])
         DynamicQuestions[idx].questions.map((que, i) =>
           ques_jump.includes(que.question)
             ? (DynamicQuestions[idx].questions[i].related = DynamicQuestions[idx].questions[i].related === "yes" ? "no" : "yes")
@@ -559,6 +568,7 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions, header_color } = this.state;
+    console.log(this.state)
     return (
       <div css={wrap}>
 
