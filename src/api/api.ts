@@ -1538,15 +1538,18 @@ export const searchClient = async (
 
 export const searchDClient = async (
   client_code: string,
-  client_name: string = "",
+  ssn: string = "",
+  first_name: string = "",
+  last_name: string = "",
+  dob: string = "",
   is_accessToken: any 
 ) => {
   const currentUser = store.getState().user.user.accessToken;
-  try {
+  try { 
     // const code : any = parseInt(client_code)
     let config: any = {
       method: 'get',
-      url: `${baseApiUrl}/${domainPath}/clients?client_name=${client_name}&client_code=${client_code}`, 
+      url: `${baseApiUrl}/${domainPath}/clients?client_code=${client_code}&ssn=${ssn}&first_name=${first_name}&last_name=${last_name}&dob=${dob}`, 
       headers: {
         'Authorization': `Bearer ${is_accessToken}`
       }

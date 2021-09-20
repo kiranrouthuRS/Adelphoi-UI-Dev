@@ -331,7 +331,7 @@ const locationOptions = suggested_locations
       };
 
       function get_length_of_stay (startDate,endDate)  {
-       let ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
+       let ONE_WEEK = 1000 * 60 * 60 * 24;
         // Convert both dates to milliseconds
         let date1_ms: any = new Date(startDate);
         let date2_ms: any = new Date(endDate);
@@ -428,6 +428,7 @@ const locationOptions = suggested_locations
      
        {( props.client.referral_status === "not_placed" || 
           props.client.referral_status === "rejected" || 
+          props.client.Program_Completion?.toString() === "1" ||
           props.client.discharge_location?.toString() === "8" || props.client.Remained_Out_of_Care?.toString()) ? 
          (<h3> Click <a href="#" onClick={() =>  
           history.push(
@@ -825,7 +826,7 @@ const locationOptions = suggested_locations
               </div>
               <div css={fieldRow}>
                 <div css={twoCol}>
-                  <label css={label}>Length of Stay<small>(Weeks)</small></label>
+                  <label css={label}>Length of Stay <small>(Days)</small></label>
                   
                 </div>
                 <div css={twoCol}> 
@@ -873,7 +874,7 @@ const locationOptions = suggested_locations
                   </div>
                 </div>
               }
-              {props.client.discharge_location?.toString() !== "8" &&
+              { (props.client.Program_Completion?.toString() !== "1") && props.client.discharge_location?.toString() !== "8" &&
               (
               <div css={fieldRow}>
                 <div css={twoCol}>

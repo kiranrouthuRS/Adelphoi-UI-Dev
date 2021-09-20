@@ -31,7 +31,7 @@ export interface DynamicExistingClientContainerState {
 export interface DynamicExistingClientContainerProp
   extends ContainerProps,
     WithSnackbarProps {
-  searchDClient: (client_code: string, client_name: string, is_accessToken: any) => void;
+  searchDClient: (client_code: string, ssn: string, first_name: string, last_name: string, dob: string, is_accessToken: any) => void;
   // getAvailablePrograms: () => Promise<void>;
   // getReferral: () => Promise<void>;
 }
@@ -60,10 +60,10 @@ DynamicExistingClientContainerState
     // this.props.getReferral();
   }
 
-  searchDClient = async (client_code: string, client_name: string) => {
+  searchDClient = async (client_code: string, ssn: string, first_name: string, last_name: string, dob: string) => {
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     try {
-      await this.props.searchDClient(client_code, client_name,is_accessToken);
+      await this.props.searchDClient(client_code, ssn, first_name, last_name,dob, is_accessToken);
     this.setState({
       is_Searched: true
     })
@@ -76,6 +76,12 @@ DynamicExistingClientContainerState
     }
     
   };
+
+  isDataAvailable = () => {
+    this.setState({
+      is_Searched: false
+    })
+  }
 
   render() {
     const { client: clientState, program: programState, referral: referralState } = this.props;
@@ -92,6 +98,7 @@ DynamicExistingClientContainerState
             headerColor= {headerColor} 
             user= {this.props && this.props.user}
             onFormSubmit={this.searchDClient}
+            clearData = {this.isDataAvailable}
           />
         </Route>
         <Route

@@ -27,7 +27,7 @@ export interface DynamicClientDetailsContainerState {
 export interface DynamicClientDetailsContainerProps
   extends ContainerProps<MatchParams>,
   WithSnackbarProps {
-  searchDClient: (client_code: string, client_name: string, is_accessToken: any) => Promise<void>; 
+  searchDClient: (client_code: string, ssn: string, first_name: string, last_name: string, dob: string, is_accessToken: any) => Promise<void>; 
   updateProgramCompletion: (
     client_code: string,
     program_completion: number | null,
@@ -106,7 +106,7 @@ export class DynamicClientDetailsContainer extends React.Component<
     this.setState({ isLoading: true });
     let version = ""
     if (!clientList[index]) {
-      await this.searchClient(index, "");
+      await this.searchClient(index, "", "", "", "");
     }
     // fetch program for this client
     if(domainPath !== "persues-house"){
@@ -118,9 +118,9 @@ export class DynamicClientDetailsContainer extends React.Component<
     // this.props.getReferral();
   }
 
-  searchClient = async (client_code: string, client_name: string) => {
+  searchClient = async (client_code: string, ssn: string, first_name: string, last_name: string,dob: string) => {
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
-    await this.props.searchDClient(client_code, client_name, is_accessToken);
+    await this.props.searchDClient(client_code, ssn, first_name, last_name,dob, is_accessToken); 
   };
 
   updateProgramCompletion = async (

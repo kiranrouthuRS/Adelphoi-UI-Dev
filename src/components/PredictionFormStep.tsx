@@ -8,6 +8,7 @@ import { searchDClient } from "../api/api";
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import {Persues_House_Score,Persues_House_Score1} from "./TramaQuestion"
+import { domainPath } from "../App"
 
 import {
   wrap,
@@ -26,7 +27,6 @@ import {
 } from "./styles";
 import * as Types from "../api/definitions";
 import { Fragment } from "react";
-import { AppState } from "../redux-modules/root";
 import { uploadcsvfile, downloadcsvfile } from "../api/api"
 
 
@@ -205,13 +205,27 @@ export class PredictionFormStep extends React.Component<
   }
   keyUp = async (e) => {
     let { name, value } = e.target
-    if (name === "Client_Code") {
-      const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
-      let response = await searchDClient(value, "", is_accessToken);
-      response.response && 
-        response.response.length > 0 &&
-        (alert("Client Code already exists. Do you want to continue?"))
+    
+    
+    if(domainPath === "persues-house"){
+      if (name === "Date_of_Birth") {
+        let {First_Name,Last_Name} = this.state.client_form
+        const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
+        let response = await searchDClient("","",First_Name,Last_Name,value, is_accessToken);
+        response.response && 
+          response.response.length > 0 &&
+          (alert("Client Code already exists. Do you want to continue?"))
+      }
+    }else{
+      if (name === "Client_Code") {
+        const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
+        let response = await searchDClient(value, "","","","", is_accessToken);
+        response.response && 
+          response.response.length > 0 &&
+          (alert("Client Code already exists. Do you want to continue?"))
+      }
     }
+    
   }
 
    AddTraumaScore = async(question,id) => { 
@@ -276,13 +290,14 @@ export class PredictionFormStep extends React.Component<
           hasError: false,
         },
         prevQuestionJump: {
-          ...this.state.prevQuestionJump,
+          ...this.state.prevQuestionJump, 
           [name.replace(/ /g, "_")]: ques_jumpto,
           hasError: false,
         }
 
-      })
-      idx&&DynamicQuestions[idx].questions.map((que, i) =>
+      }) 
+     
+      idx && DynamicQuestions[idx].questions.map((que, i) =>
         ques_jumpto.includes(que.question)
           ? (DynamicQuestions[idx].questions[i].related = "no")
           : (this.state.prevQuestionJump[name.replace(/ /g, "_")] &&
@@ -321,17 +336,17 @@ export class PredictionFormStep extends React.Component<
         })
         DynamicQuestions[idx].questions.map((que, i) =>
           ques_jump.includes(que.question)
-            ? (DynamicQuestions[idx].questions[i].related = "no")
+            ? (DynamicQuestions[idx].questions[i].related = DynamicQuestions[idx].questions[i].related === "yes" ? "no" : "yes")
             : (this.state.prevQuestionJump[name.replace(/ /g, "_")] &&
-              this.state.prevQuestionJump[name.replace(/ /g, "_")].includes(que.question) && (
+              this.state.prevQuestionJump[name.replace(/ /g, "_")].includes(que.question) && ( 
                 DynamicQuestions[idx].questions[i].related = "yes"
               )))
         DynamicQuestions.map((sec, i) => jump.includes(sec.section) ? (
-          DynamicQuestions[i].related = "false")
+          DynamicQuestions[i].related = `${!DynamicQuestions[i].related}`)
           :
           this.state.prevJump[name.replace(/ /g, "_")] &&
           this.state.prevJump[name.replace(/ /g, "_")].includes(sec.section) && (
-            DynamicQuestions[i].related = "true",
+            DynamicQuestions[i].related = `${!DynamicQuestions[i].related}`,
             this.formState()
           )
         )
@@ -729,7 +744,7 @@ export class PredictionFormStep extends React.Component<
                                       name={ques.question.replace(/ /g, "_")}
                                       value={this.state.client_form[ques.question.replace(/ /g, "_")]}
                                       type={ques.answer_type.toLowerCase()}
-
+                                      onBlur={this.keyUp}
                                     />
 
                                   </Fragment>

@@ -24,7 +24,7 @@ import {
   dataTable,
   txtDetail
 } from "./styles";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const logout = css`
                 position: relative;
@@ -39,7 +39,8 @@ const logout = css`
               `;
 interface ClientSearchProps {
   clientList: any;
-  onFormSubmit: (client_code: string, client_name: string) => void;
+  onFormSubmit: (client_code: string, ssn: string, first_name: string, last_name: string, dob: string) => void;
+  clearData: () => void;
   isLoading: boolean;
   hasError: boolean;
   error: string;
@@ -48,19 +49,26 @@ interface ClientSearchProps {
 }
 
 interface FormValues {
-  client_name: string;
+  first_name: string;
+  last_name: string;
   client_code: string;
+  ssn: string;
 }
 
 const initialValues: FormValues = {
-  client_name: "",
-  client_code: ""
+  first_name: "",
+  last_name: "",
+  client_code: "",
+  ssn : ""
 };
 
 const ClientSearch: React.FC<ClientSearchProps> = props => {
   const history = useHistory();
   /** */
   let { clientList } = props;
+  useEffect(() => {
+    props.clearData()
+}, []);
   clientList = clientList.map(sec=>sec.sections)
   const client = domainPath === "adelphoiDDD" ? [] : clientList.map(q => q[0].questions)
   const getlabel = () => {
@@ -97,60 +105,86 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
           enableReinitialize
           validate={values => {
             const errors: FormikErrors<FormValues> = {};
-            if (!values.client_code && !values.client_name) {
+            if (!values.client_code && !values.ssn && !values.first_name && !values.last_name) {
               errors.client_code = "Enter either of the fields";
             }
             return errors;
           }}
           onSubmit={async (values, helpers) => {
             const code: any = values.client_code ? parseInt(values.client_code) : ""
-            await props.onFormSubmit(code, values.client_name);
+            const ssncode: any = values.ssn ? parseInt(values.ssn) : ""
+            await props.onFormSubmit(code,ssncode, values.first_name, values.last_name,"" );
             // helpers.resetForm();
           }}
         >
           {({ values, handleSubmit, handleChange }) => (
             <form name="clientSearchForm" onSubmit={handleSubmit}>
-              <div css={fieldRow}>
-                <div css={twoCol}>
+              <TableRow>
+                <TableCell>
                   <input
                     type="text"
                     name="client_code"
                     css={inputField}
-                    placeholder={ClientLableName}
+                    placeholder="Client Code"
                     value={values.client_code || ""}
                     onChange={handleChange}
                   />
                   <ErrorMessage component="span" name="client_code" />
-                </div>
-                <div css={twoCol}>
+                </TableCell>
+                {domainPath === "persues-house" && (
+                  <TableCell>
                   <input
                     type="text"
-                    name="client_name"
+                    name="ssn"
                     css={inputField}
-                    placeholder="Client Name"
-                    value={values.client_name || ""}
+                    placeholder="SSN Number"
+                    value={values.ssn || ""}
                     onChange={handleChange}
                   />
-                  <ErrorMessage component="span" name="client_name" />
-                </div>
+                  <ErrorMessage component="span" name="ssn" />
+                </TableCell>
+                )}
+                <TableCell>
+                  <input
+                    type="text"
+                    name="first_name"
+                    css={inputField}
+                    placeholder="First Name"
+                    value={values.first_name || ""}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage component="span" name="first_name" />
+                  </TableCell>
+                  <TableCell>
+                  <input
+                    type="text"
+                    name="last_name"
+                    css={inputField}
+                    placeholder="Last Name"
+                    value={values.last_name || ""}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage component="span" name="last_name" />
+                </TableCell>
+                
                 <Button
                   type="submit"
                   size="small"
                   variant="contained"
                   style={{ marginRight: 10, 
                     backgroundColor: props.headerColor,
-                    color: "#fff",maxHeight: 44  }}
+                    color: "#fff",height: "44px", marginTop: "15px"  }}
                  
                 >
                   <SearchIcon />
                 </Button>
-              </div>
+              </TableRow>
             </form>
           )}
         </Formik>
         <div>
           <h1 css={subHeading} style= {{color: props.headerColor}}>Client List</h1>
-          {domainPath === "adelphoiDDD" ?
+          {domainPath === "persues-housessss" ?
             <Table aria-label="clients table" css={dataTable}>
               <TableHead>
                 <TableRow css={tableHeader}>

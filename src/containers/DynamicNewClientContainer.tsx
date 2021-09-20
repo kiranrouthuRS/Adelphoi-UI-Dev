@@ -222,7 +222,7 @@ export class DynamicNewClientContainer extends React.Component<
     currentClient = clientState ? clientState.client : Types.emptyClient;
     const availableProgramList =
       (programState && programState.availableProgramList) || [];
-    
+    // console.log(clientList[index].sections)
     return (
       <Switch>
         <Route exact path={`/${domainPath}/new-client/program-selection`}>

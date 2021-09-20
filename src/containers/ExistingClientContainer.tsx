@@ -23,6 +23,7 @@ export interface ExistingClientContainerState {
   error: string;
   hasError: boolean;
   program_completion_response: string | null;
+  is_Searched: boolean;
 }
 
 export interface ExistingClientContainerProp
@@ -46,7 +47,8 @@ export class ExistingClientContainer extends React.Component<
       isLoading: false,
       hasError: false,
       error: "",
-      program_completion_response: null
+      program_completion_response: null,
+      is_Searched: false
     };
   }
 
@@ -59,6 +61,11 @@ export class ExistingClientContainer extends React.Component<
   searchClient = async (client_code: string, client_name: string) => {
     await this.props.searchClient(client_code, client_name);
   };
+  isDataAvailable = () => {
+    this.setState({
+      is_Searched: false
+    })
+  }
 
   render() {
     const { client: clientState, program: programState, referral: referralState } = this.props;
@@ -70,13 +77,14 @@ export class ExistingClientContainer extends React.Component<
     
     return (
       <Switch>
-        <Route exact path={`/${domainPath}/existing-client`}>
+        <Route exact path={`/${domainPath}/existing-client`}> 
           <ClientSearch
             clientList={Object.values(clientList)}
             {...this.state}
             headerColor= "#fff" 
             user= "" 
             onFormSubmit={this.searchClient} 
+            clearData = {this.isDataAvailable}   
           />
         </Route>
         <Route

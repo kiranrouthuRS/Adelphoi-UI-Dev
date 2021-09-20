@@ -417,11 +417,14 @@ export const actions = {
 
   searchDClient(
     client_code: string,
-    client_name: string,
+    ssn: string,
+    first_name: string,
+    last_name: string,
+    dob: string,
     is_accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
-      const response = await searchDClient(client_code, client_name, is_accessToken);
+      const response = await searchDClient(client_code, ssn, first_name, last_name,dob, is_accessToken);
       let arr = response.response;
       let clientList: { [key: string]: any } = {};
       arr && arr.map((c: any) => {
