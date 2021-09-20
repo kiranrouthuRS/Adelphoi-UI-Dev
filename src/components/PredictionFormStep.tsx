@@ -134,7 +134,6 @@ export class PredictionFormStep extends React.Component<
   }
   async componentDidMount() {
     await this.props.GetQuestions()
-    console.log(this.props.DynamicQuestions)
     await this.setState({
       DynamicQuestions: this.props.DynamicQuestions,
       isOpen: this.props.errors ? true : false,
@@ -147,10 +146,12 @@ export class PredictionFormStep extends React.Component<
   formState = async () => {
     let client_form = [] as any;
     let Required_List = [] as any;
-    console.log(this.state.DynamicQuestions)
+    let prevJump = [] as any;
+    let prevQuestionJump = [] as any;
     this.state.DynamicQuestions.map
       (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
         ques.related === "no" &&
+        
         client_form.push({
           [ques.question.replace(/ /g, "_")]:  
             Array.isArray(ques.answer) ? ques.suggested_answers.map((q, j) => ques.answer.includes(q.value) &&
@@ -160,11 +161,21 @@ export class PredictionFormStep extends React.Component<
                   ques.suggested_answers.filter((p, i) => p.value === ques.answer)[0].id.toString()
                   : ques.answer ? ques.answer.toString() : ""
         });
+        ques.suggested_jump.filter(n=> n &&  n.answer === ques.answer?.toString() && 
+        (
+         prevQuestionJump.push({
+           [ques.question.replace(/ /g, "_")]:  n.question_jumpto
+          }),
+          prevJump.push({
+            [ques.question.replace(/ /g, "_")]:  n.jumpto
+           }))
+          
+          );
         ques.related === "no" &&
         Required_List.push({
           [ques.question.replace(/ /g, "_")]: ques.required
-        });
-      }))
+        })
+      }));
     let form_data = Object.assign({}, ...client_form)
     let visitedQuestion = [] as any;
     Persues_House_Score.length > 0 && Persues_House_Score.map((question) => 
@@ -177,7 +188,9 @@ export class PredictionFormStep extends React.Component<
       ClientCode: form_data["Client_Code"],
       Required_List: Object.assign({}, ...Required_List),
       visitedQuestion: Object.assign({}, ...visitedQuestion),
-      trauma_score: form_data.Trauma_Score ? Number(form_data.Trauma_Score) : 0
+      trauma_score: form_data.Trauma_Score ? Number(form_data.Trauma_Score) : 0,
+      prevJump: Object.assign({}, ...prevJump),
+      prevQuestionJump: Object.assign({}, ...prevQuestionJump)
     })
   }
 
@@ -210,10 +223,8 @@ export class PredictionFormStep extends React.Component<
     
     
     if(domainPath === "persues-house"){
-      console.log(name,value)
       if (name === "Date_of_Birth") {
         let {First_Name,Last_Name} = this.state.client_form
-        console.log(First_Name,Last_Name)
         const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
         let response = await searchDClient("","",First_Name,Last_Name,value, is_accessToken);
         response.response && 
@@ -300,8 +311,7 @@ export class PredictionFormStep extends React.Component<
         }
 
       }) 
-     
-      idx && DynamicQuestions[idx].questions.map((que, i) =>
+    idx && DynamicQuestions[idx].questions.map((que, i) =>
         ques_jumpto.includes(que.question)
           ? (DynamicQuestions[idx].questions[i].related = "no")
           : (this.state.prevQuestionJump[name.replace(/ /g, "_")] &&
@@ -326,37 +336,30 @@ export class PredictionFormStep extends React.Component<
         const idx = e.target.dataset.idx;
         const id = e.target.dataset.id;
         Persues_House_Score.length > 0 && this.AddTraumaScore(name,id)
-        this.setState({
-          prevJump: {
-            ...this.state.prevJump,
-            [name.replace(/ /g, "_")]: jump,
-            hasError: false,
+        this.setState(prevState => ({
+          prevJump: {...prevState.prevJump,
+                      [name.replace(/ /g, "_")]: jump,
+                      hasError: false,
           },
-          prevQuestionJump: {
-            ...this.state.prevQuestionJump,
-            [name.replace(/ /g, "_")]: ques_jump,
-            hasError: false,
+          prevQuestionJump: {...prevState.prevQuestionJump,
+                        [name.replace(/ /g, "_")]: ques_jump,
+                        hasError: false,
           }
-        })
-        console.log(ques_jump)
-        console.log( idx && DynamicQuestions[idx].questions.map((que, i) =>
-           ques_jump.includes(que.question) ? (`${!DynamicQuestions[idx].questions[i].related}`):"hello"
-            ))
-            console.log(DynamicQuestions[idx])
+        }));
         DynamicQuestions[idx].questions.map((que, i) =>
           ques_jump.includes(que.question)
-            ? (DynamicQuestions[idx].questions[i].related = DynamicQuestions[idx].questions[i].related === "yes" ? "no" : "yes")
+            ? (DynamicQuestions[idx].questions[i].related =  "no" )
             : (this.state.prevQuestionJump[name.replace(/ /g, "_")] &&
               this.state.prevQuestionJump[name.replace(/ /g, "_")].includes(que.question) && ( 
                 DynamicQuestions[idx].questions[i].related = "yes"
               )))
         DynamicQuestions.map((sec, i) => jump.includes(sec.section) ? (
-          DynamicQuestions[i].related = `${!DynamicQuestions[i].related}`)
+          DynamicQuestions[i].related = "false")
           :
           this.state.prevJump[name.replace(/ /g, "_")] &&
           this.state.prevJump[name.replace(/ /g, "_")].includes(sec.section) && (
-            DynamicQuestions[i].related = `${!DynamicQuestions[i].related}`,
-            this.formState()
+            DynamicQuestions[i].related = "true"
+            // this.formState()
           )
         )
       }
@@ -568,7 +571,6 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions, header_color } = this.state;
-    console.log(this.state)
     return (
       <div css={wrap}>
 
@@ -766,7 +768,7 @@ export class PredictionFormStep extends React.Component<
                           }
                           {
                             this.state.isSubmitted ?
-                              this.state.client_form[ques.question.replace(/ /g, "_")] ? "" :
+                              this.state.client_form[ques.question.replace(/ /g, "_")]?.toString() ? "" :
                                 ques.required === "yes" ? <div style={{ color: "red" }}>Required</div> : ""
                               : ""
                           }

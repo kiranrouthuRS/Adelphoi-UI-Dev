@@ -129,7 +129,9 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
                     value={values.client_code || ""}
                     onChange={handleChange}
                   />
+                  <div style={{color: "red"}}>
                   <ErrorMessage component="span" name="client_code" />
+                  </div>
                 </TableCell>
                 {domainPath === "persues-house" && (
                   <TableCell>

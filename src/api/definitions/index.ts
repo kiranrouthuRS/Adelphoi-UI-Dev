@@ -56,6 +56,7 @@ export interface DynamicClient {
 }
 export interface Client {
   client_code: string | null;
+  Program: string | null; 
   episode_start: string | null;
   episode_number: string | null;
   name: string | null;
@@ -147,6 +148,9 @@ export interface Client {
   referral: string | null;
   program_significantly_modified: number | null;
   sections: any ;
+  length_of_stay: string | null;
+  discharge_location: string | null;
+  client_recidivate: string | null
 }
 export interface Referral {
   referral_code: number;
@@ -213,6 +217,7 @@ export const emptyDClient: DynamicClient = {
 }
 export const emptyClient: Client = {
   client_code: null,
+  Program: null,
   sections: null,
   referral: null,
   episode_start: null,
@@ -303,7 +308,10 @@ export const emptyClient: Client = {
   Returned_to_Care: null,
   Remained_Out_of_Care: null,
   program_significantly_modified: null,
-  program_model_suggested: null
+  program_model_suggested: null,
+  length_of_stay:  null,
+  discharge_location:  null,
+  client_recidivate:  null
 };
 
 export const emptyConfiguration: Configuration = {

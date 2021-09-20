@@ -330,15 +330,17 @@ export const actions = {
       if (response) {
         const cl: Types.Client = {
           ...client,
-          SuggestedPrograms: version ? [ sData[latestVersion].client_selected_program ] : response.program_model_suggested || null, 
+          SuggestedPrograms: version ? sData[latestVersion].client_selected_program !== undefined  ? [ sData[latestVersion].client_selected_program ] : client.SuggestedPrograms : 
+                              response.program_model_suggested ? response.program_model_suggested : client.SuggestedPrograms || null, 
           SuggestedLocations: sData[latestVersion].client_selected_locations
             ? [sData[latestVersion].client_selected_locations]
             : [],
-          selected_program: sData[latestVersion].client_selected_program,
+          selected_program: sData[latestVersion].client_selected_program ? sData[latestVersion].client_selected_program : sData[latestVersion].Program,
+          Program: sData[latestVersion].Program,
           selected_location: sData[latestVersion].client_selected_locations,
           Program_Completion: sData[latestVersion].Program_Completion,
           Returned_to_Care: sData[latestVersion].Returned_to_Care,
-          Remained_Out_of_Care: sData[latestVersion]["Remained Out of Care"],
+          Remained_Out_of_Care: sData[latestVersion]["Remained Out of Care"] ? sData[latestVersion]["Remained Out of Care"] : sData[latestVersion].Remained_Out_of_Care?.toString(),
           ageAtEpisodeStart: sData[latestVersion].ageAtEpisodeStart,
           client_selected_locations: sData[latestVersion].client_selected_locations,
           client_selected_program: sData[latestVersion].client_selected_program,
@@ -346,7 +348,10 @@ export const actions = {
           model_program: sData[latestVersion].model_program,
           program_significantly_modified: sData[latestVersion].program_significantly_modified,
           referred_program: sData[latestVersion].referred_program,
-          roc_confidence: sData[latestVersion].roc_confidence
+          roc_confidence: sData[latestVersion].roc_confidence,
+          length_of_stay: sData[latestVersion].length_of_stay?.toString(),
+          discharge_location: sData[latestVersion].discharge_location?.toString(),
+          client_recidivate: sData[latestVersion].client_recidivate?.toString()
         };
         clientList[client_code] = cl;
         dispatch(update({ clientList }));

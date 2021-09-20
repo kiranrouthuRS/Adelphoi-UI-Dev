@@ -282,15 +282,15 @@ const locationOptions = suggested_locations
     const { name, value } = e.target;
     var optionElement = e.target.childNodes[e.target.selectedIndex]
     let version_id = optionElement.getAttribute('data-id');
-    const val = searchData.filter((sec, i) => sec.version === value && sec)
-    setSelectedVersion(val);
+    const Version = searchData.filter((sec, i) => sec.version === value && sec)
+    setSelectedVersion(Version);
     setVersion(!version_id ? false : true); 
-    setPredictedProgram(val[0].client_selected_program);
-    setPredictedReferral(val[0].selected_referral);
-    setPredictedLocation(val[0].client_selected_locations);
-    setReferralStatus(val[0].referral_status);
-    setStartDate(val[0].start_date);
-    setEndDate(val[0].end_date);
+    setPredictedProgram(Version[0].Program); 
+    setPredictedReferral(Version[0].selected_referral);
+    setPredictedLocation(Version[0].client_selected_locations);
+    setReferralStatus(Version[0].referral_status);
+    setStartDate(Version[0].start_date);
+    setEndDate(Version[0].end_date);
     props.onVersionSelect(props.searchData[0].client_code,version_id);
   
   }
@@ -360,7 +360,7 @@ const locationOptions = suggested_locations
               >
                 <option value="">Select Version</option>
                 {searchData.map((data, i) =>
-                  <option key={i} data-id={searchData.length - 1 === i ? "":i} 
+                  <option key={i} data-id={searchData.length - 1 === i ? "" : i} 
                   value={data.version} 
 
                   selected={data.version === searchData[searchData.length - 1].version}>
