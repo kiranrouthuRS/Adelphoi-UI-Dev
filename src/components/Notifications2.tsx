@@ -177,7 +177,7 @@ const Notifications2: React.FC<Notification2Props> = props => {
                         <TableBody> 
                             {props.Notification_data.length > 0 ? (
                                 props.Notification_data.map((p: any, id) => (
-                                    <TableRow key={id} css={tableRow} >
+                                    <TableRow key={id}  >
                                         <TableCell >{p["Client Code"]}</TableCell>
                                         <TableCell>{p["Date of Referral"]} </TableCell>  
                                         <TableCell>{p["First Name"]} </TableCell>

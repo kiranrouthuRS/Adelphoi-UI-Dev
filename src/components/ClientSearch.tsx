@@ -80,7 +80,7 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
     const is_accessToken: any = props.user && props.user.user.accessToken; 
     await downloadDataReport(is_accessToken)  
   }
- 
+ const tableCellCount = domainPath === "persues-house" ? 4 : 3
   return (
     <div css={wrap}>
       <div css={mainContent}>
@@ -235,7 +235,7 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
                 <TableRow css={tableHeader}>
                 {client.length > 0 && client.flat().map((cl,i) => 
                   // <React.Fragment>
-                  i < 3 && (
+                  i < tableCellCount && (
                   <TableCell>{cl.question}</TableCell>
                   
                 ))}
@@ -257,6 +257,9 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
                     <TableCell>{cl[0].answer}</TableCell>
                     <TableCell>{cl[1].answer}</TableCell>
                     <TableCell>{cl[2].answer}</TableCell>
+                    {domainPath === "persues-house" &&
+                    <TableCell>{cl[3].answer}</TableCell>
+                    }
 
                     {/* <TableCell>
                       {cl.gender && cl.gender.toString() === "1"
