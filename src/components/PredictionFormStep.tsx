@@ -7,7 +7,7 @@ import FormData from "form-data"
 import { searchDClient } from "../api/api";
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
-import {Persues_House_Score,Persues_House_Score1} from "./TramaQuestion"
+import {Persues_House_Score} from "./TramaQuestion"
 import { domainPath } from "../App"
 
 import {
@@ -151,7 +151,6 @@ export class PredictionFormStep extends React.Component<
     this.state.DynamicQuestions.map
       (sec => sec.related === "false" && sec.questions && sec.questions.map(ques => {
         ques.related === "no" &&
-        
         client_form.push({
           [ques.question.replace(/ /g, "_")]:  
             Array.isArray(ques.answer) ? ques.suggested_answers.map((q, j) => ques.answer.includes(q.value) &&
@@ -180,8 +179,9 @@ export class PredictionFormStep extends React.Component<
     let visitedQuestion = [] as any;
     Persues_House_Score.length > 0 && Persues_House_Score.map((question) => 
          (Object.keys(form_data).includes(question.Question.replace(/ /g, '_')))
-         && form_data[question.Question.replace(/ /g, '_')] && visitedQuestion.push({
-           [question.Question.replace(/ /g, '_')]: form_data[question.Question.replace(/ /g, '_')][0]== 0 ? 0 : 1}))  
+         && form_data[question.Question.replace(/ /g, '_')] && visitedQuestion.push({ 
+           [question.Question.replace(/ /g, '_')]: form_data[question.Question.replace(/ /g, '_')].length > 1 ? 1 : question.values[form_data[question.Question.replace(/ /g, '_')]]
+                                              &&question.values[form_data[question.Question.replace(/ /g, '_')]].id}))  
     await this.setState({
       // DynamicQuestions: this.props.DynamicQuestions,
       client_form: form_data,
@@ -247,7 +247,7 @@ export class PredictionFormStep extends React.Component<
    let TScore = Persues_House_Score.find(score =>  score.Question === question.replace(/_/g, ' ')) 
    let selectedID = Array.isArray(id) ? id[0] : id;
    let isChecked = Array.isArray(id) ? id[1] : "";
-   let score = TScore ? TScore.values[selectedID]  : 0; 
+   let score = TScore ? (TScore.values[selectedID].id)  : 0; 
    if(TScore !== undefined){
        await this.setState( 
           prevstate => ({ 
@@ -654,7 +654,6 @@ export class PredictionFormStep extends React.Component<
                               <option value="">Select</option>
                               {ques.suggested_answers.map((ans, i) =>
                                   <option key={i}
-                                  // value={Object.keys(Persues_House_Score1).length>0?[[Persues_House_Score1[ques.question]?.values],Persues_House_Score1[ques.question]?.addValues,Persues_House_Score1[ques.question]?.multiselect]:ans.id}
                                   value={ans.id}
                                   data-idx={index} 
                                   data-idy={ind}
