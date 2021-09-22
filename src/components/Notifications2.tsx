@@ -179,7 +179,7 @@ const Notifications2: React.FC<Notification2Props> = props => {
                                 props.Notification_data.map((p: any, id) => (
                                     <TableRow key={id}  >
                                         <TableCell >{p["Client Code"]}</TableCell>
-                                        <TableCell>{p["Date of Referral"]} </TableCell>  
+                                        <TableCell>{format(new Date(p["Date of Referral"]), "MM-dd-yyyy")} </TableCell>  
                                         <TableCell>{p["First Name"]} </TableCell>
                                         <TableCell>{p["Last Name"]} </TableCell>
                                         <TableCell>{p["Referral Source"]} </TableCell>

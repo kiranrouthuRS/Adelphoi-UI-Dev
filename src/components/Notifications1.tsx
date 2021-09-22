@@ -16,13 +16,13 @@ const Notifications1: React.FC<Notifications1Props> = props => {
             <form name="UsersForm" >
             <h1 css={subHeading} style= {{color: props.headerColor}}>Notification Center:</h1> 
    <div css={fieldRow} > 
-   <Link to={`/${domainPath}/notifications/pending`} onClick={()=>props.getNotifications("pending")}>There are clients still in pending status - Click to view</Link>
+   <Link to={`/${domainPath}/notifications/pending`} onClick={()=>props.getNotifications("pending")}>There are clients still in Pending Status - Click to view</Link>
    </div>
    <div css={fieldRow} > 
    <Link  to={`/${domainPath}/notifications/pcr`} onClick={()=>props.getNotifications("pcr")}>There are placed clients with unknown Program Completion Outcomes - Click to view</Link>
    </div>
    <div css={fieldRow} > 
-   <Link  to={`/${domainPath}/notifications/roc`} onClick={()=>props.getNotifications("roc")}>There are clients with unknown Remain Out of Care outcomes - Click to view</Link>
+   <Link  to={`/${domainPath}/notifications/roc`} onClick={()=>props.getNotifications("roc")}>There are clients with unknown Remain Out of Care Outcomes - Click to view</Link>
    </div>
  </form>
             )
