@@ -504,18 +504,28 @@ export class PredictionFormStep extends React.Component<
       this.setState({
         isSubmitted: false,
         err_msg: this.props.errors,
-        isOpen: this.props.errors ? true : false,
+        isOpen: this.props.errors ? true : false, 
            // isSuccess: true
       })
-      await this.props.onFormSubmit(formData);
-      await this.props.GetQuestions()
-    await this.setState({
-      DynamicQuestions: this.props.DynamicQuestions,
-      isOpen: this.props.errors ? true : false,
-      err_msg: this.props.errors,
-      header_color: this.props.user && this.props.user.user.header_color
-    })
-    this.formState();
+      const response: any = await this.props.onFormSubmit(formData);
+        if(response.status === "success") {
+          await this.props.GetQuestions()
+          await this.setState({
+          DynamicQuestions: this.props.DynamicQuestions,
+          isOpen: this.props.errors ? true : false,
+          err_msg: this.props.errors,
+          header_color: this.props.user && this.props.user.user.header_color
+        })
+           this.formState();
+        }else {
+          await this.setState({
+            isOpen: this.props.errors ? true : false,
+            err_msg: this.props.errors,
+            header_color: this.props.user && this.props.user.user.header_color
+          })
+        }
+        
+      
     } 
    
   }
