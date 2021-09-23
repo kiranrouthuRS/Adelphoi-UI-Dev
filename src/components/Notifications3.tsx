@@ -9,7 +9,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { Formik, FormikProps, FormikErrors, FieldProps, Field, ErrorMessage } from "formik";
 import { format } from "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
+import { domainPath } from "../App"
 // import { format } from "date-fns";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -32,7 +32,7 @@ import * as Types from "../api/definitions";
 
 interface Notification3Props {
     Notification_data: any;
-    onSearch: (Type:any, start_date: any, end_date: any) => void;
+    onSearch: (Type: any, start_date: any, end_date: any) => void;
     downloadReport: (Type: any, start_date: any, end_date: any) => void;
     isLoading: boolean;
     error: string;
@@ -89,8 +89,8 @@ const Notifications3: React.FC<Notification3Props> = props => {
                 {({ values, handleSubmit, handleChange, setFieldValue }) => (
 
                     <form name="UsersForm" onSubmit={handleSubmit}>
-       <h1 css={subHeading} style= {{color: props.headerColor}}>Clients without a Program Completion and End Date:</h1>
-                         <div css={fieldRow}>
+                        <h1 css={subHeading} style={{ color: props.headerColor }}>Clients without a Program Completion and End Date:</h1>
+                        <div css={fieldRow}>
                             <div css={twoCol}>
                                 <label css={label}>Start Date From</label>
                                 <DatePicker
@@ -135,13 +135,15 @@ const Notifications3: React.FC<Notification3Props> = props => {
                                     type="submit"
                                     size="large"
                                     variant="contained"
-                                    style={{ marginRight: 10, 
+                                    style={{
+                                        marginRight: 10,
                                         backgroundColor: props.headerColor,
-                                        color: "#fff" }}
+                                        color: "#fff"
+                                    }}
                                 // onClick={this.onLoad}
                                 >
                                     Search
-                </Button>
+                                </Button>
                             </div>
                         </div>
 
@@ -155,84 +157,106 @@ const Notifications3: React.FC<Notification3Props> = props => {
                 <CircularProgress color="inherit" />
             </Backdrop>
             {props.Notification_data.length > 0 ?
-               <React.Fragment> 
-                   <Table aria-label="users table" css={dataTable}>
-                   
-                    <TableHead>
-                        <TableRow css={tableHeader}>
-                            <TableCell >
-                                Client ID
-                      </TableCell>
-                      <TableCell >
-                            First Name
-                      </TableCell>
-                            <TableCell >
-                            Last Name
-                      </TableCell>
-                            <TableCell >
-                           Referral Status
-                      </TableCell>
-                       <TableCell >
-                     Location
-                      </TableCell>
-                      <TableCell >
-                     Start Date
-                      </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody> 
-                        {props.Notification_data.length > 0 ? (
-                            props.Notification_data.map((p: any, id) => (
-                                <TableRow key={id}  >
-                                    <TableCell >{p["Client Code"]}</TableCell>
-                                    <TableCell>{p["First Name"]} </TableCell>
-                                    <TableCell>{p["Last Name"]} </TableCell>
-                                    <TableCell>{p.referral_status} </TableCell>
-                                    <TableCell>{p.client_selected_locations} </TableCell>
-                                    <TableCell>{format(new Date(p.start_date), "MM-dd-yyyy")} </TableCell>
-                                </TableRow>
-                            ))
-                             
-                        ) 
-                        
-                        : (
-                                <TableRow key={9999}>
-                                    <TableCell colSpan={2} >
-                                        No records were found.
-                        </TableCell>
-                                </TableRow>
-                            )}
-                           
-                    </TableBody>
-                </Table>
-                <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
-                            <label css={label}>&nbsp;</label>
-                           <Button
-                                type="submit"
-                                size="large"
-                                variant="contained"
-                                style={{ marginRight: 10, marginTop: 10,
-                                    backgroundColor: props.headerColor,
-                                    color: "#fff" }}
-                                onClick={() => props.downloadReport("pcr", startdate, enddate)}
-                            >
-                              Download Report
-                </Button> 
-               
-        
-                  
-                        </div>
-                </React.Fragment>
-                    :
+                <React.Fragment>
                     <Table aria-label="users table" css={dataTable}>
+
+                        <TableHead>
+                            <TableRow css={tableHeader}>
+                                <TableCell >
+                                    Client ID
+                                </TableCell>
+                                {domainPath === "perseus-house" &&
+                                    <TableCell>
+                                        Date of Referral
+                                    </TableCell>
+                                }
+                                <TableCell >
+                                    First Name
+                                </TableCell>
+                                <TableCell >
+                                    Last Name
+                                </TableCell>
+                                {domainPath === "perseus-house" &&
+                                    <TableCell>
+                                        Program
+                                    </TableCell>
+                                }
+                                <TableCell >
+                                    Referral Status
+                                </TableCell>
+                                {domainPath !== "perseus-house" &&
+                                    <TableCell >
+                                        Location
+                                    </TableCell>
+                                }
+                                <TableCell >
+                                    Start Date
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
                         <TableBody>
-                        <TableRow key={9999}>
+                            {props.Notification_data.length > 0 ? (
+                                props.Notification_data.map((p: any, id) => (
+                                    <TableRow key={id}  >
+                                        <TableCell >{p["Client Code"]}</TableCell>
+                                        {domainPath === "perseus-house" &&
+                                            <TableCell>{p["Date of Referral"]}</TableCell>
+                                        }
+                                        <TableCell>{p["First Name"]} </TableCell>
+                                        <TableCell>{p["Last Name"]} </TableCell>
+                                        {domainPath === "perseus-house" &&
+                                        <TableCell> { p.Program } </TableCell>
+                                         }
+                                        <TableCell>{p.referral_status} </TableCell>
+                                        {domainPath !== "perseus-house" &&
+                                        <TableCell>{p.client_selected_locations} </TableCell>
+                                        }
+                                        <TableCell>{p.start_date} </TableCell>
+                                    </TableRow>
+                                ))
+
+                            )
+
+                                : (
+                                    <TableRow key={9999}>
                                         <TableCell colSpan={2} >
                                             No records were found.
-                        </TableCell>
-                                    </TableRow> 
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+
                         </TableBody>
                     </Table>
+                    <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
+                        <label css={label}>&nbsp;</label>
+                        <Button
+                            type="submit"
+                            size="large"
+                            variant="contained"
+                            style={{
+                                marginRight: 10, marginTop: 10,
+                                backgroundColor: props.headerColor,
+                                color: "#fff"
+                            }}
+                            onClick={() => props.downloadReport("pcr", startdate, enddate)}
+                        >
+                            Download Report
+                        </Button>
+
+
+
+                    </div>
+                </React.Fragment>
+                :
+                <Table aria-label="users table" css={dataTable}>
+                    <TableBody>
+                        <TableRow key={9999}>
+                            <TableCell colSpan={2} >
+                                No records were found.
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
 
             }
 

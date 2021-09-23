@@ -72,7 +72,7 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
   clientList = clientList.map(sec=>sec.sections)
   const client = domainPath === "adelphoiDDD" ? [] : clientList.map(q => q[0].questions)
   const getlabel = () => {
-    let label = domainPath === "persues-house" ? "Client Code / SSN Number" : "Client Code";
+    let label = domainPath === "perseus-house" ? "Client Code / SSN Number" : "Client Code";
     return label;
    }
   const ClientLableName = getlabel()
@@ -80,7 +80,7 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
     const is_accessToken: any = props.user && props.user.user.accessToken; 
     await downloadDataReport(is_accessToken)  
   }
- const tableCellCount = domainPath === "persues-house" ? 4 : 3
+ const tableCellCount = domainPath === "perseus-house" ? 4 : 3
   return (
     <div css={wrap}>
       <div css={mainContent}>
@@ -133,13 +133,13 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
                   <ErrorMessage component="span" name="client_code" />
                   </div>
                 </TableCell>
-                {domainPath === "persues-house" && (
+                {domainPath === "perseus-house" && (
                   <TableCell>
                   <input
                     type="text"
                     name="ssn"
                     css={inputField}
-                    placeholder="SSN Number"
+                    placeholder="Last 5 SSN"
                     value={values.ssn || ""}
                     onChange={handleChange}
                   />
@@ -257,7 +257,7 @@ const ClientSearch: React.FC<ClientSearchProps> = props => {
                     <TableCell>{cl[0].answer}</TableCell>
                     <TableCell>{cl[1].answer}</TableCell>
                     <TableCell>{cl[2].answer}</TableCell>
-                    {domainPath === "persues-house" &&
+                    {domainPath === "perseus-house" &&
                     <TableCell>{cl[3].answer}</TableCell>
                     }
 

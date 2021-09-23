@@ -10,7 +10,7 @@ import TableRow from "@material-ui/core/TableRow";
 import { Formik, FormikProps, FormikErrors, FieldProps, Field, ErrorMessage } from "formik";
 import { format } from "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
-// import { format } from "date-fns";
+import { domainPath } from "../App"
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DatePicker from 'react-datepicker';
@@ -32,7 +32,7 @@ import * as Types from "../api/definitions";
 
 interface Notification4Props {
     Notification_data: any;
-    onSearch: (Type:any, start_date: any, end_date: any) => void;
+    onSearch: (Type: any, start_date: any, end_date: any) => void;
     downloadReport: (Type: any, start_date: any, end_date: any) => void;
     isLoading: boolean;
     error: string;
@@ -88,7 +88,7 @@ const Notifications4: React.FC<Notification4Props> = props => {
                 {({ values, handleSubmit, handleChange, setFieldValue }) => (
 
                     <form name="UsersForm" onSubmit={handleSubmit}>
-                         <h1 css={subHeading} style= {{color: props.headerColor}}>Clients without Remained-Out-of-Care Outcomes, Post one year from their End Date:</h1>
+                        <h1 css={subHeading} style={{ color: props.headerColor }}>Clients without Remained-Out-of-Care Outcomes, Post one year from their End Date:</h1>
                         <div css={fieldRow}>
                             <div css={twoCol}>
                                 <label css={label}>End Date From</label>
@@ -134,13 +134,15 @@ const Notifications4: React.FC<Notification4Props> = props => {
                                     type="submit"
                                     size="large"
                                     variant="contained"
-                                    style={{ marginRight: 10, 
+                                    style={{
+                                        marginRight: 10,
                                         backgroundColor: props.headerColor,
-                                        color: "#fff" }}
+                                        color: "#fff"
+                                    }}
                                 // onClick={this.onLoad}
                                 >
                                     Search
-                </Button>
+                                </Button>
                             </div>
                         </div>
 
@@ -154,92 +156,115 @@ const Notifications4: React.FC<Notification4Props> = props => {
                 <CircularProgress color="inherit" />
             </Backdrop>
             {props.Notification_data.length > 0 ?
-                        <React.Fragment>
-                           <Table aria-label="users table" css={dataTable}>
+                <React.Fragment>
+                    <Table aria-label="users table" css={dataTable}>
 
-                                <TableHead>
-                                    <TableRow css={tableHeader}>
-                                        <TableCell >
-                                            Client ID
-                      </TableCell>
-                                        <TableCell >
-                                            First Name
-                      </TableCell>
-                                        <TableCell >
-                                            Last Name
-                      </TableCell>
-                                        <TableCell >
-                                            Referral Source
-                      </TableCell>
-                                        <TableCell >
-                                            Location
-                      </TableCell>
-                                        <TableCell >
-                                            Program Completion
-                      </TableCell>
-                                        <TableCell >
-                                            End Date
-                      </TableCell>
+                        <TableHead>
+                            <TableRow css={tableHeader}>
+                                <TableCell >
+                                    Client ID
+                                </TableCell>
+                                {domainPath === "perseus-house" &&
+                                    <TableCell>
+                                        Date of Referral
+                                    </TableCell>
+                                }
+                                <TableCell >
+                                    First Name
+                                </TableCell>
+                                <TableCell >
+                                    Last Name
+                                </TableCell>
+                                {domainPath === "perseus-house" ?
+                                    <TableCell>
+                                        Program
+                                    </TableCell>
+                                :
+                                <React.Fragment>
+                                <TableCell >
+                                    Referral Source
+                                </TableCell>
+                                <TableCell >
+                                    Location
+                                </TableCell>
+                                </React.Fragment>
+                              }
+                                <TableCell >
+                                    Program Completion
+                                </TableCell>
+                                <TableCell >
+                                    End Date
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {props.Notification_data.length > 0 ? (
+                                props.Notification_data.map((p: any, id) => (
+                                    <TableRow key={id}  >
+                                        <TableCell >{p["Client Code"]}</TableCell>
+                                        {domainPath === "perseus-house" &&
+                                            <TableCell>{p["Date of Referral"]}</TableCell>
+                                        }
+                                        <TableCell>{p["First Name"]} </TableCell>
+                                        <TableCell>{p["Last Name"]} </TableCell>
+                                        <TableCell>{p["Referral Source"]} </TableCell>
+                                        {domainPath === "perseus-house" ?
+                                        <TableCell> { p.Program } </TableCell> :
+                                         <React.Fragment>
+                                        <TableCell>{p.client_selected_locations} </TableCell>
+                                        <TableCell>{p.Program_Completion} </TableCell>
+                                        </React.Fragment>
+                                        }
+                                        <TableCell>{format(new Date(p.end_date), "MM-dd-yyyy")} </TableCell>
                                     </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {props.Notification_data.length > 0 ? (
-                                        props.Notification_data.map((p: any, id) => (
-                                            <TableRow key={id}  >
-                                                <TableCell >{p["Client Code"]}</TableCell>
-                                                <TableCell>{p["First Name"]} </TableCell>
-                                                <TableCell>{p["Last Name"]} </TableCell>
-                                                <TableCell>{p["Referral Source"]} </TableCell>
-                                                <TableCell>{p.client_selected_locations} </TableCell>
-                                                <TableCell>{p.Program_Completion} </TableCell>
-                                                <TableCell>{format(new Date(p.end_date), "MM-dd-yyyy")} </TableCell>
-                                            </TableRow>
-                                        ))
+                                ))
 
-                                    )
+                            )
 
-                                        : (
-                                            <TableRow key={9999}>
-                                                <TableCell colSpan={2} >
-                                                    No records were found.
-                        </TableCell>
-                                            </TableRow>
-                                        )}
+                                : (
+                                    <TableRow key={9999}>
+                                        <TableCell colSpan={2} >
+                                            No records were found.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
 
-                                </TableBody>
-                            </Table>
-                            <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
-                                <label css={label}>&nbsp;</label>
-                                <Button
-                                    type="submit"
-                                    size="large"
-                                    variant="contained"
-                                    style={{ marginRight: 10, marginTop: 10,
-                                        backgroundColor: props.headerColor,
-                                        color: "#fff" }}
-                                    onClick={() => props.downloadReport("roc", startdate, enddate)}
-                                >
-                                    Download Report
-                </Button>
+                        </TableBody>
+                    </Table>
+                    <div css={fieldRow} style={{ justifyContent: "flex-end" }}>
+                        <label css={label}>&nbsp;</label>
+                        <Button
+                            type="submit"
+                            size="large"
+                            variant="contained"
+                            style={{
+                                marginRight: 10, marginTop: 10,
+                                backgroundColor: props.headerColor,
+                                color: "#fff"
+                            }}
+                            onClick={() => props.downloadReport("roc", startdate, enddate)}
+                        >
+                            Download Report
+                        </Button>
 
 
 
-                            </div>
+                    </div>
 
-                        </React.Fragment>
-                        :
-                        <Table aria-label="users table" css={dataTable}>
-                            <TableHead>
-                               </TableHead>
-                            <TableBody>
-                                <TableRow key={9999}>
-                                    <TableCell colSpan={2} >
-                                        No records were found.
-                        </TableCell>
-                                </TableRow>
+                </React.Fragment>
+                :
+                <Table aria-label="users table" css={dataTable}>
+                    <TableHead>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow key={9999}>
+                            <TableCell colSpan={2} >
+                                No records were found.
+                            </TableCell>
+                        </TableRow>
 
-                            </TableBody>
-                        </Table>
+                    </TableBody>
+                </Table>
 
             }
 

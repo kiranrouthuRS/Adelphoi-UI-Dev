@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DatePicker from 'react-datepicker';
+import { domainPath } from "../App"
 import "react-datepicker/dist/react-datepicker.css";
 import {
     subHeading,
@@ -169,7 +170,7 @@ const Notifications2: React.FC<Notification2Props> = props => {
                                     Last Name
                                 </TableCell>
                                 <TableCell >
-                                    Referral Source
+                                  {domainPath === "perseus-house" ? "Referral Status" : "Referral Source"}  
                                 </TableCell>
 
                             </TableRow>
@@ -179,10 +180,12 @@ const Notifications2: React.FC<Notification2Props> = props => {
                                 props.Notification_data.map((p: any, id) => (
                                     <TableRow key={id}  >
                                         <TableCell >{p["Client Code"]}</TableCell>
-                                        <TableCell>{format(new Date(p["Date of Referral"]), "MM-dd-yyyy")} </TableCell>  
+                                        <TableCell>{p["Date of Referral"]} </TableCell>  
                                         <TableCell>{p["First Name"]} </TableCell>
                                         <TableCell>{p["Last Name"]} </TableCell>
+                                        {domainPath === "perseus-house" ? <TableCell>Pending </TableCell> : 
                                         <TableCell>{p["Referral Source"]} </TableCell>
+                                        }
                                     </TableRow>
                                 ))
 

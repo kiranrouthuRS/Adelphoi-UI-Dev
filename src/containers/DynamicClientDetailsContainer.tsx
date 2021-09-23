@@ -109,7 +109,7 @@ export class DynamicClientDetailsContainer extends React.Component<
       await this.searchClient(index, "", "", "", "");
     }
     // fetch program for this client
-    if(domainPath !== "persues-house"){
+    if(domainPath !== "perseus-house"){
       await this.props.getProgramsForClient(index, version);
     }
     this.setState({ isLoading: false });
@@ -271,7 +271,7 @@ export class DynamicClientDetailsContainer extends React.Component<
     const { is_prediction_available }: any = this.props.user && this.props.user.user;
     const is_role_type: any = this.props.user && this.props.user.user.role_type
      const searchData: any = this.props && this.props.client && this.props.client.searchData && this.props.client.searchData
-    if(domainPath === "persues-house"){
+    if(domainPath === "perseus-house"){
       return (
         <div css={wrap}>
           <div css={mainContent}>

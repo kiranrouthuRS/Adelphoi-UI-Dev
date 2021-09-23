@@ -222,7 +222,7 @@ export class PredictionFormStep extends React.Component<
     let { name, value } = e.target
     
     
-    if(domainPath === "persues-house"){
+    if(domainPath === "perseus-house"){
       if (name === "Date_of_Birth") {
         let {First_Name,Last_Name} = this.state.client_form
         const is_accessToken: any = this.props.user && this.props.user.user.accessToken;
@@ -247,7 +247,9 @@ export class PredictionFormStep extends React.Component<
    let TScore = Persues_House_Score.find(score =>  score.Question === question.replace(/_/g, ' ')) 
    let selectedID = Array.isArray(id) ? id[0] : id;
    let isChecked = Array.isArray(id) ? id[1] : "";
-   let score = TScore ? (TScore.values[selectedID].id)  : 0; 
+   question = TScore?.related !== "" ? this.state.visitedQuestion[question] === undefined ? question : TScore?.related : question
+   let score = TScore ? TScore?.related !== "" ? this.state.visitedQuestion[question] === undefined ? 0 : this.state.visitedQuestion[question] === 0 ? 0 : selectedID?.toString() === "0" ? 0 : -this.state.client_form[TScore?.related]?.length+1 :(TScore.values[selectedID]?.id)  : 0; 
+  let  clearPreviousData = TScore && TScore?.related && selectedID?.toString() === "1" && this.state.client_form[TScore?.related] !== undefined
    if(TScore !== undefined){
        await this.setState( 
           prevstate => ({ 
@@ -258,7 +260,7 @@ export class PredictionFormStep extends React.Component<
                  prevstate.trauma_score === 0 ? prevstate.trauma_score + Number(score) : prevstate.trauma_score
                   :prevstate.trauma_score + Number(score)
                  : 
-                 TScore?.addValues ? prevstate.trauma_score - Number(score)
+                 TScore?.addValues ? prevstate.trauma_score - Number(score) 
                  :
                  this.state.client_form[question] && Number(score) === 0 ? prevstate.trauma_score : this.state.client_form[question].length === 2 ? prevstate.trauma_score - this.state.visitedQuestion[question] : prevstate.trauma_score 
               : 
@@ -266,14 +268,15 @@ export class PredictionFormStep extends React.Component<
               this.state.visitedQuestion[question] ? (prevstate.trauma_score - this.state.visitedQuestion[question]) + Number(score): 
                          prevstate.trauma_score + Number(score)
                   }));     
-                       this.setState({
+                  await  this.setState({
                               client_form: {
                                 ...this.state.client_form,
                                 ["Trauma_Score"]: this.state.trauma_score, 
+                                [question]: clearPreviousData ? [] : this.state.client_form[question]
                               },
                               visitedQuestion : {
                                 ...this.state.visitedQuestion,
-                                [question]:   Number(score) 
+                                [question]:   score < 0 ? 0 : Number(score) 
                         }  
                             })
              }            
@@ -571,6 +574,7 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions, header_color } = this.state;
+    console.log(this.state)
     return (
       <div css={wrap}>
 
