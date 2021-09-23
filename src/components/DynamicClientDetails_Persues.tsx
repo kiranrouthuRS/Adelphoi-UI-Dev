@@ -62,6 +62,7 @@ interface DynamicClientDetails_PersuesProps {
     program_completion: number | null,
     Remained_Out_of_Care: number | null,
    program_significantly_modified: number,
+   client_psychiatrically_hospitalized: number,
     Program: string | null,
     discharge_location: string | null,
     start_date: any | null,
@@ -90,6 +91,7 @@ interface FormValues {
   Reason_for_rejected: string | number | any;
   Remained_Out_of_Care: string | number | null;
   program_significantly_modified: number | string | null;
+  client_psychiatrically_hospitalized: number | string | null;
   Program: any;
   start_date: string;
   end_date: string;
@@ -265,6 +267,9 @@ const locationOptions = suggested_locations
       program_significantly_modified: Number(
         client.program_significantly_modified
       ),
+      client_psychiatrically_hospitalized: Number(
+        client.client_psychiatrically_hospitalized
+      ),
       Program: program,
       start_date:
         client.start_date !== null ? startDate ? startDate : client.start_date : "",
@@ -341,7 +346,7 @@ const locationOptions = suggested_locations
         return Math.floor(difference_ms / ONE_WEEK);
         
       }
-    
+    console.log(SelectedVersion)
  return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -394,7 +399,7 @@ const locationOptions = suggested_locations
         </div>
       
       {
-        SelectedVersion && SelectedVersion[0].sections.map((ques, id) =>
+        SelectedVersion && SelectedVersion[0].sections.map((ques, id) => ques.related === "false" &&
           <Accordion defaultExpanded={id === 0 ? true : false} key={id}> 
             <AccordionSummary
               css={panelHeader}
@@ -405,8 +410,9 @@ const locationOptions = suggested_locations
             </AccordionSummary>
             <AccordionDetails css={panel}>
               {display(id, SelectedVersion).map((item, index) => {
-                return <div css={fieldRow} key={index}>{item.map((ques, index_1) => {
-                  return <div css={twoCol} key={index_1}>
+                return <div css={fieldRow} key={index}>{item.map((ques, index_1) =>  {
+                  
+                  return ques.related === "no" &&  <div css={twoCol} key={index_1}>
                     <label css={txtLabel}>{ques.question}</label>  
                     <div css={txtDetail}>
                       {Array.isArray(ques.answer)? ques.answer.toString(): 
@@ -505,13 +511,13 @@ const locationOptions = suggested_locations
                 ? null 
                 : Number(values.Program_Completion);
             const Remained_Out_of_Care =
-            values.Remained_Out_of_Care === ""
-              ? null
-              : Number(values.Remained_Out_of_Care); 
+              values.Remained_Out_of_Care === ""
+                ? null
+                : Number(values.Remained_Out_of_Care); 
             const length_of_stay = 
-            values.length_of_stay === ""
-              ? null
-              : values.length_of_stay; 
+              values.length_of_stay === ""
+                ? null
+                : values.length_of_stay; 
             const Reason_not_accepted  =
               values.Reason_not_accepted === ""
                 ? null
@@ -550,6 +556,7 @@ const locationOptions = suggested_locations
               Program_Completion,
               Remained_Out_of_Care,
               Number(values.program_significantly_modified),
+              Number(values.client_psychiatrically_hospitalized),
               program,
               discharge_location,
               start_date,
@@ -559,8 +566,7 @@ const locationOptions = suggested_locations
               Reason_not_accepted,
               Reason_for_rejected,
               client_recidivate
-             
-            );
+             );
             helpers.resetForm();
             }
           }}
@@ -574,7 +580,7 @@ const locationOptions = suggested_locations
             >
               <div css={fieldRow}>
                 <div css={twoCol}>
-                  <label css={label} htmlFor="program_significantly_modified">
+                  <label css={label} htmlFor="referral_status">
                     Referral Status
                 </label>
                 </div>
@@ -824,6 +830,36 @@ const locationOptions = suggested_locations
                   />
                 </div>
               </div>
+              {(values.Program_Completion?.toString()) &&
+              <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label} htmlFor="client_psychiatrically_hospitalized">
+                  Was this client psychiatrically hospitalized during this treatment stay?
+                </label>
+                </div>
+                <div css={twoCol}>
+                  <div css={fieldBox}>
+                    <input
+                      type="checkbox"
+                      disabled = {version_changed || [0,1].includes(props.client.Program_Completion) }  
+                      onChange={handleChange}
+                      name="client_psychiatrically_hospitalized"
+                      id="client_psychiatrically_hospitalized"
+                      value="true"
+                      checked={
+                        values.client_psychiatrically_hospitalized !== null
+                          ? Number(values.client_psychiatrically_hospitalized) === 1
+                          : false
+                      }
+                    />
+                  </div>
+                  <ErrorMessage
+                    component="span"
+                    name="client_psychiatrically_hospitalized"
+                  />
+                </div>
+              </div>
+              }
               <div css={fieldRow}>
                 <div css={twoCol}>
                   <label css={label}>Length of Stay <small>(Days)</small></label>

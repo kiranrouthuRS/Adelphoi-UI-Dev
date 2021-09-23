@@ -172,7 +172,8 @@ const Login: React.FC<LoginFormProps> = props => {
 
   const initialValues: LoginFormValues = { email: "", password: "", email_id: "", forgotpassword: false };    
   const { error } = props;
-  const domain = domainPath.charAt(0).toUpperCase() + domainPath.substr(1).toLowerCase();
+  let domain = domainPath.charAt(0).toUpperCase() + domainPath.substr(1).toLowerCase();
+        domain = domain === "Perseus-house" ? "Perseus House Inc" : domain 
   return (
     <div >
       
@@ -198,7 +199,7 @@ const Login: React.FC<LoginFormProps> = props => {
         </Avatar> */}
         <Typography component="div" variant="h5"
           className={classes.brandTitle}>
-              Login to FirstMatch&reg; for {domain}
+              Login to FirstMatch&reg; for <small>&nbsp; {domain}</small>
         </Typography >
               {error && (
                 <Typography

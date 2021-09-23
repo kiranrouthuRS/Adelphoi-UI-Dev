@@ -125,7 +125,7 @@ export class DynamicNewClientContainer extends React.Component<
       })
     }
   }
-  this.props.clearClient();
+  return res.data
   };
 
   getLocationsAndPcr = async (selected_program: string) => {

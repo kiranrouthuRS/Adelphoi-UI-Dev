@@ -1478,6 +1478,7 @@ export const updateProgramCompletion1 = async (
   Program_Completion: number | null,
   Remained_Out_of_Care: number | null,
   program_significantly_modified: number,
+  client_psychiatrically_hospitalized: number,
   program: any,
   discharge_location: any,
   start_date: any,
@@ -1490,10 +1491,11 @@ export const updateProgramCompletion1 = async (
   currentUser: any
 ) => {
   try {
-    const data = {
+    const data =  {
       Program_Completion : Program_Completion,
       Remained_Out_of_Care : Remained_Out_of_Care,
-      program_significantly_modified : program_significantly_modified,
+      program_significantly_modified : program_significantly_modified, 
+      client_psychiatrically_hospitalized : client_psychiatrically_hospitalized,
       Program: program,
       discharge_location: discharge_location,
       start_date : start_date,
@@ -1504,9 +1506,18 @@ export const updateProgramCompletion1 = async (
       Reason_for_rejected: Reason_for_rejected,
       client_recidivate: client_recidivate
     }
+    let final_data: any = "";
+    for (const [key, value] of Object.entries(data)) {
+
+      if (value) {
+        final_data = {...final_data, [key]: value }
+      }
+  
+    }
+    console.log(final_data)
     const response = await axios.put(
       `${baseApiUrl}/${domainPath}/program_complete/${client_code}/`,
-      data, {
+      final_data, {
       headers: {
         'Authorization': `Bearer ${currentUser}`
       }

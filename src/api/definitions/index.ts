@@ -147,6 +147,7 @@ export interface Client {
   Remained_Out_of_Care: number | null;
   referral: string | null;
   program_significantly_modified: number | null;
+  client_psychiatrically_hospitalized: number | null;
   sections: any ;
   length_of_stay: string | null;
   discharge_location: string | null;
@@ -308,6 +309,7 @@ export const emptyClient: Client = {
   Returned_to_Care: null,
   Remained_Out_of_Care: null,
   program_significantly_modified: null,
+  client_psychiatrically_hospitalized: null,
   program_model_suggested: null,
   length_of_stay:  null,
   discharge_location:  null,
