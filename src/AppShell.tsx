@@ -164,25 +164,32 @@ const billing = css`
   }
 `;
 const btn_container = css`
-   transform: translate(800px, 20px);
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  position: fixed;
-  @media all and (max-width: 520px) {
-    transform: translate(600px, 20px);
-  }
+      position: fixed;
+      top: 50%;
+      right: 0px;
+      width: 115px;
+        
 `;
 
 const fixed_button = css`
-  transform: rotate(-90deg);
- height: 40px;
- width: 180px;
- font-size: 24px;
- background-color: #8F00FF;
- color: #fff;
- border: 2px solid #8F00FF;
- border-radius: 3px;
+      transform: rotate(-90deg);
+      -webkit-transform: rotate(-90deg); 
+      -moz-transform: rotate(-90deg); 
+      -o-transform: rotate(-90deg); 
+      display: block; 
+      margin-left: 10px;
+      text-align:center;
+      width: 165px;
+      padding: 8px 16px;
+      background-color: #8F00FF;
+      color: #fff;
+      border: 2px solid #8F00FF;
+      border-radius: 3px;
+      font-family: Arial, sans-serif; 
+      font-size: 17px; 
+      font-weight: bold; 
+      text-decoration: none;  
+      border-radius: 4px;
 `;
 const customStyles = {
   content: {
