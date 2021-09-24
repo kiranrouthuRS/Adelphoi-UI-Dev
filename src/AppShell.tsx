@@ -241,13 +241,14 @@ const [description, setDescription] = useState("");
         }
         
         const res = await sendTicket(formData);
+        console.log(res)
         if (res.message === "your ticket raised") {
             setisOpen(false)
             setSubject("")
             setDescription("")
-            alert(res.message)
+            alert(res.message) 
           } else{
-            alert(res.message ? res.message : "Something went wrong")
+            alert(res.message ? "Allowed formats are png,jpg,jpeg,pdf,xls,xlsx,csv . Required 1 MB file." : "Something went wrong")
           }
   }
  return (
