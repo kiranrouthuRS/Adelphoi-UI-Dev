@@ -1506,10 +1506,11 @@ export const updateProgramCompletion1 = async (
       Reason_for_rejected: Reason_for_rejected,
       client_recidivate: client_recidivate
     }
+    console.log(data)  
     let final_data: any = "";
     for (const [key, value] of Object.entries(data)) {
 
-      if (value) {
+      if (value || value === 0) {
         final_data = {...final_data, [key]: value }
       }
   
