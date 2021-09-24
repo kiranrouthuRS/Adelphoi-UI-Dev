@@ -346,7 +346,7 @@ const locationOptions = suggested_locations
         return Math.floor(difference_ms / ONE_WEEK);
         
       }
-      
+       
  return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -930,7 +930,7 @@ const locationOptions = suggested_locations
                   </div>
                 </div>
               } 
-              { values.Program_Completion?.toString() === "1" || (props.client.Program_Completion?.toString() !== "1") && props.client.discharge_location?.toString() !== "8" &&
+              {values.discharge_location?.toString() === "8" || values.Program_Completion?.toString() === "1" || (props.client.Program_Completion?.toString() !== "1") && props.client.discharge_location?.toString() !== "8" &&
               (
               <div css={fieldRow}> 
                 <div css={twoCol}>
