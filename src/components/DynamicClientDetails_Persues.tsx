@@ -346,6 +346,7 @@ const locationOptions = suggested_locations
         return Math.floor(difference_ms / ONE_WEEK);
         
       }
+      
  return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -842,18 +843,35 @@ const locationOptions = suggested_locations
                 <div css={twoCol}>
                   <div css={fieldBox}>
                     <input
-                      type="checkbox"
+                      type="radio"
                       disabled = {version_changed || [0,1].includes(props.client.Program_Completion) }  
                       onChange={handleChange}
                       name="client_psychiatrically_hospitalized"
                       id="client_psychiatrically_hospitalized"
-                      value="true"
+                      value="1"
                       checked={
                         values.client_psychiatrically_hospitalized !== null
                           ? Number(values.client_psychiatrically_hospitalized) === 1
                           : false
                       }
                     />
+                    <label >Yes</label>
+                  </div>
+                  <div css={fieldBox}>
+                    <input
+                      type="radio"
+                      disabled = {version_changed || [0,1].includes(props.client.Program_Completion) }  
+                      onChange={handleChange}
+                      name="client_psychiatrically_hospitalized"
+                      id="client_psychiatrically_hospitalized"
+                      value="0"
+                      checked={
+                        values.client_psychiatrically_hospitalized !== null
+                          ? Number(values.client_psychiatrically_hospitalized) === 0
+                          : false
+                      }
+                    />
+                     <label >No</label>
                   </div>
                   <ErrorMessage
                     component="span"

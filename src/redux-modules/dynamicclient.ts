@@ -351,6 +351,7 @@ export const actions = {
            confidence: sData[latestVersion].confidence,
           model_program: sData[latestVersion].model_program,
           program_significantly_modified: sData[latestVersion].program_significantly_modified,
+          client_psychiatrically_hospitalized: sData[latestVersion].client_psychiatrically_hospitalized,
           referred_program: sData[latestVersion].referred_program,
           roc_confidence: sData[latestVersion].roc_confidence,
           length_of_stay: sData[latestVersion].length_of_stay?.toString(),
