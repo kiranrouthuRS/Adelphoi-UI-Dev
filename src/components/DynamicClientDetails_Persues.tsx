@@ -953,7 +953,7 @@ const locationOptions = suggested_locations
                     <option value="">Select</option> 
                     <option value="0">Yes</option>
                     <option value="1">No</option>
-                    <option value="2">Internal Transfer​</option>
+                    
                   </select>
                 </div>
                
