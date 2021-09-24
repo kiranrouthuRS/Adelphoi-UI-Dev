@@ -346,7 +346,6 @@ const locationOptions = suggested_locations
         return Math.floor(difference_ms / ONE_WEEK);
         
       }
-    console.log(SelectedVersion)
  return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -490,6 +489,9 @@ const locationOptions = suggested_locations
               if (!values.discharge_location) {
                 errors.discharge_location = "Required";
               }
+              // if (!values.client_psychiatrically_hospitalized) {
+              //   errors.client_psychiatrically_hospitalized = "Required";
+              // }
             }
             if (values.Remained_Out_of_Care?.toString()) { 
               if (!values.client_recidivate) {
@@ -909,10 +911,10 @@ const locationOptions = suggested_locations
                     <ErrorMessage component="span" name="discharge_location" />
                   </div>
                 </div>
-              }
-              { (props.client.Program_Completion?.toString() !== "1") && props.client.discharge_location?.toString() !== "8" &&
+              } 
+              { values.Program_Completion?.toString() === "1" || (props.client.Program_Completion?.toString() !== "1") && props.client.discharge_location?.toString() !== "8" &&
               (
-              <div css={fieldRow}>
+              <div css={fieldRow}> 
                 <div css={twoCol}>
                   <label css={label}>Remained Out of Care</label>
                 </div>
