@@ -489,9 +489,9 @@ const locationOptions = suggested_locations
               if (!values.discharge_location) {
                 errors.discharge_location = "Required";
               }
-              // if (!values.client_psychiatrically_hospitalized) {
-              //   errors.client_psychiatrically_hospitalized = "Required";
-              // }
+              if (!values.client_psychiatrically_hospitalized) {
+                errors.client_psychiatrically_hospitalized = "Required";
+              }
             }
             if (values.Remained_Out_of_Care?.toString()) { 
               if (!values.client_recidivate) {
