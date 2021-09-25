@@ -341,6 +341,8 @@ export const actions = {
             : [],
           selected_program: sData[latestVersion].client_selected_program ? sData[latestVersion].client_selected_program : sData[latestVersion].Program,
           Program: sData[latestVersion].Program,
+          Reason_for_rejected: sData[latestVersion].Reason_for_rejected ? sData[latestVersion].Reason_for_rejected : null,
+          Reason_not_accepted: sData[latestVersion].Reason_not_accepted ? sData[latestVersion].Reason_not_accepted : null,
           selected_location: sData[latestVersion].client_selected_locations,
           Program_Completion: sData[latestVersion].Program_Completion,
           Returned_to_Care: sData[latestVersion].Returned_to_Care,
