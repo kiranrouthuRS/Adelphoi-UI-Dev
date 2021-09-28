@@ -248,7 +248,6 @@ export class PredictionFormStep extends React.Component<
 
    AddTraumaScore = async(question,id) => { 
    let TScore = Persues_House_Score.find(score =>  score.Question === question.replace(/_/g, ' ')) 
-   console.log(Persues_House_Score.find(score =>  score.Question === question.replace(/_/g, ' ') ),question.replace(/_/g, ' '))
    let selectedID = Array.isArray(id) ? id[0] : id;
    let isChecked = Array.isArray(id) ? id[1] : "";
    console.log(selectedID,TScore)
@@ -299,6 +298,7 @@ export class PredictionFormStep extends React.Component<
 
   handleChange = async (e) => {
     const { name, value } = e.target;
+    console.log(value)
     let DynamicQuestions = this.state.DynamicQuestions;
     let val1: any = e.target.dataset.val1 ? e.target.dataset.val1 : "";
     const val2: any = e.target.dataset.val2 ? e.target.dataset.val2 : "";
@@ -317,22 +317,10 @@ export class PredictionFormStep extends React.Component<
           let jumpto = jump&&jump.split(',').filter(j => j)
           let ques_jumpto = ques_jump&&ques_jump.split(',').filter(j => j)
           //console.log(DynamicQuestions[idx].questions[idy])
+          
           DynamicQuestions[idx].questions[idy].answer = DynamicQuestions[idx].questions[idy].suggested_answers[value].value
-          Persues_House_Score.length > 0 && await this.AddTraumaScore(name,id)
-          this.setState({
-            DynamicQuestions,
-              prevJump: {
-                ...this.state.prevJump,
-                [name.replace(/ /g, "_")]: jumpto,
-                hasError: false,
-              },
-              prevQuestionJump: {
-                ...this.state.prevQuestionJump, 
-                [name.replace(/ /g, "_")]: ques_jumpto,
-                hasError: false,
-              }
-
-            }) 
+          console.log(DynamicQuestions)
+          
             console.log(jumpto,ques_jumpto,this.state.prevQuestionJump[name.replace(/ /g, "_")]) 
             idx && DynamicQuestions[idx].questions.map((que, i) =>
                 ques_jumpto.includes(que.question)
@@ -351,6 +339,21 @@ export class PredictionFormStep extends React.Component<
                   DynamicQuestions[i].related = "true"
                 )
               )
+              this.setState({
+                DynamicQuestions,
+                  prevJump: {
+                    ...this.state.prevJump,
+                    [name.replace(/ /g, "_")]: jumpto,
+                    hasError: false,
+                  },
+                  prevQuestionJump: {
+                    ...this.state.prevQuestionJump, 
+                    [name.replace(/ /g, "_")]: ques_jumpto,
+                    hasError: false,
+                  }
+    
+                }) 
+              Persues_House_Score.length > 0 && await this.AddTraumaScore(name,id)
            await this.formState(name,value,jumpto,ques_jumpto)
 
     } else {
@@ -362,19 +365,7 @@ export class PredictionFormStep extends React.Component<
         const idy = e.target.dataset.idy;
         console.log(idx,id,idy,name)
         DynamicQuestions[idx].questions[idy].answer = DynamicQuestions[idx].questions[idy].suggested_answers[value].value
-        Persues_House_Score.length > 0 && await this.AddTraumaScore(name,id)
-       
-        this.setState(prevState => ({
-          DynamicQuestions,
-          prevJump: {...prevState.prevJump,
-                      [name.replace(/ /g, "_")]: jump,
-                      hasError: false,
-          },
-          prevQuestionJump: {...prevState.prevQuestionJump,
-                        [name.replace(/ /g, "_")]: ques_jump,
-                        hasError: false,
-          }
-        }));
+         
         console.log(jump,ques_jump,this.state.prevQuestionJump[name.replace(/ /g, "_")],this.state.prevJump[name.replace(/ /g, "_")])
         DynamicQuestions[idx].questions.map((que, i) =>
           ques_jump.includes(que.question)
@@ -392,6 +383,19 @@ export class PredictionFormStep extends React.Component<
             // this.formState()
           )
         )
+        console.log(DynamicQuestions)
+        this.setState(prevState => ({
+          DynamicQuestions,
+          prevJump: {...prevState.prevJump,
+                      [name.replace(/ /g, "_")]: jump,
+                      hasError: false,
+          },
+          prevQuestionJump: {...prevState.prevQuestionJump,
+                        [name.replace(/ /g, "_")]: ques_jump,
+                        hasError: false,
+          }
+        }));
+        Persues_House_Score.length > 0 && await this.AddTraumaScore(name,id)
         await this.formState(name,value,jump,ques_jump)
       }
 
