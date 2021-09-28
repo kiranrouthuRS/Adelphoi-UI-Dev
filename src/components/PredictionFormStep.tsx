@@ -308,7 +308,7 @@ export class PredictionFormStep extends React.Component<
     let jump = "";
     let ques_jump = "";
     if (type === "select") {
-          let optionElement = e.target.childNodes[e.target.selectedIndex]
+          let optionElement = e.target.childNodes[e.target.selectedIndex] 
           let idx = optionElement.getAttribute('data-idx');
           let id = optionElement.getAttribute('data-id');
           let idy = optionElement.getAttribute('data-idy');
@@ -316,13 +316,13 @@ export class PredictionFormStep extends React.Component<
           ques_jump = optionElement.getAttribute('data-quesjump');
           let jumpto = jump&&jump.split(',').filter(j => j)
           let ques_jumpto = ques_jump&&ques_jump.split(',').filter(j => j)
-          //console.log(DynamicQuestions[idx].questions[idy])
+          console.log(id,idx,idy,value)
           
-          DynamicQuestions[idx].questions[idy].answer = DynamicQuestions[idx].questions[idy].suggested_answers[value].value
+          DynamicQuestions[idx].questions[idy].answer = id ? DynamicQuestions[idx].questions[idy].suggested_answers[value].value :""
           console.log(DynamicQuestions)
           
             console.log(jumpto,ques_jumpto,this.state.prevQuestionJump[name.replace(/ /g, "_")]) 
-            idx && DynamicQuestions[idx].questions.map((que, i) =>
+            id && DynamicQuestions[idx].questions.map((que, i) =>
                 ques_jumpto.includes(que.question)
                   ? (DynamicQuestions[idx].questions[i].related = "no")
                   : (this.state.prevQuestionJump[name.replace(/ /g, "_")] &&
@@ -695,7 +695,8 @@ export class PredictionFormStep extends React.Component<
                               data-length={ques.suggested_jump.length}
          
                             >
-                              <option value="">Select</option>
+                              <option data-idx={index} 
+                                  data-idy={ind} data-id = ""  value="">Select</option>
                               {ques.suggested_answers.map((ans, i) =>
                                   <option key={i}
                                   value={ans.id}
