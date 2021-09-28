@@ -46,6 +46,7 @@ export interface UsersListState {
   adminList: string[];
   isOpen: boolean;
   adminEmail: string;
+  alertUser: boolean;
 }
 
 export interface UsersListProps {
@@ -96,7 +97,8 @@ export class UsersList extends React.Component<
       adminList:[],
       isLoading: this.props.isLoading,
       isOpen: false,
-      adminEmail: "" 
+      adminEmail: "",
+      alertUser: false
     
     };
   }
@@ -220,6 +222,25 @@ export class UsersList extends React.Component<
     this.setState({ isLoading: false });
     window.scrollTo(0, 0);
   }
+  alertDelete = async (e: any) => {
+    e.preventDefault();
+    let userID: any = this.state.id;
+    let adminEmail: any = this.state.adminEmail;
+    if (e.currentTarget.dataset.id === 0 || e.currentTarget.dataset.id) {
+      userID = e.currentTarget.dataset.id;
+      this.setState({id: userID})
+    }
+    const data: any = {
+           id: userID,
+           adminEmail: adminEmail
+
+    }
+    this.setState({
+      alertUser: true,
+      isOpen: true
+    })
+  }
+
   handleDelete = async (e: any) => {
     e.preventDefault();
     let userID: any = this.state.id;
@@ -251,6 +272,7 @@ export class UsersList extends React.Component<
     const { usersList, rolesList, user } = this.props;
     let user_role = user.user.role_type
     const isEdit = this.state.isEdit
+    console.log(this.state)
     return (
       <form name="UsersForm" onSubmit={this.handleSubmit}>
         <Backdrop css={backdrop} open={this.props.isLoading || this.state.isLoading}>
@@ -422,9 +444,9 @@ export class UsersList extends React.Component<
                   </TableCell>
                   <TableCell>
                   {(  user_role === "Coordinator" ? "-" :
-              user_role === "Admin" && (p.role_type === "Super Admin" || p.role_type === "Admin" )) ? "-" :
-              <a href="" data-id={p.id} onClick={this.handleDelete}>Delete</a>
-                                }
+              user_role === "Admin" && (p.role_type === "Super Admin" || p.role_type === "Admin" )) ? "-" : 
+              <a href="" data-id={p.id} onClick={this.alertDelete}>Delete</a>
+                                } 
                    
                   </TableCell>
                 </TableRow>
@@ -445,6 +467,48 @@ export class UsersList extends React.Component<
             style={customStyles}
             contentLabel="Example Modal"
           >
+            {this.state.alertUser ? (
+              <React.Fragment>
+              <h1 css={subHeading} style={{ color: this.props.headerColor }}>Are you sure to delete this User.</h1>
+              <Grid container spacing={3}>
+              <Grid item xs={2} >&nbsp; </Grid>
+              <Grid item xs={4} >
+
+            <Button
+              type="submit"
+              size="large"
+              variant="contained"
+              color="primary"
+              style={{ marginRight: 10, 
+                backgroundColor: this.props.headerColor,
+                color: "#fff" }}
+              onClick = {this.handleDelete}
+            >
+              Yes
+            </Button>
+
+          </Grid>
+          <Grid item xs={4} >
+
+          <Button
+            type="submit"
+            size="large"
+            variant="contained"
+            color="primary"
+            style={{ marginRight: 10, 
+              backgroundColor: this.props.headerColor,
+              color: "#fff" }}
+            onClick = {(e) => this.setState({isOpen: false, alertUser: false})}
+          >
+            No
+          </Button>
+
+        </Grid>
+        <Grid item xs={2} >&nbsp; </Grid>
+        </Grid> 
+        </React.Fragment>
+            ) : (
+              <React.Fragment>
             <div>
               <h1 css={subHeading} style={{ color: this.props.headerColor }}>Please choose one of the below to be a default SUPER ADMIN​</h1>
               
@@ -485,7 +549,9 @@ export class UsersList extends React.Component<
               Delete USER
             </Button>
 
-</Grid>
+          </Grid>
+          </React.Fragment>
+          )}
           </Modal>
       </form>
     );
