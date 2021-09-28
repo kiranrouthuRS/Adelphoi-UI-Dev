@@ -104,6 +104,7 @@ interface FormValues {
 
 const DynamicClientDetails_Persues: React.FC<DynamicClientDetails_PersuesProps> = props => {
   const history = useHistory();
+  console.log(props)
   const [modalIsOpen,setIsOpen] = useState(false);
   const [predicted_program, setPredictedProgram] = useState<string | null>(
     null
@@ -353,7 +354,7 @@ const locationOptions = suggested_locations
         return Math.floor(difference_ms / ONE_WEEK);
         
       }
-       
+       console.log(SelectedVersion)
  return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -757,7 +758,7 @@ const locationOptions = suggested_locations
                     name="start_date"
                     disabled = {version_changed || props.client.referral_status !== "pending" }  
                     css={inputField}
-                    min= {SelectedVersion[0].sections[0].questions[6].answer}
+                     min= {SelectedVersion&&SelectedVersion[0].sections[0].questions[6].answer} 
                     placeholder=""
                     value={values.start_date || ""}
                     onChange={handleChange}
