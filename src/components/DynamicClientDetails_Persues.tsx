@@ -189,7 +189,11 @@ const DynamicClientDetails_Persues: React.FC<DynamicClientDetails_PersuesProps> 
   let suggested_locations : any = props.client.SuggestedLocations?.length > 0 ? 
                                                props.client.SuggestedLocations : 
                                                props.client["Suggested Locations"]
- const programOptions = props.client.SuggestedPrograms
+  let program = ["Andromeda House RTF","Andromeda House ITU",
+                 "Brighter Horizons","Girls Enhanced RTF",
+                 "Boys Enhanced RTF","Perseus House",
+                 "7th Street"];
+ const programOptions = program
     ? props.client.SuggestedPrograms.map(p => {
       return {
         label: p,
@@ -210,7 +214,8 @@ const locationOptions = suggested_locations
    []; 
   const getInitialValues = (): FormValues => {
     const { client, is_role_type, searchData } = props;
-    let program: any = null;
+    console.log(client)     
+    let program: any = null; 
     let location: any = null;
     let referral: any = null;
     if (client.selected_referral) {
