@@ -4,11 +4,12 @@ import React from "react";
 import Modal from "react-modal";
 import Button from "@material-ui/core/Button";
 import FormData from "form-data"
-import { searchDClient } from "../api/api";
 import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import {Persues_House_Score} from "./TramaQuestion"
 import { domainPath } from "../App"
+import {searchDClient} from "../api/api";    
+
 
 import {
   wrap,
@@ -243,14 +244,21 @@ export class PredictionFormStep extends React.Component<
       }
     }
     
-  }
+  }  
 
    AddTraumaScore = async(question,id) => { 
    let TScore = Persues_House_Score.find(score =>  score.Question === question.replace(/_/g, ' ')) 
+   console.log(Persues_House_Score.find(score =>  score.Question === question.replace(/_/g, ' ') ),question.replace(/_/g, ' '))
    let selectedID = Array.isArray(id) ? id[0] : id;
    let isChecked = Array.isArray(id) ? id[1] : "";
+   console.log(selectedID,TScore)
    question = TScore?.related !== "" ? this.state.visitedQuestion[question] === undefined ? question : TScore?.related : question
-   let score = TScore ? TScore?.related !== "" ? this.state.visitedQuestion[question] === undefined ? 0 : this.state.visitedQuestion[question] === 0 ? 0 : selectedID?.toString() === "0" ? 0 : -this.state.client_form[TScore?.related]?.length+1 :(TScore.values[selectedID]?.id)  : 0; 
+   let score = TScore ? TScore?.related !== "" ? 
+             this.state.visitedQuestion[question] === undefined ? 0 : 
+             this.state.visitedQuestion[question] === 0 ? 0 : 
+             selectedID?.toString() === "0" ? 0 
+             : -this.state.client_form[TScore?.related]?.length+1 :
+             (TScore.values[selectedID].id)  : 0; 
   let  clearPreviousData = TScore && TScore?.related && selectedID?.toString() === "1" && this.state.client_form[TScore?.related] !== undefined
    console.log(score,this.state.visitedQuestion[question])
   if(TScore !== undefined){
@@ -354,7 +362,7 @@ export class PredictionFormStep extends React.Component<
         const idy = e.target.dataset.idy;
         console.log(idx,id,idy,name)
         DynamicQuestions[idx].questions[idy].answer = DynamicQuestions[idx].questions[idy].suggested_answers[value].value
-        Persues_House_Score.length > 0 && this.AddTraumaScore(name,id)
+        Persues_House_Score.length > 0 && await this.AddTraumaScore(name,id)
        
         this.setState(prevState => ({
           DynamicQuestions,
