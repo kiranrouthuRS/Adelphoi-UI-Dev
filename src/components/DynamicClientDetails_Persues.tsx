@@ -751,7 +751,8 @@ const locationOptions = suggested_locations
                     type="date"
                     name="start_date"
                     disabled = {version_changed || props.client.referral_status !== "pending" }  
-                   css={inputField}
+                    css={inputField}
+                    min= {SelectedVersion[0].sections[0].questions[6].answer}
                     placeholder=""
                     value={values.start_date || ""}
                     onChange={handleChange}
@@ -798,6 +799,7 @@ const locationOptions = suggested_locations
                       disabled = {version_changed || [0,1].includes(props.client.Program_Completion) }     
                       css={inputField}
                       // disabled={Number(values.Program_Completion) === 0}
+                      min = {values.start_date}
                       placeholder=""
                       value={values.end_date || ""}
                       onChange={(e) => {values.length_of_stay = get_length_of_stay(values.start_date,e.target.value);
