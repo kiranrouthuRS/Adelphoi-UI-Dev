@@ -267,9 +267,11 @@ const locationOptions = suggested_locations
       program_significantly_modified: Number(
         client.program_significantly_modified
       ),
-      client_psychiatrically_hospitalized: Number(
-        client.client_psychiatrically_hospitalized
-      ),
+      client_psychiatrically_hospitalized: 
+        client.client_psychiatrically_hospitalized === "" 
+        ? ""
+        : client.client_psychiatrically_hospitalized 
+      ,
       Program: program,
       start_date:
         client.start_date !== null ? startDate ? startDate : client.start_date : "",
@@ -435,7 +437,7 @@ const locationOptions = suggested_locations
        {( props.client.referral_status === "not_placed" || 
           props.client.referral_status === "rejected" || 
           props.client.Program_Completion?.toString() === "1" ||
-          props.client.discharge_location?.toString() === "8" || props.client.Remained_Out_of_Care?.toString()) ? 
+          ["8","9"].includes(props.client.discharge_location?.toString()) || props.client.Remained_Out_of_Care?.toString()) ? 
          (<h3> Click <a href="#" onClick={() =>  
           history.push(
             `/${domainPath}/existing-client/edit-details/${index}&true&true`  
@@ -850,9 +852,7 @@ const locationOptions = suggested_locations
                       id="client_psychiatrically_hospitalized"
                       value="1"
                       checked={
-                        values.client_psychiatrically_hospitalized !== null
-                          ? Number(values.client_psychiatrically_hospitalized) === 1
-                          : false
+                        values.client_psychiatrically_hospitalized?.toString() === "1"
                       }
                     />
                     <label >Yes</label>
@@ -866,9 +866,7 @@ const locationOptions = suggested_locations
                       id="client_psychiatrically_hospitalized"
                       value="0"
                       checked={
-                        values.client_psychiatrically_hospitalized !== null
-                          ? Number(values.client_psychiatrically_hospitalized) === 0
-                          : false
+                        values.client_psychiatrically_hospitalized?.toString() === "0"
                       }
                     />
                      <label >No</label>
@@ -924,13 +922,14 @@ const locationOptions = suggested_locations
                       <option value="5">Inpatient Hospitalization</option>
                       <option value="6">Shelter​</option>
                       <option value="7">Detention​</option>
-                      <option value="8">Internal Transfer​</option>
+                      <option value="8">Step Up – Internal Transfer​</option>
+                      <option value="9">Step Down – Internal Transfer​</option>
                     </select>
                     <ErrorMessage component="span" name="discharge_location" />
                   </div>
                 </div>
               } 
-              {values.discharge_location?.toString() === "8" || values.Program_Completion?.toString() === "1" || (props.client.Program_Completion?.toString() !== "1") && props.client.discharge_location?.toString() !== "8" &&
+              {["8","9"].includes(values.discharge_location?.toString()) || values.Program_Completion?.toString() === "1" || (props.client.Program_Completion?.toString() !== "1")  &&
               (
               <div css={fieldRow}> 
                 <div css={twoCol}>
@@ -999,7 +998,7 @@ const locationOptions = suggested_locations
                   color="primary" 
                   disabled = {version_changed || values.referral_status === "pending" ||
                     ["not_placed","rejected"].includes(props.client.referral_status) 
-                    || (props.client.Remained_Out_of_Care?.toString() || props.client.discharge_location?.toString() === "8")}
+                    || (props.client.Remained_Out_of_Care?.toString() || ["8","9"].includes(props.client.discharge_location?.toString()))}
                   
                 >
                   Submit
