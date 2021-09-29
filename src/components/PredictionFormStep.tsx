@@ -250,7 +250,7 @@ export class PredictionFormStep extends React.Component<
    let TScore = Persues_House_Score.find(score =>  score.Question === question.replace(/_/g, ' ')) 
    let selectedID = Array.isArray(id) ? id[0] : id;
    let isChecked = Array.isArray(id) ? id[1] : "";
-   console.log(selectedID,TScore)
+   console.log(selectedID,TScore,this.state.client_form) 
    question = TScore?.related !== "" ? this.state.visitedQuestion[question] === undefined ? question : TScore?.related : question
    let score = TScore ? TScore?.related !== "" ? 
              this.state.visitedQuestion[question] === undefined ? 0 : 
@@ -281,7 +281,9 @@ export class PredictionFormStep extends React.Component<
                   console.log(this.state.trauma_score)
                  let DynamicQuestions = this.state.DynamicQuestions;
                  (DynamicQuestions[DynamicQuestions.length-1].questions.find(ques=> ques.question === "Trauma Score")).answer = this.state.trauma_score
-                  await  this.setState({
+                  console.log(clearPreviousData,question.replace(/_/g, ' '))
+                  clearPreviousData && (DynamicQuestions[5].questions[1].answer = [])
+                   await  this.setState({
                                 client_form: {
                                 ...this.state.client_form,
                                 ["Trauma_Score"]: this.state.trauma_score, 
@@ -328,6 +330,7 @@ export class PredictionFormStep extends React.Component<
                   : (this.state.prevQuestionJump[name.replace(/ /g, "_")] &&
                     this.state.prevQuestionJump[name.replace(/ /g, "_")].includes(que.question) && (
                       DynamicQuestions[idx].questions[i].related = "yes"
+                      
                     )))
               DynamicQuestions.map((sec, i) => jumpto && jumpto.includes(sec.section) ? (
                 DynamicQuestions[i].related = "false"
@@ -365,7 +368,7 @@ export class PredictionFormStep extends React.Component<
         const idy = e.target.dataset.idy;
         console.log(idx,id,idy,name)
         DynamicQuestions[idx].questions[idy].answer = DynamicQuestions[idx].questions[idy].suggested_answers[value].value
-         
+         console.log(DynamicQuestions)
         console.log(jump,ques_jump,this.state.prevQuestionJump[name.replace(/ /g, "_")],this.state.prevJump[name.replace(/ /g, "_")])
         DynamicQuestions[idx].questions.map((que, i) =>
           ques_jump.includes(que.question)
