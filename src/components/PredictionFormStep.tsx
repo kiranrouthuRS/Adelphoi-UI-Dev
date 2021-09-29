@@ -257,7 +257,7 @@ export class PredictionFormStep extends React.Component<
              this.state.visitedQuestion[question] === 0 ? 0 : 
              selectedID?.toString() === "0" ? 0 
              : -this.state.client_form[TScore?.related]?.length+1 :
-             (TScore.values[selectedID].id)  : 0; 
+             selectedID ?   (TScore.values[selectedID].id) : 0  : 0; 
   let  clearPreviousData = TScore && TScore?.related && selectedID?.toString() === "1" && this.state.client_form[TScore?.related] !== undefined
    console.log(score,this.state.visitedQuestion[question])
   if(TScore !== undefined){
