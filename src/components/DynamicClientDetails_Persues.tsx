@@ -195,7 +195,7 @@ const DynamicClientDetails_Persues: React.FC<DynamicClientDetails_PersuesProps> 
                  "Boys Enhanced RTF","Perseus House",
                  "7th Street"];
  const programOptions = program
-    ? props.client.SuggestedPrograms.map(p => {
+    ? program.map(p => {
       return {
         label: p,
         value: p,
