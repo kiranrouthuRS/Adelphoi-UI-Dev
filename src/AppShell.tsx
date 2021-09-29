@@ -248,7 +248,8 @@ const [description, setDescription] = useState("");
             setDescription("")
             alert(res.message) 
           } else{
-            alert(res.message ? "Allowed formats are png,jpg,jpeg,pdf,xls,xlsx,csv . Required 1 MB file." : "Something went wrong")
+            console.log(res.attachments)
+            alert(res.attachments ? res.attachments[0].errors : res.message)
           }
   }
  return (
