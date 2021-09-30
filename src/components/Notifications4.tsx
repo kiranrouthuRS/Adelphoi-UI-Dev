@@ -207,14 +207,15 @@ const Notifications4: React.FC<Notification4Props> = props => {
                                         }
                                         <TableCell>{p["First Name"]} </TableCell>
                                         <TableCell>{p["Last Name"]} </TableCell>
-                                        <TableCell>{p["Referral Source"]} </TableCell>
                                         {domainPath === "perseus-house" ?
                                         <TableCell> { p.Program } </TableCell> :
                                          <React.Fragment>
+                                             <TableCell>{p["Referral Source"]} </TableCell>
                                         <TableCell>{p.client_selected_locations} </TableCell>
-                                        <TableCell>{p.Program_Completion} </TableCell>
+                                        
                                         </React.Fragment>
                                         }
+                                        <TableCell>{p.Program_Completion} </TableCell>
                                         <TableCell>{format(new Date(p.end_date), "MM-dd-yyyy")} </TableCell>
                                     </TableRow>
                                 ))
