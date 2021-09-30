@@ -191,24 +191,47 @@ export const uploadcsvfile = async (data,is_accessToken) => {
   }
 };
 
-export const sendTicket = async (data) => {
-  console.log(data)
-  try {
-    return await axios.post(`${baseApiUrl}/tickets`, data, )
-      .then(response => {
-        const bill = response.data
-        const path = response.data.response
-        return response.data;
+export const sendTicket = async (data, email_id: string = "") => { 
+  console.log(email_id)
+  // if(data.hasOwnProperty('email_id'))
+  if(email_id){
+    try {
+      return await axios.post(`${baseApiUrl}/tickets`, data, )
+        .then(response => {
+          return response.data;
+        })
+  
+    }
+  
+    catch (error) {
+      console.log('error')
+  
+      throwError(error)
+  
+    }
+  }else{
+    const { dispatch } = store;
+  const currentUser = store.getState().user.user.accessToken;
+    try {
+      return await axios.post(`${baseApiUrl}/${domainPath}/tickets`, data, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.refreshToken}`
+        }
       })
-
+        .then(response => {
+          return response.data;
+        })
+  
+    }
+  
+    catch (error) {
+      console.log('error')
+  
+      throwError(error)
+  
+    }
   }
-
-  catch (error) {
-    console.log('error')
-
-    throwError(error)
-
-  }
+  
 };
 
 export const downloadcsvfile = async (is_accessToken) => {
@@ -1473,7 +1496,7 @@ export const updateProgramCompletion = async (
   }
 };
 
-export const updateProgramCompletion1 = async (
+export const updateProgramCompletion1 = async ( 
   client_code: string,
   Program_Completion: number | null,
   Remained_Out_of_Care: number | null,
@@ -1548,7 +1571,7 @@ export const searchClient = async (
   }
 };
 
-export const searchDClient = async (
+export const searchDClient = async ( 
   client_code: string,
   ssn: string = "",
   first_name: string = "",
@@ -1574,11 +1597,6 @@ export const searchDClient = async (
     throwError(error);
   }
 };
-
-// EXISTING CLIENT PAGE APIs
-// list of programs for existing client
-// http://13.232.1.126:8000/first_match/program/100/
-// Program completion likelihood
 
 export const fetchProgramsForClient = async (client_code: string, currentUser: any) => {
   try {

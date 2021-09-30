@@ -18,7 +18,8 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import { domainPath } from "../App";
-import { loginApiUrl } from "../api/api"; 
+import { loginApiUrl, sendTicket } from "../api/api"; 
+
 import {
   wrap,
   subHeading,
@@ -141,6 +142,47 @@ const customStyles = {
   }
 };
 
+const btn_container = css`
+  position: fixed;
+  top: 50%;
+  right: 0px;
+  width: 115px;
+    
+`;
+
+const fixed_button = css`
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg); 
+  -moz-transform: rotate(-90deg); 
+  -o-transform: rotate(-90deg); 
+  display: block; 
+  margin-left: 10px;
+  text-align:center;
+  width: 165px;
+  padding: 8px 16px;
+  background-color: #8F00FF;
+  color: #fff;
+  border: 2px solid #8F00FF;
+  border-radius: 3px;
+  font-family: Arial, sans-serif; 
+  font-size: 17px; 
+  font-weight: bold; 
+  text-decoration: none;  
+  border-radius: 4px;
+`;
+const customStyles1 = {
+content: {
+top: '50%',
+left: '50%',
+right: 'auto',
+bottom: 'auto',
+marginRight: '-50%',
+height: '75%',
+width: '50%',
+transform: 'translate(-20%, -50%)'
+}
+};
+
 interface LoginFormValues {
   password: string;
   email: string;
@@ -161,6 +203,11 @@ const Login: React.FC<LoginFormProps> = props => {
   const classes = useStyles();
   const [modalIsOpen,setIsOpen] = React.useState(false);
   const [message, setMessage] = React.useState( '' );
+  const [isOpen, setisOpen] = React.useState(false);
+  const [selectedFile, setselectedFile] = React.useState();
+  const [subject, setSubject] = React.useState("");
+  const [email_id, setEmail] = React.useState("");
+  const [description, setDescription] = React.useState("");
   function openModal() {
     setIsOpen(true);
   }
@@ -169,7 +216,48 @@ const Login: React.FC<LoginFormProps> = props => {
     setIsOpen(false);
     
   }
-
+  const handleClose = () => {
+    setisOpen(false)
+    setSubject("")
+    setDescription("")
+    setEmail("")
+  }
+  
+  const isOpenModal = () => {
+    setisOpen(true)
+  }
+  const onFileChange = event => {
+  let file = event.target.files[0]
+  setselectedFile(event.target.files );
+  
+  };
+  const onSubmitTicket = async() => {
+      let files: any = selectedFile
+      const formData = new FormData(); 
+      formData.append('email_id', email_id)
+      formData.append('subject', subject)
+      formData.append('description', description)
+      
+  
+      if(files){
+        for (let i = 0; i < files.length; i++) {
+          formData.append(`attachments`, files[i])
+      }
+      }
+      
+      const res = await sendTicket(formData,"email_id");
+      console.log(res)
+      if (res.message === "your ticket raised") {
+          setisOpen(false)
+          setEmail("")
+          setSubject("")
+          setDescription("")
+          alert(res.message) 
+        } else{
+          console.log(res.attachments)
+          alert(res.attachments ? res.attachments[0].errors : res.message)
+        }
+  }
   const initialValues: LoginFormValues = { email: "", password: "", email_id: "", forgotpassword: false };    
   const { error } = props;
   let domain = domainPath.charAt(0).toUpperCase() + domainPath.substr(1).toLowerCase();
@@ -314,7 +402,84 @@ const Login: React.FC<LoginFormProps> = props => {
             Login
           </Button>
           </div>
-          
+         
+          {isOpen && ( 
+            <React.Fragment>
+            
+                <Modal
+                  isOpen={isOpen}
+                  ariaHideApp={false}
+                  onRequestClose={handleClose}
+                  style={customStyles1}
+                  contentLabel="Example Modal"
+                >
+                 <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label}>Email ID:</label>
+                  <input
+                    type="text"
+                    name="email_id"
+                    css={inputField}
+                    placeholder=""
+                    value={email_id}
+                    onChange={(e)=> setEmail(e.target.value)}
+                    required
+                  />
+                  {/* <ErrorMessage component="span" name="first_name" /> */}
+                </div>
+                </div>
+                <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label}>Subject:</label>
+                  <input
+                    type="text"
+                    name="first_name"
+                    css={inputField}
+                    placeholder=""
+                    value={subject}
+                    onChange={(e)=> setSubject(e.target.value)}
+                    required
+                  />
+                  {/* <ErrorMessage component="span" name="first_name" /> */}
+                </div>
+                </div>
+                <div css={fieldRow}>
+                <div css={twoCol}>
+                  <label css={label}>Description:</label>
+                  <textarea
+                    name="first_name"
+                    css={inputField}
+                    placeholder="Please provide as many details as you can, like the client code, page you are on, actions you took and the problemy you faced. Please attach a file or multiple files."
+                    style={{height:"150px"}} 
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                  />
+                  {/* <ErrorMessage component="span" name="first_name" /> */}
+                </div>
+                  </div>
+                  <div css={fieldRow}>
+                  <div css={twoCol}>
+                  <input type="file" name="uploadfiles" multiple  onChange={onFileChange} />  
+                  </div>
+                  <div css={twoCol}>  
+                 &nbsp;
+                  </div>
+                <div css={twoCol}>
+                <Button
+                    type="submit"
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                    onClick={onSubmitTicket}
+                  >
+                    Submit
+                  </Button>
+                </div>
+                </div>
+                </Modal>
+                </React.Fragment>
+          )}
           <Modal
           isOpen={modalIsOpen}
           ariaHideApp={false}
@@ -409,6 +574,13 @@ const Login: React.FC<LoginFormProps> = props => {
                   
                 )}
               </Formik>
+              <div style={{position: "absolute"}}>
+            <div css={btn_container}>
+              <button onClick={isOpenModal} css={fixed_button} style={{position: "fixed"}}>
+                Need Help? 
+                </button> 
+                </div>
+                </div>
               </div>
         
         </Container>
