@@ -156,9 +156,7 @@ export const actions = {
       ): ThunkAction<Promise<string>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const currentUser = getState().user?.user.accessToken;
-      // if (program && location) {
-      //   await saveLocationAndProgram(client_code, program, location, currentUser);
-      // }
+     console.log(client_psychiatrically_hospitalized,"client_psychiatrically_hospitalized")
       const response = await updateProgramCompletion1(
         client_code,
         Program_Completion,
@@ -199,15 +197,14 @@ export const actions = {
          cl.Program_Completion = Program_Completion ? Program_Completion : Program_Completion === 0 ? 0 : null;
          cl.Remained_Out_of_Care = Remained_Out_of_Care ? Remained_Out_of_Care : Remained_Out_of_Care === 0 ? 0 :null;
          cl.program_significantly_modified = program_significantly_modified ? program_significantly_modified : null; 
-         cl.client_psychiatrically_hospitalized = client_psychiatrically_hospitalized ? client_psychiatrically_hospitalized : null;
+         cl.client_psychiatrically_hospitalized = client_psychiatrically_hospitalized?.toString() ? client_psychiatrically_hospitalized?.toString() : null;
          cl.selected_location = discharge_location ? discharge_location : null
          const updatedCl = {
           ...cl,
           Program_Completion,
           Remained_Out_of_Care, 
           program_significantly_modified,
-          client_psychiatrically_hospitalized,
-          // selected_location: location
+         // selected_location: location
                 };
                 
         if (!updatedCl["Client Code"]) {

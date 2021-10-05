@@ -498,7 +498,7 @@ const locationOptions = suggested_locations
               if (!values.discharge_location) {
                 errors.discharge_location = "Required";
               }
-              if (!values.client_psychiatrically_hospitalized) {
+              if (!values.client_psychiatrically_hospitalized?.toString()) {
                 errors.client_psychiatrically_hospitalized = "Required";
               }
             }
