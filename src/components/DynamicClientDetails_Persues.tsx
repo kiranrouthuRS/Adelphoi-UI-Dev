@@ -423,7 +423,7 @@ const locationOptions = suggested_locations
                   return ques.related === "no" &&  <div css={twoCol} key={index_1}>
                     <label css={txtLabel}>{ques.question}</label>  
                     <div css={txtDetail}>
-                      {Array.isArray(ques.answer)? ques.answer.toString(): 
+                      {Array.isArray(ques.answer)? (ques.answer.toString()).replace(/,/g, ",  "): 
                       ques.answer.toString().includes("-") ? is_date(ques.answer) :       
                       ques.question === "Age" ? props.searchData[0].ageAtEpisodeStart 
                                         ? props.searchData[0].ageAtEpisodeStart:
