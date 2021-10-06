@@ -191,8 +191,8 @@ export const actions = {
          cl.Program = program ? program : null;
          cl.discharge_location = discharge_location ? discharge_location : null;
          cl.length_of_stay = length_of_stay ? length_of_stay : null;
-         cl.Reason_for_rejected = Reason_for_rejected ? Reason_for_rejected : null;
-         cl.Reason_not_accepted = Reason_not_accepted ? Reason_not_accepted : null;
+         cl.Reason_for_rejected = Reason_for_rejected?.toString() ? Reason_for_rejected?.toString() : null;
+         cl.Reason_not_accepted = Reason_not_accepted?.toString() ? Reason_not_accepted?.toString() : null;
          cl.client_recidivate = client_recidivate ? client_recidivate : null;
          cl.Program_Completion = Program_Completion ? Program_Completion : Program_Completion === 0 ? 0 : null;
          cl.Remained_Out_of_Care = Remained_Out_of_Care ? Remained_Out_of_Care : Remained_Out_of_Care === 0 ? 0 :null;

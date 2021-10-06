@@ -758,7 +758,8 @@ const locationOptions = suggested_locations
                     name="start_date"
                     disabled = {version_changed || props.client.referral_status !== "pending" }  
                     css={inputField}
-                     min= {SelectedVersion&&SelectedVersion[0].sections[0].questions[6].answer} 
+                    min= {SelectedVersion&&SelectedVersion[0].sections[0].questions[6].answer} 
+                    max="9999-12-31"
                     placeholder=""
                     value={values.start_date || ""}
                     onChange={handleChange}
@@ -806,6 +807,7 @@ const locationOptions = suggested_locations
                       css={inputField}
                       // disabled={Number(values.Program_Completion) === 0}
                       min = {values.start_date}
+                      max="9999-12-31"
                       placeholder=""
                       value={values.end_date || ""}
                       onChange={(e) => {values.length_of_stay = get_length_of_stay(values.start_date,e.target.value);

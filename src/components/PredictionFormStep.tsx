@@ -684,7 +684,7 @@ export class PredictionFormStep extends React.Component<
                        {( ques.related !== "yes" &&
                         (
                         <div css={twoCol} key={ind}> 
-                          <label css={label1} >{ques.question}</label>
+                          <label css={label1} >{ques.question}=={ques.answer_type}</label>
                           {ques.description &&
                             <label >
                               <small>({ques.description})</small>
@@ -790,6 +790,25 @@ export class PredictionFormStep extends React.Component<
 
                                   </Fragment>
 
+                                  :
+                                  ques.answer_type === "DATE" ?
+                                  <Fragment>
+                                    <input
+                                      css={inputField}
+                                      data-val1={ques.validation1}
+                                      data-val2={ques.validation2}
+                                      data-type={ques.answer_type.toLowerCase()}
+                                      data-msg={ques.error_msg}
+                                      data-idx={index}
+                                      data-idy={ind}
+                                      name={ques.question.replace(/ /g, "_")}
+                                      max="9999-12-31"
+                                      value={this.state.client_form[ques.question.replace(/ /g, "_")]}
+                                      type={ques.answer_type.toLowerCase()}
+                                      onBlur={this.keyUp}
+                                    />
+
+                                  </Fragment>
                                   :
                                   <Fragment>
                                     <input
