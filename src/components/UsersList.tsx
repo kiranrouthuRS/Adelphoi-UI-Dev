@@ -121,15 +121,18 @@ export class UsersList extends React.Component<
     if (isEdit) {
       this.setState({ isLoading: true });
      const response: any = await this.props.updateUsers(users,is_accessToken); 
+     let message = response.status === "failed" && typeof response.message === "object" ? Object.keys(response.message).map(msg=>response.message[msg]) : ""
      this.setState({
-        message: response.status === "failed" ? response.message:"User updated successfully",
+        message: response.status === "failed" ? message ? (message.toString()).replace(/,/g, "  ") : response.message : "User updated successfully",
         isEdit : false
       });
      
     } else {
       const response: any =  await this.props.createUsers(users,is_accessToken);
+      let message = response.status === "failed" && typeof response.message === "object" ? Object.keys(response.message).map(msg=>response.message[msg]) : ""
+      console.log((message.toString()).replace(/,/g, "</br>"))
       this.setState({
-        message: response.status === "failed" ? response.message:"User created successfully"
+        message: response.status === "failed" ? message ? (message.toString()).replace(/,/g, "  ") : response.message : "User created successfully"
       })
       
     }
