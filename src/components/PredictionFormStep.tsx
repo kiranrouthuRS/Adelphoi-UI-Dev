@@ -684,7 +684,7 @@ export class PredictionFormStep extends React.Component<
                        {( ques.related !== "yes" &&
                         (
                         <div css={twoCol} key={ind}> 
-                          <label css={label1} >{ques.question}=={ques.answer_type}</label>
+                          <label css={label1} >{ques.question}</label>
                           {ques.description &&
                             <label >
                               <small>({ques.description})</small>
