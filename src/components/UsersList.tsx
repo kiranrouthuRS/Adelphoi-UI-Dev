@@ -318,6 +318,7 @@ export class UsersList extends React.Component<
               name="email_id"
               css={inputField}
               placeholder=""
+              readOnly = {isEdit}
               value={this.state.email_id}
               onChange={this.handleChangeEmail}
             />
