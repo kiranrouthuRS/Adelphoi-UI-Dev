@@ -104,7 +104,6 @@ interface FormValues {
 
 const DynamicClientDetails_Persues: React.FC<DynamicClientDetails_PersuesProps> = props => {
   const history = useHistory();
-  console.log(props)
   const [modalIsOpen,setIsOpen] = useState(false);
   const [predicted_program, setPredictedProgram] = useState<string | null>(
     null
@@ -215,7 +214,6 @@ const locationOptions = suggested_locations
    []; 
   const getInitialValues = (): FormValues => {
     const { client, is_role_type, searchData } = props;
-    console.log(client)     
     let program: any = null; 
     let location: any = null;
     let referral: any = null;
@@ -354,8 +352,7 @@ const locationOptions = suggested_locations
         return Math.floor(difference_ms / ONE_WEEK);
         
       }
-       console.log(SelectedVersion)
- return (
+  return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
         <CircularProgress color="inherit" />
@@ -827,7 +824,8 @@ const locationOptions = suggested_locations
                   <div css={fieldBox}>
                     <input
                       type="checkbox"
-                      disabled={ version_changed }
+                      disabled={ version_changed || props.client.program_significantly_modified || props.client.Program_Completion?.toString() === "1"  
+                      || (props.client.Remained_Out_of_Care?.toString() || ["8","9"].includes(props.client.discharge_location?.toString())) }
                       onChange={handleChange}
                       name="program_significantly_modified"
                       id="program_significantly_modified"
@@ -1007,7 +1005,8 @@ const locationOptions = suggested_locations
                   variant="contained"  
                   color="primary" 
                   disabled = {version_changed || values.referral_status === "pending" ||
-                    ["not_placed","rejected"].includes(props.client.referral_status) 
+                                ["not_placed","rejected"].includes(props.client.referral_status) ||
+                                props.client.Program_Completion?.toString() === "1"  
                     || (props.client.Remained_Out_of_Care?.toString() || ["8","9"].includes(props.client.discharge_location?.toString()))}
                   
                 >
