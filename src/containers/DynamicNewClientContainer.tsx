@@ -99,7 +99,7 @@ export class DynamicNewClientContainer extends React.Component<
     const { history } = this.props;
     const { index } = this.props.match.params;
     this.props.clearErrors();
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, error: "" });
     //this.props.saveClient(client, true, true);
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     const is_role_type: any = this.props.user && this.props.user.user.role_type
@@ -121,7 +121,7 @@ export class DynamicNewClientContainer extends React.Component<
         this.props.enqueueSnackbar("Client not registered. Please update the client outcomes.")
       }else{
       this.setState({
-        error: res.data.response
+        error: res.data.response ? res.data.response : res.data.message
       })
     }
   }

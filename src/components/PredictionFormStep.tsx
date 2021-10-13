@@ -29,6 +29,7 @@ import {
 import * as Types from "../api/definitions";
 import { Fragment } from "react";
 import { uploadcsvfile, downloadcsvfile } from "../api/api"
+import { isArray } from "util";
 
 
 
@@ -142,8 +143,8 @@ export class PredictionFormStep extends React.Component<
       header_color: this.props.user && this.props.user.user.header_color
     })
     this.formState();
-   
-  }
+   }
+
   formState = async (name:  string = "",value: string = "",jump : any = "",ques_jump: any = "") => {
     let client_form = [] as any;
     let Required_List = [] as any;
@@ -176,7 +177,6 @@ export class PredictionFormStep extends React.Component<
           [ques.question.replace(/ /g, "_")]: ques.required
         })
       }));
-      console.log(client_form)
     let form_data = Object.assign({}, ...client_form)
     let visitedQuestion = [] as any;
     Persues_House_Score.length > 0 && Persues_House_Score.map((question) => 
@@ -184,7 +184,6 @@ export class PredictionFormStep extends React.Component<
          && form_data[question.Question.replace(/ /g, '_')] && visitedQuestion.push({ 
            [question.Question.replace(/ /g, '_')]: form_data[question.Question.replace(/ /g, '_')].length > 1 ? 1 : question.values[form_data[question.Question.replace(/ /g, '_')]]
                                     &&question.values[form_data[question.Question.replace(/ /g, '_')]].id}))
-     console.log(form_data)                                 
     await this.setState({
       // DynamicQuestions: this.props.DynamicQuestions,
       client_form: form_data,
@@ -199,7 +198,8 @@ export class PredictionFormStep extends React.Component<
 
   handleClose = () => {
     this.setState({
-      isOpen: false
+      isOpen: false,
+      err_msg: []
     })
   }
 
@@ -250,8 +250,7 @@ export class PredictionFormStep extends React.Component<
    let TScore = Persues_House_Score.find(score =>  score.Question === question.replace(/_/g, ' ')) 
    let selectedID = Array.isArray(id) ? id[0] : id;
    let isChecked = Array.isArray(id) ? id[1] : "";
-   console.log(selectedID,TScore,this.state.client_form) 
-   question = TScore?.related !== "" ? this.state.visitedQuestion[question] === undefined ? question : TScore?.related : question
+  question = TScore?.related !== "" ? this.state.visitedQuestion[question] === undefined ? question : TScore?.related : question
    let score = TScore ? TScore?.related !== "" ? 
              this.state.visitedQuestion[question] === undefined ? 0 : 
              this.state.visitedQuestion[question] === 0 ? 0 : 
@@ -259,7 +258,6 @@ export class PredictionFormStep extends React.Component<
              : -this.state.client_form[TScore?.related]?.length+1 :
              selectedID ?   (TScore.values[selectedID].id) : 0  : 0; 
   let  clearPreviousData = TScore && TScore?.related && selectedID?.toString() === "1" && this.state.client_form[TScore?.related] !== undefined
-   console.log(score,this.state.visitedQuestion[question])
   if(TScore !== undefined){
        await this.setState( 
           prevstate => ({ 
@@ -278,10 +276,8 @@ export class PredictionFormStep extends React.Component<
               this.state.visitedQuestion[question] ? (prevstate.trauma_score - this.state.visitedQuestion[question]) + Number(score): 
                          prevstate.trauma_score + Number(score) 
                   }));     
-                  console.log(this.state.trauma_score)
                  let DynamicQuestions = this.state.DynamicQuestions;
                  (DynamicQuestions[DynamicQuestions.length-1].questions.find(ques=> ques.question === "Trauma Score")).answer = this.state.trauma_score
-                  console.log(clearPreviousData,question.replace(/_/g, ' '))
                   clearPreviousData && (DynamicQuestions[5].questions[1].answer = [])
                    await  this.setState({
                                 client_form: {
@@ -300,7 +296,6 @@ export class PredictionFormStep extends React.Component<
 
   handleChange = async (e) => {
     const { name, value } = e.target;
-    console.log(value)
     let DynamicQuestions = this.state.DynamicQuestions;
     let val1: any = e.target.dataset.val1 ? e.target.dataset.val1 : "";
     const val2: any = e.target.dataset.val2 ? e.target.dataset.val2 : "";
@@ -318,13 +313,8 @@ export class PredictionFormStep extends React.Component<
           ques_jump = optionElement.getAttribute('data-quesjump');
           let jumpto = jump&&jump.split(',').filter(j => j)
           let ques_jumpto = ques_jump&&ques_jump.split(',').filter(j => j)
-          console.log(id,idx,idy,value)
-          
           DynamicQuestions[idx].questions[idy].answer = id ? DynamicQuestions[idx].questions[idy].suggested_answers[value].value :""
-          console.log(DynamicQuestions)
-          
-            console.log(jumpto,ques_jumpto,this.state.prevQuestionJump[name.replace(/ /g, "_")]) 
-            id && DynamicQuestions[idx].questions.map((que, i) =>
+          id && DynamicQuestions[idx].questions.map((que, i) =>
                 ques_jumpto.includes(que.question)
                   ? (DynamicQuestions[idx].questions[i].related = "no")
                   : (this.state.prevQuestionJump[name.replace(/ /g, "_")] &&
@@ -366,10 +356,7 @@ export class PredictionFormStep extends React.Component<
         const idx = e.target.dataset.idx;
         const id = e.target.dataset.id;
         const idy = e.target.dataset.idy;
-        console.log(idx,id,idy,name)
         DynamicQuestions[idx].questions[idy].answer = DynamicQuestions[idx].questions[idy].suggested_answers[value].value
-         console.log(DynamicQuestions)
-        console.log(jump,ques_jump,this.state.prevQuestionJump[name.replace(/ /g, "_")],this.state.prevJump[name.replace(/ /g, "_")])
         DynamicQuestions[idx].questions.map((que, i) =>
           ques_jump.includes(que.question)
             ? (DynamicQuestions[idx].questions[i].related =  "no" )
@@ -386,7 +373,6 @@ export class PredictionFormStep extends React.Component<
             // this.formState()
           )
         )
-        console.log(DynamicQuestions)
         this.setState(prevState => ({
           DynamicQuestions,
           prevJump: {...prevState.prevJump,
@@ -410,7 +396,6 @@ export class PredictionFormStep extends React.Component<
         const id = e.target.dataset.id;
         const idy = e.target.dataset.idy;  
         const idz = e.target.dataset.idz;      
-        console.log(idx,id,idy,idz,name)
         const checked = e.target.checked;
         DynamicQuestions[idx].questions[idy].answer= DynamicQuestions[idx].questions[idy].answer ? 
                                                      DynamicQuestions[idx].questions[idy].answer : []
@@ -432,8 +417,7 @@ export class PredictionFormStep extends React.Component<
         const idx = e.target.dataset.idx;
         const id = e.target.dataset.id;
         const idy = e.target.dataset.idy;        
-        console.log(name,type)
-         DynamicQuestions[idx].questions[idy].answer = value
+        DynamicQuestions[idx].questions[idy].answer = value
         }
        await this.setState({
         DynamicQuestions,
@@ -453,7 +437,6 @@ export class PredictionFormStep extends React.Component<
         const idx = e.target.dataset.idx;
         const id = e.target.dataset.id;
         const idy = e.target.dataset.idy;        
-        console.log(idx,id,idy,name)
         DynamicQuestions[idx].questions[idy].answer = value
         if (this.state.isEdit === "true" && name === "Client_Code") {
           this.setState(prevState => ({
@@ -489,7 +472,6 @@ export class PredictionFormStep extends React.Component<
         const idx = e.target.dataset.idx;
         const id = e.target.dataset.id;
         const idy = e.target.dataset.idy;        
-        console.log(idx,id,idy,name)
         DynamicQuestions[idx].questions[idy].answer = value
         
         this.setState({
@@ -534,8 +516,8 @@ export class PredictionFormStep extends React.Component<
       
         this.setState({
           isSubmitted: false,
-          err_msg: this.props.errors,
-          isOpen: this.props.errors ? true : false, 
+         // err_msg: this.props.errors,
+         // isOpen: this.props.errors ? true : false, 
              // isSuccess: true
         })
         const response: any = await this.props.onFormSubmit(formData);
@@ -617,7 +599,6 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions, header_color } = this.state;
-    console.log(this.state)
     return (
       <div css={wrap}>
 
@@ -663,7 +644,7 @@ export class PredictionFormStep extends React.Component<
           >
             <div>
               <h1 css={subHeading} style={{ color: header_color }}>Please correct the following errors and try again.</h1>
-              {this.state.err_msg && this.state.err_msg.map((e, i) => <div style={{ color: "red" }}>{this.state.err_msg[i]}</div>)}
+              {this.state.err_msg && Array.isArray(this.state.err_msg) ? this.state.err_msg.map((e, i) => <div style={{ color: "red" }}>{this.state.err_msg[i]}</div>) : <div style={{ color: "red" }}>{this.state.err_msg}</div>}
 
             </div>
 
