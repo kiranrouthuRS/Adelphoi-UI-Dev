@@ -46,6 +46,7 @@ interface PredictionFormStepProps {
   reReffer: string;
   errors: any;
   user: any;
+  client_id: string;
   
 
 
@@ -70,6 +71,7 @@ export interface PredictionFormStepState {
   header_color: string;
   trauma_score: number; 
   visitedQuestion: any;
+  client_id: string;
 
 }
 const logout = css`
@@ -131,7 +133,8 @@ export class PredictionFormStep extends React.Component<
       reReffer: this.props.reReffer,
       header_color: "",
       trauma_score: 0,
-      visitedQuestion: []
+      visitedQuestion: [],
+      client_id: this.props.client_id
     };
   }
   async componentDidMount() {
@@ -494,7 +497,8 @@ export class PredictionFormStep extends React.Component<
     e.preventDefault();
     const client_form = this.state.client_form;
     let Required_List = this.state.Required_List;
-    this.setState({
+    let client_id = this.state.client_id
+     this.setState({
       isSubmitted: true,
       err_msg: [],
       isOpen: false,
@@ -505,7 +509,7 @@ export class PredictionFormStep extends React.Component<
     (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] }),
       !client_form[ele] && Required_List[ele] === "yes" && (isValid_Data = false)
     ))
-    let formData = Object.assign({}, ...data)
+    let formData = Object.assign({}, ...data,{["_id"]: client_id})
     if (Object.keys(formData).includes("Client Code1")) {
       formData["New Client Code"] = formData["Client Code"];
       formData["Client Code"] = formData["Client Code1"];

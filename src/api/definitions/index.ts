@@ -56,6 +56,7 @@ export interface DynamicClient {
 }
 export interface Client {
   client_code: string | null;
+  _id: any ;
   Program: string | null; 
   Reason_for_rejected: string | null; 
   Reason_not_accepted: string | null; 
@@ -219,6 +220,7 @@ export const emptyDClient: DynamicClient = {
 }
 export const emptyClient: Client = {
   client_code: null,
+  _id: null,
   Program: null,
   Reason_for_rejected: null,
   Reason_not_accepted: null, 
