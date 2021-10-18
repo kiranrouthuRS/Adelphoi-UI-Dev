@@ -209,7 +209,7 @@ export class PredictionFormStep extends React.Component<
     })
   }
 
-  getAge = (date, fromDate) => {
+  getAge = (date, fromDate, data) => {
     if (!date) {
       return "";
     }
@@ -219,12 +219,17 @@ export class PredictionFormStep extends React.Component<
     } else {
       today = new Date(fromDate);
     }
-    var birthDate = new Date(date);
-    var age = today.getFullYear() - birthDate.getFullYear();
-    var m = today.getMonth() - birthDate.getMonth();
+    let birthDate = new Date(date);
+    let age : any = today.getFullYear() - birthDate.getFullYear();
+    let m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
+    
+    const err = parseInt(age) < parseInt(data.range1)
+    const err1 = parseInt(age) > parseInt(data.range2)
+    this.state.error[data.question.replace(/ /g, "_")] = err === true ? data.error_msg : err1 === true ? data.error_msg : ""
+      
     return age.toString();
   }
   keyUp = async (e) => {
@@ -607,7 +612,6 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions, header_color, isSuccess } = this.state;
-    console.log(this.state)
     return (
       <div css={wrap}>
 
@@ -773,7 +777,9 @@ export class PredictionFormStep extends React.Component<
                                       readOnly={ques.field_type === 0 || ques.question === "Trauma Score" || ques.question === "Client Code" && this.state.reReffer === "true"}
                                       name={ques.question.replace(/ /g, "_")}
                                       value={ques.question === "Age" ? (
-                                        this.state.client_form[ques.question.replace(/ /g, "_")] = this.getAge(this.state.client_form["Date_of_Birth"], this.state.client_form["Date_of_Referral"])
+                                                    this.state.client_form[ques.question.replace(/ /g, "_")] = 
+                                                    this.getAge(this.state.client_form["Date_of_Birth"], this.state.client_form["Date_of_Referral"],{["range1"]: ques.validation1,
+                                                                                                                            ["range2"]: ques.validation2, ["error_msg"]: ques.error_msg,["question"]: ques.question })
                                       )
                                         : this.state.client_form[ques.question.replace(/ /g, "_")]}
                                       type={ques.answer_type.toLowerCase()}
