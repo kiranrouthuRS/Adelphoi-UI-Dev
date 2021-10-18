@@ -106,7 +106,7 @@ export class DynamicNewClientContainer extends React.Component<
     const is_prediction_available: any = this.props.user && this.props.user.user.is_prediction_available
     const res: any = await this.props.insertDClient(client, is_accessToken);
     this.setState({ isLoading: false, error: "" });
-    if (res !== null && res.data.status === "success") {
+    if (res !== null && res.data.message === "client details updated") {
       this.setState({ isSuccess: true })
       this.props.enqueueSnackbar(index ? "Client details updated Successfully." : res.data.message);
       {

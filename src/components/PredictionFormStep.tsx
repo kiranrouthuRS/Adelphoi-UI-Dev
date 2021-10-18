@@ -72,6 +72,7 @@ export interface PredictionFormStepState {
   trauma_score: number; 
   visitedQuestion: any;
   client_id: string;
+  isSuccess: boolean;
 
 }
 const logout = css`
@@ -134,7 +135,8 @@ export class PredictionFormStep extends React.Component<
       header_color: "",
       trauma_score: 0,
       visitedQuestion: [],
-      client_id: this.props.client_id
+      client_id: this.props.client_id,
+      isSuccess: false
     };
   }
   async componentDidMount() {
@@ -202,7 +204,8 @@ export class PredictionFormStep extends React.Component<
   handleClose = () => {
     this.setState({
       isOpen: false,
-      err_msg: []
+      err_msg: [],
+      isSuccess: false
     })
   }
 
@@ -529,6 +532,7 @@ export class PredictionFormStep extends React.Component<
             await this.props.GetQuestions()
             await this.setState({
             DynamicQuestions: this.props.DynamicQuestions,
+            isSuccess: true,
             isOpen: this.props.errors ? true : false,
             err_msg: this.props.errors,
             header_color: this.props.user && this.props.user.user.header_color
@@ -602,7 +606,8 @@ export class PredictionFormStep extends React.Component<
   }
 
   render() {
-    const { DynamicQuestions, header_color } = this.state;
+    const { DynamicQuestions, header_color, isSuccess } = this.state;
+    console.log(this.state)
     return (
       <div css={wrap}>
 
@@ -647,8 +652,10 @@ export class PredictionFormStep extends React.Component<
             contentLabel="Example Modal"
           >
             <div>
+              { !isSuccess && 
               <h1 css={subHeading} style={{ color: header_color }}>Please correct the following errors and try again.</h1>
-              {this.state.err_msg && Array.isArray(this.state.err_msg) ? this.state.err_msg.map((e, i) => <div style={{ color: "red" }}>{this.state.err_msg[i]}</div>) : <div style={{ color: "red" }}>{this.state.err_msg}</div>}
+               } 
+               {this.state.err_msg && Array.isArray(this.state.err_msg) ? this.state.err_msg.map((e, i) => <div style={{ color: "red" }}>{this.state.err_msg[i]}</div>) : <div style={{ color: isSuccess ? header_color :  "red" }}>{this.state.err_msg}</div>}
 
             </div>
 
