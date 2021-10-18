@@ -106,7 +106,7 @@ export class DynamicNewClientContainer extends React.Component<
     const is_prediction_available: any = this.props.user && this.props.user.user.is_prediction_available
     const res: any = await this.props.insertDClient(client, is_accessToken);
     this.setState({ isLoading: false, error: "" });
-    if (res !== null && res.data.message === "client registered") {
+    if (res !== null && res.data.message === "client registered" || res.data.message ===  "client details updated") {
       this.setState({ isSuccess: true })
       this.props.enqueueSnackbar(index ? "Client details updated Successfully." : "New Client Created Successfully.");
       {
@@ -255,6 +255,7 @@ export class DynamicNewClientContainer extends React.Component<
           <PredictionFormStep
             {...this.state}
             isEdit={index ? "true" : "false"}
+            client_id = {index ? clientList[index]._id : "" } 
             reReffer={Rerefer ? Rerefer : ""}
             Referral={referralList}
             user={this.props && this.props.user}
