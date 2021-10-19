@@ -192,8 +192,6 @@ export const uploadcsvfile = async (data,is_accessToken) => {
 };
 
 export const sendTicket = async (data, email_id: string = "") => { 
-  console.log(email_id)
-  // if(data.hasOwnProperty('email_id'))
   if(email_id){
     try {
       return await axios.post(`${baseApiUrl}/tickets`, data, )
@@ -284,15 +282,25 @@ export const downloadDataReport = async (is_accessToken) => {
 
 export const insertDClient = async (client_form, is_accessToken) => {
   const currentUser = store.getState().user.user.accessToken;
-  var data = new FormData();
-  var myJSON = JSON.stringify(client_form);
+  let methodUpdate = client_form._id === "" ? false : true ;
+  let data = new FormData();
+  let myJSON = JSON.stringify(client_form);
   data.append('client_form', myJSON);
+  console.log(methodUpdate)
   try {
-    const response = await axios.post(`${baseApiUrl}/${domainPath}/clients`, data, {
-      headers: {
-        'Authorization': `Bearer ${is_accessToken}`
-      }
-    });
+    const response = methodUpdate ? 
+                          await axios.put(`${baseApiUrl}/${domainPath}/clients`, data, {
+                            headers: {
+                              'Authorization': `Bearer ${is_accessToken}`
+                            }
+                          }) 
+                            :
+                          await axios.post(`${baseApiUrl}/${domainPath}/clients`, data, {
+                            headers: {
+                              'Authorization': `Bearer ${is_accessToken}`
+                            }
+                          })  
+    console.log(response)
     const r = {
       ...response,
       program_type: response.data.response.program_type && response.data.response.program_type[0],
@@ -1529,7 +1537,6 @@ export const updateProgramCompletion1 = async (
       Reason_for_rejected: Reason_for_rejected,
       client_recidivate: client_recidivate
     }
-    console.log(data)  
     let final_data: any = "";
     for (const [key, value] of Object.entries(data)) {
 
@@ -1538,7 +1545,6 @@ export const updateProgramCompletion1 = async (
       }
   
     }
-    console.log(final_data)
     const response = await axios.put(
       `${baseApiUrl}/${domainPath}/program_complete/${client_code}/`,
       final_data, {
@@ -1590,7 +1596,6 @@ export const searchDClient = async (
       }
     };
     const response = await axios(config)
-    console.log(response)
     return response.data;
   } catch (error) {
     console.error("api function searchClient error");
