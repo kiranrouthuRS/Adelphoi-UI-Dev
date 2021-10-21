@@ -214,6 +214,7 @@ const locationOptions = suggested_locations
    []; 
   const getInitialValues = (): FormValues => {
     const { client, is_role_type, searchData } = props;
+    console.log(client)
     let program: any = null; 
     let location: any = null;
     let referral: any = null;
@@ -278,13 +279,13 @@ const locationOptions = suggested_locations
       ,
       Program: program,
       start_date:
-        client.start_date !== null ? startDate ? startDate : client.start_date : "",
+        client.start_date !== null ?  client.start_date : "",
 
       end_date:
-        client.end_date !== null ? endDate ? endDate : client.end_date : "",
+        client.end_date !== null ?  client.end_date : "",
 
       referral_status:
-        client.referral_status !== null ? referralStatus ? referralStatus: client.referral_status : ""
+        client.referral_status !== null ? client.referral_status : ""
     };
     
   };

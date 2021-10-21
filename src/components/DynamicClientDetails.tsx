@@ -258,13 +258,13 @@ const locationOptions = suggested_locations
       Location: location || "",
 
       start_date:
-        client.start_date !== null ? startDate ? startDate : client.start_date : "",
+        client.start_date !== null ?  client.start_date : "",
 
       end_date:
-        client.end_date !== null ? endDate ? endDate : client.end_date : "",
+        client.end_date !== null ?  client.end_date : "",
 
       referral_status:
-        client.referral_status !== null ? referralStatus ? referralStatus: client.referral_status : ""
+        client.referral_status !== null ?  client.referral_status : ""
     };
     
   };
