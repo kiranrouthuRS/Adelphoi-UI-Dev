@@ -505,8 +505,10 @@ export class PredictionFormStep extends React.Component<
     e.preventDefault();
     const client_form = this.state.client_form;
     let Required_List = this.state.Required_List;
-    let client_id = this.state.client_id
-     this.setState({
+    let client_id = this.state.client_id; 
+    console.log(this.state.isEdit,"refer")
+    let Action = this.state.isEdit === "true" ? {["action"]: this.state.reReffer === "true" ? "re-referral" : "update"} : ""
+    this.setState({
       isSubmitted: true,
       err_msg: [],
       isOpen: false,
@@ -517,7 +519,7 @@ export class PredictionFormStep extends React.Component<
     (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] }),
       !client_form[ele] && Required_List[ele] === "yes" && (isValid_Data = false)
     ))
-    let formData = Object.assign({}, ...data,{["_id"]: client_id})
+    let formData = Object.assign({}, ...data,{["_id"]: client_id},Action)
     if (Object.keys(formData).includes("Client Code1")) {
       formData["New Client Code"] = formData["Client Code"];
       formData["Client Code"] = formData["Client Code1"];
@@ -554,9 +556,7 @@ export class PredictionFormStep extends React.Component<
         
       } 
       }
-    
-   
-  }
+    }
 
   uploadCSV = async (e) => {
     e.preventDefault()
@@ -612,6 +612,7 @@ export class PredictionFormStep extends React.Component<
 
   render() {
     const { DynamicQuestions, header_color, isSuccess } = this.state;
+    console.log(this.state)
     return (
       <div css={wrap}>
 
