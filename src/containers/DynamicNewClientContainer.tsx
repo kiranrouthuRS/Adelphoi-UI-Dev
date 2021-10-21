@@ -38,7 +38,7 @@ export interface DynamicNewClientContainerProp
     page1FormCompleted?: boolean,
     excludePage2?: boolean
   ) => void;
-  insertDClient: (client: Types.DynamicClient, is_accessToken: any) => Promise<void>;
+  insertDClient: (client: Types.DynamicClient, action: string, is_accessToken: any) => Promise<void>;
   submitPrediction: (client: Types.Client) => Promise<void>;
   getLocations: (
     client_code: string,
@@ -95,7 +95,7 @@ export class DynamicNewClientContainer extends React.Component<
   async componentDidMount() {
     this.props.closeSnackbar();
     }
-  saveClientStep1 = async (client: Types.DynamicClient) => {
+  saveClientStep1 = async (client: Types.DynamicClient, action: string) => {
     const { history } = this.props;
     const { index } = this.props.match.params;
     this.props.clearErrors();
@@ -104,7 +104,7 @@ export class DynamicNewClientContainer extends React.Component<
     const is_accessToken: any = this.props.user && this.props.user.user.accessToken
     const is_role_type: any = this.props.user && this.props.user.user.role_type
     const is_prediction_available: any = this.props.user && this.props.user.user.is_prediction_available
-    const res: any = await this.props.insertDClient(client, is_accessToken);
+    const res: any = await this.props.insertDClient(client, action, is_accessToken);
     this.setState({ isLoading: false, error: "" });
     if (res !== null && res.data.status === "success") {
       this.setState({ isSuccess: true })
@@ -194,14 +194,14 @@ export class DynamicNewClientContainer extends React.Component<
     try {
       this.setState({ isLoading: true });
       this.props.saveClient(client);
-      await this.props.insertDClient(client, is_accessToken);
-      this.setState({ isLoading: false });
-      this.props.enqueueSnackbar("New Client Created Successfully.");
-      {
-        is_role_type === "" ?
-          history.push(`/${domainPath}/new-client/`) :
-          history.push(`/${domainPath}/new-client/program-selection`)
-      }
+      // await this.props.insertDClient(client, is_accessToken);
+      // this.setState({ isLoading: false });
+      // this.props.enqueueSnackbar("New Client Created Successfully.");
+      // {
+      //   is_role_type === "" ?
+      //     history.push(`/${domainPath}/new-client/`) :
+      //     history.push(`/${domainPath}/new-client/program-selection`)
+      // }
 
     } catch (error) {
       console.log(error);

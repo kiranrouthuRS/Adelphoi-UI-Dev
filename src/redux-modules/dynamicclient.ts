@@ -498,6 +498,7 @@ export const actions = {
 
   insertDClient(
     Dclient: Types.DynamicClient,
+    action: string, 
     is_accessToken: any
   ): ThunkAction<Promise<void>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
@@ -505,7 +506,7 @@ export const actions = {
       let updatedDClient: Types.DynamicClient;
       const is_prediction_available = getState().user?.user.is_prediction_available
       try {
-        return await insertDClient(Dclient, is_accessToken)
+        return await insertDClient(Dclient, action, is_accessToken)
           .then(async response => {
             const cl = {
               ...Dclient,

@@ -37,7 +37,7 @@ interface PredictionFormStepProps {
   Referral: Types.Referral[];
   DynamicQuestions: any;
   client: Types.Client;
-  onFormSubmit: (client: Types.Client) => void;
+  onFormSubmit: (client: Types.Client, action: string) => void;
   GetQuestions: () => void;
   isLoading: boolean;
   hasError: boolean;
@@ -507,7 +507,7 @@ export class PredictionFormStep extends React.Component<
     let Required_List = this.state.Required_List;
     let client_id = this.state.client_id; 
     console.log(this.state.isEdit,"refer")
-    let Action = this.state.isEdit === "true" ? {["action"]: this.state.reReffer === "true" ? "re-referral" : "update"} : ""
+    let Action = this.state.isEdit === "true" ? this.state.reReffer === "true" ? "re-referral" : "update" : "";
     this.setState({
       isSubmitted: true,
       err_msg: [],
@@ -519,7 +519,7 @@ export class PredictionFormStep extends React.Component<
     (data.push({ [ele.replace(/_/g, ' ')]: client_form[ele] }),
       !client_form[ele] && Required_List[ele] === "yes" && (isValid_Data = false)
     ))
-    let formData = Object.assign({}, ...data,{["_id"]: client_id},Action)
+    let formData = Object.assign({}, ...data,{["_id"]: client_id})
     if (Object.keys(formData).includes("Client Code1")) {
       formData["New Client Code"] = formData["Client Code"];
       formData["Client Code"] = formData["Client Code1"];
@@ -534,7 +534,7 @@ export class PredictionFormStep extends React.Component<
          // isOpen: this.props.errors ? true : false, 
              // isSuccess: true
         })
-        const response: any = await this.props.onFormSubmit(formData);
+        const response: any = await this.props.onFormSubmit(formData,Action);
           if(response.status === "success") {
             await this.props.GetQuestions()
             await this.setState({

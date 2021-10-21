@@ -283,12 +283,13 @@ export const downloadDataReport = async (is_accessToken) => {
   }
 };
 
-export const insertDClient = async (client_form, is_accessToken) => {
+export const insertDClient = async (client_form, action, is_accessToken) => {
   const currentUser = store.getState().user.user.accessToken;
   let methodUpdate = client_form._id === "" ? false : true ;
   let data = new FormData();
   let myJSON = JSON.stringify(client_form);
   data.append('client_form', myJSON);
+  data.append('action', action);
   console.log(methodUpdate)
   try {
     const response = methodUpdate ? 
