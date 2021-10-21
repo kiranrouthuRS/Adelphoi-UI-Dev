@@ -352,6 +352,7 @@ const locationOptions = suggested_locations
         return Math.floor(difference_ms / ONE_WEEK);
         
       }
+      
   return (
     <div>
       <Backdrop css={backdrop} open={props.isLoading}>
@@ -492,7 +493,7 @@ const locationOptions = suggested_locations
                let stay = await get_length_of_stay(values.start_date,values.end_date); 
                values.length_of_stay = stay; 
               }
-              if (!values.discharge_location) {
+              if (!values.discharge_location?.toString()) {
                 errors.discharge_location = "Required";
               }
               if (!values.client_psychiatrically_hospitalized?.toString()) {
@@ -775,8 +776,8 @@ const locationOptions = suggested_locations
                 <div css={twoCol}> 
                   <select
                     css={selectField} 
-                    onChange={handleChange}
-                    disabled = {version_changed || [0,1,2,3].includes(props.client.Program_Completion)   ? true : values.referral_status !== "placed" } 
+                    onChange={handleChange} 
+                    disabled = {version_changed || props.client.Program_Completion?.toString()}  
                     name="Program_Completion"
                     value={
                       values.Program_Completion !== null 
@@ -800,7 +801,7 @@ const locationOptions = suggested_locations
                     <input
                       type="date"
                       name="end_date" 
-                      disabled = {version_changed || [0,1].includes(props.client.Program_Completion) }     
+                      disabled = {version_changed || props.client.end_date }     
                       css={inputField}
                       // disabled={Number(values.Program_Completion) === 0}
                       min = {values.start_date}
@@ -823,8 +824,8 @@ const locationOptions = suggested_locations
                 <div css={twoCol}>
                   <div css={fieldBox}>
                     <input
-                      type="checkbox"
-                      disabled={ version_changed || props.client.program_significantly_modified || props.client.Program_Completion?.toString() === "1"  
+                      type="checkbox" 
+                      disabled={ version_changed || props.client.program_significantly_modified === 1 || props.client.Program_Completion?.toString() === "1"  
                       || (props.client.Remained_Out_of_Care?.toString() || ["8","9"].includes(props.client.discharge_location?.toString())) }
                       onChange={handleChange}
                       name="program_significantly_modified"
@@ -854,7 +855,7 @@ const locationOptions = suggested_locations
                   <div css={fieldBox}>
                     <input
                       type="radio"
-                      disabled = {version_changed || [0,1].includes(props.client.Program_Completion) }  
+                      disabled = {version_changed || props.client.Program_Completion?.toString() }   
                       onChange={handleChange}
                       name="client_psychiatrically_hospitalized"
                       id="client_psychiatrically_hospitalized"
@@ -868,7 +869,7 @@ const locationOptions = suggested_locations
                   <div css={fieldBox}>
                     <input
                       type="radio"
-                      disabled = {version_changed || [0,1].includes(props.client.Program_Completion) }  
+                      disabled = {version_changed || props.client.Program_Completion?.toString() }   
                       onChange={handleChange}
                       name="client_psychiatrically_hospitalized"
                       id="client_psychiatrically_hospitalized"
@@ -896,7 +897,7 @@ const locationOptions = suggested_locations
                     type="text"
                     name="length_of_stay"
                     readOnly
-                    disabled = {version_changed || [0,1].includes(props.client.Program_Completion) } 
+                    disabled = {version_changed || ["0","1"].includes(props.client.Program_Completion).toString() } 
                     css={inputField}
                     placeholder=""
                     value={values.length_of_stay || ""}
@@ -913,11 +914,11 @@ const locationOptions = suggested_locations
                     <select
                       css={selectField} 
                       onChange={handleChange}
-                      disabled = {version_changed || [0,1].includes(props.client.Program_Completion) }  
+                      disabled = {version_changed || props.client.Program_Completion?.toString() }   
                       name="discharge_location"
                       value={
                         values.discharge_location !== null 
-                          ? values.discharge_location && values.discharge_location.toString()
+                          ? values.discharge_location?.toString() && values.discharge_location?.toString()
                           : ""
                       }   
                     > 
