@@ -63,8 +63,11 @@ export const login = async (email: string, password: string, domain: string) => 
       username: email,
       password: password
     });
-    localStorage.setItem("refreshToken", response.data.response.token);
-    localStorage.setItem("user_role", response.data.response.role_type)
+    console.log(response)
+    
+    // localStorage.setItem("refreshToken", response.data&&response.data.response.token);
+    // localStorage.setItem("user_role", response.data&&response.data.response.role_type)
+    console.log(response)
     return response.data;
   } catch (error) {
     console.log(error)
@@ -1623,6 +1626,7 @@ function throwError(error: any) {
   if (error.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
+    console.log(error.response)
     console.log(error.response.data);
     console.log("code", error.response.status);
     console.log(error.response.headers);
