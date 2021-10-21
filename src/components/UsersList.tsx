@@ -130,7 +130,6 @@ export class UsersList extends React.Component<
     } else {
       const response: any =  await this.props.createUsers(users,is_accessToken);
       let message = response.status === "failed" && typeof response.message === "object" ? Object.keys(response.message).map(msg=>response.message[msg]) : ""
-      console.log((message.toString()).replace(/,/g, "</br>"))
       this.setState({
         message: response.status === "failed" ? message ? (message.toString()).replace(/,/g, "  ") : response.message : "User created successfully"
       })
@@ -262,11 +261,13 @@ export class UsersList extends React.Component<
     const response: any =  await this.props.deleteUsers(data,is_accessToken)
     this.setState({ isLoading: false });
     if(response.message === "select any one to make default"){
-          this.setState({adminList: response.response, isOpen: true})
+          this.setState({adminList: response.response, isOpen: true, alertUser: false})
     }else{
     this.setState({
       message: response.message,
-      isOpen: false
+      isOpen: false,
+      id: "",
+      adminEmail: ""
     })
   }
   }
@@ -275,7 +276,6 @@ export class UsersList extends React.Component<
     const { usersList, rolesList, user } = this.props;
     let user_role = user.user.role_type
     const isEdit = this.state.isEdit
-    console.log(this.state)
     return (
       <form name="UsersForm" onSubmit={this.handleSubmit}>
         <Backdrop css={backdrop} open={this.props.isLoading || this.state.isLoading}>
