@@ -59,8 +59,9 @@ export class LoginContainer extends React.Component<
       const pwd_updated = this.props.user && this.props.user.user && this.props.user.user.is_pwd_updated;
       const is_configured:any = this.props.user && this.props.user.user && this.props.user.user.is_fully_configured;
       const is_accessToken: any = this.props.user && this.props.user.user.accessToken
+      console.log(res)
       try{
-        
+        if(res.data.status === "success"){
         await this.props.getConfiguredQuestions(is_accessToken) 
         if(pwd_updated){
           history.push(is_configured !== true ? (`/${domainPath}/welcomepage`) :
@@ -69,9 +70,17 @@ export class LoginContainer extends React.Component<
         }else{
           history.push(`/${domainPath}/changepassword`);
         } 
+      }else{
+      const error = res.data.message ? res.data.message: "Something went wrong. Please try again after sometime."; 
+      this.setState({
+        error,
+        hasLoginError: true,
+        isLoading: false
+      });
+      }
       } catch (e) {
         console.log(e,"error");
-      const error = e.data.message ? e.data.message: "Invalid Credentials"; 
+      const error = e.data.message ? e.data.message: "Something went wrong. Please try again after sometime."; 
       this.setState({
         error,
         hasLoginError: true,
@@ -83,7 +92,7 @@ export class LoginContainer extends React.Component<
      
     } catch (e) {
       console.log(e,"error");
-      const error = e.data.message ? e.data.message: "Invalid Credentials"; 
+      const error =e.data ? e.data.message && e.data.message: "Something went wrong. Please try again after sometime."; 
       this.setState({
         error,
         hasLoginError: true,

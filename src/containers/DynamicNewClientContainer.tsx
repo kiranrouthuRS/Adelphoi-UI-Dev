@@ -106,16 +106,16 @@ export class DynamicNewClientContainer extends React.Component<
     const is_prediction_available: any = this.props.user && this.props.user.user.is_prediction_available
     const res: any = await this.props.insertDClient(client, is_accessToken);
     this.setState({ isLoading: false, error: "" });
-    if (res !== null && res.data.message === "client details updated") {
+    if (res !== null && res.data.status === "success") {
       this.setState({ isSuccess: true })
-      this.props.enqueueSnackbar(index ? "Client details updated Successfully." : res.data.message);
-      {
-         client["Exclusionary Criteria Exists/Referral Rejected"] === "0" || !is_prediction_available ?
-          history.push(`/${domainPath}/new-client/`) :
-          history.push(`/${domainPath}/new-client/program-selection`)
-
-      }
-    }
+        this.props.enqueueSnackbar(index ? "Client details updated Successfully." : res.data.message);
+        {
+           client["Exclusionary Criteria Exists/Referral Rejected"] === "0" || !is_prediction_available ?
+            history.push(`/${domainPath}/new-client/`) :
+            history.push(`/${domainPath}/new-client/program-selection`)
+  
+        }
+     }
     else {
       if(res !== null && res.data.message === "client not registered"){
         this.props.enqueueSnackbar("Client not registered. Please update the client outcomes.")

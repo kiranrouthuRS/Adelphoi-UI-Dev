@@ -16,7 +16,6 @@ import {
   BrowserRouter as Router,
   Redirect
 } from "react-router-dom";
-import NewClientContainer from "./containers/NewClientContainer";
 import DynamicNewClientContainer from "./containers/DynamicNewClientContainer";
 import ExistingClientContainer from "./containers/ExistingClientContainer";
 import DynamicExistingClientContainer from "./containers/DynamicExistingClientContainer";
@@ -57,7 +56,7 @@ const url = typeof window !== 'undefined' ? window.location.pathname : '';
     
   }
 
-
+  
 const App: React.FC<AppProps> = props => {
   const {  logout, appState } = props;
   const { user } = appState;
@@ -79,12 +78,11 @@ const App: React.FC<AppProps> = props => {
     
 },[localStorage.refreshToken])
 
-  
 return (
   
     <React.Fragment>
       <Provider store={store}> 
-       <SnackbarProvider
+       <SnackbarProvider maxSnack={5}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
         <Router>
@@ -148,7 +146,7 @@ return (
       </Provider>
       <Footer/>
       
-       </React.Fragment> 
+       </React.Fragment>  
     
      
   );
