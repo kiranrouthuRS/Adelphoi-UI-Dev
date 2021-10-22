@@ -156,8 +156,7 @@ export const actions = {
       ): ThunkAction<Promise<string>, AppState, null, AnyAction> {
     return async (dispatch, getState) => {
       const currentUser = getState().user?.user.accessToken;
-     console.log(client_psychiatrically_hospitalized,"client_psychiatrically_hospitalized")
-      const response = await updateProgramCompletion1(
+     const response = await updateProgramCompletion1(
         client_code,
         Program_Completion,
         Remained_Out_of_Care,
@@ -328,6 +327,7 @@ export const actions = {
       const client = clientList[client_code];
       const sData = sDataList.filter(a => a.client_code === Number(client_code))
       const latestVersion = version ? version : sData.length - 1
+      console.log(sData[latestVersion])
       if (response) {
         const cl: Types.Client = {
           ...client,
@@ -337,7 +337,10 @@ export const actions = {
             ? [sData[latestVersion].client_selected_locations]
             : [],
           selected_program: sData[latestVersion].client_selected_program ? sData[latestVersion].client_selected_program : sData[latestVersion].Program,
-          Program: sData[latestVersion].Program,
+          Program: sData[latestVersion].Program,  
+          referral_status: sData[latestVersion].referral_status ? sData[latestVersion].referral_status : null,
+          start_date: sData[latestVersion].referral_status ? sData[latestVersion].start_date : null,
+          end_date: sData[latestVersion].referral_status ? sData[latestVersion].end_date : null,
           Reason_for_rejected: sData[latestVersion].Reason_for_rejected?.toString() ? sData[latestVersion].Reason_for_rejected?.toString() : null,
           Reason_not_accepted: sData[latestVersion].Reason_not_accepted?.toString() ? sData[latestVersion].Reason_not_accepted?.toString() : null,
           selected_location: sData[latestVersion].client_selected_locations,
@@ -347,7 +350,7 @@ export const actions = {
           ageAtEpisodeStart: sData[latestVersion].ageAtEpisodeStart,
           client_selected_locations: sData[latestVersion].client_selected_locations,
           client_selected_program: sData[latestVersion].client_selected_program,
-           confidence: sData[latestVersion].confidence,
+          confidence: sData[latestVersion].confidence,
           model_program: sData[latestVersion].model_program,
           program_significantly_modified: sData[latestVersion].program_significantly_modified,
           client_psychiatrically_hospitalized: sData[latestVersion].client_psychiatrically_hospitalized,
