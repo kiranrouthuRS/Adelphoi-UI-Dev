@@ -264,7 +264,7 @@ const locationOptions = suggested_locations
         client.end_date !== null ?  client.end_date : "",
 
       referral_status:
-        client.referral_status !== null ?  client.referral_status : ""
+        client.referral_status !== null ? referralStatus ? referralStatus: client.referral_status : ""
     };
     
   };
@@ -738,7 +738,7 @@ const locationOptions = suggested_locations
                   <div css={fieldBox}>
                     <input
                       type="checkbox"
-                      disabled={ props.client.Remained_Out_of_Care ? true :
+                      disabled={ props.client.Remained_Out_of_Care?.toString() ? true :
                         version_changed ? version_changed : values.Program_Completion !== ""
                           ? values.Program_Completion === "0" || values.Program_Completion === 0 
                           : true
