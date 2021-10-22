@@ -58,6 +58,7 @@ export interface Client {
   client_code: string | null;
   _id: any ;
   Program: string | null; 
+  referral_status:  string | null;
   Reason_for_rejected: string | null; 
   Reason_not_accepted: string | null; 
   episode_start: string | null;
@@ -121,6 +122,8 @@ export interface Client {
   ageAtEpisodeStart: string | null;
   ageAtEnrollStart: string | null;
   enrollStart_date: string | null;
+  start_date: string | null;
+  end_date: string | null;
   english_second_lang: string | null;
   type_of_drugs: string | null;
   FAST_FamilyTogetherScore: string | null;
@@ -222,6 +225,7 @@ export const emptyClient: Client = {
   client_code: null,
   _id: null,
   Program: null,
+  referral_status: null, 
   Reason_for_rejected: null,
   Reason_not_accepted: null, 
   sections: null,
@@ -287,6 +291,8 @@ export const emptyClient: Client = {
   ageAtEpisodeStart: null,
   ageAtEnrollStart: null,
   enrollStart_date: null,
+  start_date: null,
+  end_date: null,
   english_second_lang: null,
   type_of_drugs: null,
   FAST_FamilyTogetherScore: null,
