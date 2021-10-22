@@ -2,7 +2,7 @@
 import React from "react";
 import axios from "axios";
 import Modal from "react-modal";
-import { jsx, css, Global } from "@emotion/core";
+import { jsx, css } from "@emotion/core";
 import { Formik, FormikErrors } from "formik";
 import Container from "@material-ui/core/Container";
 import * as Types from "../api/definitions";
@@ -12,8 +12,6 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
-import logo from "../image/logo.png";
-//import "./Home.css";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { Link as RouterLink, useHistory } from "react-router-dom";
@@ -503,9 +501,7 @@ const Login: React.FC<LoginFormProps> = props => {
             setFieldValue('forgotpassword', false, false)
             setMessage("")
             closeModal()
-        }}
-          
-        >
+        }}>
           Ok
         </Button>
         </div>
@@ -548,7 +544,7 @@ const Login: React.FC<LoginFormProps> = props => {
               Submit
             </Button>
             <Button
-              type="submit"
+              // type="submit"
               fullWidth
               variant="contained"
               color="primary"
@@ -557,21 +553,15 @@ const Login: React.FC<LoginFormProps> = props => {
                 setFieldValue('forgotpassword', false, false)
                 closeModal()
             }}
-              
             >
               Close
             </Button>
             </div>
          </React.Fragment>
         }
-        
-        
-            
           </form>
         </Modal>
         </form>
-               
-                  
                 )}
               </Formik>
               <div style={{position: "absolute"}}>
